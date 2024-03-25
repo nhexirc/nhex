@@ -165,7 +165,7 @@ export default function ConnectBox() {
           id="server-input"
           onInput={(e) => setServer(e.currentTarget.value)}
           placeholder="Server"
-        />:
+        />
         <input
           id="server-input"
           onInput={(e) => {

@@ -2,6 +2,8 @@
 
 A Next-generation [HexChat](https://hexchat.github.io/)
 
+![](./public/screenshots/2024-03-24_1.png)
+
 ## Status
 
 This is currently in proof-of-concept phase, striving toward minimum-viable-product. As of this writing the project is less than 48 hours old, so please excuse the mess.
