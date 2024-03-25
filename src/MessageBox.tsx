@@ -15,7 +15,6 @@ export default function MessageBox(props) {
         mbRef.current.scrollIntoView({behavior: "smooth", block:"end"});
     });
 
-    useEffect(() => mbRef.current.scrollIntoView({behavior: "smooth", block:"end"}), []);
     return (
         <div id="message_box">
             <div id="message_cont">
