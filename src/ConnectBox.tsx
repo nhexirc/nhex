@@ -48,14 +48,11 @@ class MBUserInputEvent {
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
 
-function messageBoxLinesFromBuffer(buffer: Buffer) {
-  return buffer.buffer.map((parsed: IRCMessageParsed) => {
-    if (parsed.command.toLowerCase() === "privmsg") {
-      return `<${parsed.prefix}> ${parsed.params.slice(1).join(" ")}`;
-    }
-
-    return parsed.raw;
-  })
+function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string) {
+  return buffer.buffer.map((parsed: IRCMessageParsed) => ({
+    message: parsed,
+    isUs: currentNick === parsed.prefix,
+  }));
 }
 
 export default function ConnectBox() {
@@ -107,7 +104,7 @@ export default function ConnectBox() {
         currentBuffer.buffer.push(parsed);
 
         if (event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
-          setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer));
+          setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
           emit("nhexchat://servers_and_chans/selected", CUR_SELECTION);
         }
 
@@ -119,7 +116,7 @@ export default function ConnectBox() {
     await listen("nhexchat://servers_and_chans/select", (event: SACSelectEvent) => {
       const { server, channel } = event.payload;
       CUR_SELECTION = { server, channel };
-      setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[server].buffers[channel]));
+      setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[server].buffers[channel], nick));
       emit("nhexchat://servers_and_chans/selected", CUR_SELECTION);
     });
 
@@ -127,7 +124,7 @@ export default function ConnectBox() {
       if (event.payload.command.toLowerCase() === "privmsg") {
         BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel].buffer.push({
           command: event.payload.command,
-          params: event.payload.args,
+          params: [CUR_SELECTION.channel, ...event.payload.args],
           prefix: nick, ///TODO: this better
           raw: event.payload.raw,
           tags: {}

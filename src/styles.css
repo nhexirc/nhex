@@ -2,6 +2,18 @@ body {
   overflow: hidden;
 }
 
+.ourName {
+  color: #24c8db;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.message {
+  margin-left: 0.5em;
+}
+
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;

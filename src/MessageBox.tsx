@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { emit, listen } from '@tauri-apps/api/event';
 
 export interface MBUserInputRaw {
@@ -19,11 +19,30 @@ export default function MessageBox(props) {
         <div id="message_box">
             <div id="message_cont">
                 <div id="message_area" ref={mbRef}>
-                    {props.lines.map((line, i) => (
-                        <>
-                        <div id={`mb_line_${i}`}>{line}</div>
-                        </>
-                    ))}
+                    {props.lines.map(({message, isUs}, i) => {
+                        if (message.command.toLowerCase() === "privmsg") {
+                            return (
+                                <>
+                                <div id={`mb_line_${i}`}>
+                                    &lt;<span className={`name ${isUs ? 'ourName' : ''}`}>
+                                        {message.prefix}
+                                    </span>&gt;
+                                    <span className={`message ${isUs ? 'ourMessage' : ''}`}>
+                                        {message.params.slice(1).join(" ")}
+                                    </span>
+                                </div>
+                                </>
+                            );
+                        }
+
+                        return (
+                            <>
+                            <div id={`mb_line_${i}`}>
+                                {message.raw}
+                            </div>
+                            </>
+                        );
+                    })}
                 </div>
             </div>
             <div id="user_input_cont">
