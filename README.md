@@ -1,6 +1,6 @@
 # NhexChat
 
-The Next [HexChat](https://hexchat.github.io/)
+A Next-generation [HexChat](https://hexchat.github.io/)
 
 ## Status
 
