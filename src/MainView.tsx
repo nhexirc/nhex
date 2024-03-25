@@ -10,57 +10,34 @@ import {
   ResizablePanelGroup,
 } from './shadcn/Resizable';
 import MessageBox from './MessageBox';
-import { MBUserInputRaw } from './MessageBox';
+import {
+  Buffer,
+  NetworkBuffer,
+  IRCMessageEvent,
+  IRCMessageParsed,
+  MBUserInputEvent,
+  MessageBoxLines
+} from './lib/types';
 import ServersAndChans from './ServersAndChans';
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
-
-class IRCMessagePayload {
-  message: string;
-  server: string;
-};
-
-class IRCMessageEvent {
-  payload: IRCMessagePayload;
-};
-
-class IRCMessageParsed {
-  command: string;
-  params: string[];
-  prefix: string;
-  raw: string;
-  tags: Record<string, any>;
-};
-
-class Buffer {
-  name: string;
-  buffer: IRCMessageParsed[];
-};
-
-class NetworkBuffer {
-  server: string;
-  buffers: Record<string, Buffer>;
-};
-
-class MBUserInputEvent {
-  payload: MBUserInputRaw;
-};
+import messageParser from './lib/messageParser';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
 
-function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string) {
+function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
   return buffer.buffer.map((parsed: IRCMessageParsed) => ({
     message: parsed,
     isUs: currentNick === parsed.prefix,
   }));
 }
 
-export default function ConnectBox() {
+export default function MainView() {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
   const [channels, setChannels] = useState("");
-  const [messageBoxLines, setMessageBoxLines] = useState([]);
+  const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
 
   async function connect() {
@@ -70,12 +47,14 @@ export default function ConnectBox() {
     BUFFERS[server] = { server, buffers: {
       "": {
         name: "",
-        buffer: []
+        buffer: [],
+        names: []
       },
       ...channels.split(" ").reduce((a, chan) => ({
         [chan]: {
           name: chan,
-          buffer: []
+          buffer: [],
+          names: []
         },
         ...a
       }), {})
@@ -83,29 +62,16 @@ export default function ConnectBox() {
 
     const networkBuffers = BUFFERS[server].buffers;
 
-    await listen('nhexchat://irc_message', (event: IRCMessageEvent) => {
+    await listen('nhex://irc_message', (event: IRCMessageEvent) => {
         if (event.payload.server !== server) {
           return;
         }
 
-        const parsed: IRCMessageParsed = parse(event.payload.message);
-        let currentBuffer: Buffer = networkBuffers[""];
-        if (parsed.command.toLowerCase() === "privmsg") {
-          if (!networkBuffers[parsed.params[0]]) {
-            networkBuffers[parsed.params[0]] = {
-              name: parsed.params[0],
-              buffer: []
-            };
-          }
-          
-          currentBuffer = networkBuffers[parsed.params[0]];
-        }
-
-        currentBuffer.buffer.push(parsed);
+        const { currentBuffer } = messageParser(networkBuffers, parse(event.payload.message));
 
         if (event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
           setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
-          emit("nhexchat://servers_and_chans/selected", CUR_SELECTION);
+          emit("nhex://servers_and_chans/selected", CUR_SELECTION);
         }
 
         setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
@@ -113,14 +79,14 @@ export default function ConnectBox() {
         ))));
     });
 
-    await listen("nhexchat://servers_and_chans/select", (event: SACSelectEvent) => {
+    await listen("nhex://servers_and_chans/select", (event: SACSelectEvent) => {
       const { server, channel } = event.payload;
       CUR_SELECTION = { server, channel };
       setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[server].buffers[channel], nick));
-      emit("nhexchat://servers_and_chans/selected", CUR_SELECTION);
+      emit("nhex://servers_and_chans/selected", CUR_SELECTION);
     });
 
-    await listen("nhexchat://user_input/raw", (event: MBUserInputEvent) => {
+    await listen("nhex://user_input/raw", (event: MBUserInputEvent) => {
       if (event.payload.command.toLowerCase() === "privmsg") {
         BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel].buffer.push({
           command: event.payload.command,
@@ -130,10 +96,10 @@ export default function ConnectBox() {
           tags: {}
         });
 
-        emit("nhexchat://servers_and_chans/select", CUR_SELECTION);
+        emit("nhex://servers_and_chans/select", CUR_SELECTION);
       }
 
-      emit("nhexchat://user_input", { ...CUR_SELECTION, ...event.payload });
+      emit("nhex://user_input", { ...CUR_SELECTION, ...event.payload });
     });
 
     invoke("connect", {

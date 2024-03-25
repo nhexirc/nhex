@@ -1,5 +1,5 @@
 import "./App.css";
-import ConnectBox from "./ConnectBox";
+import MainView from "./MainView";
 import {
   Menubar,
   MenubarContent,
@@ -9,13 +9,14 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "./shadcn/MenuBar";
+import "./styles.css";
 
 function App() {
   return (
     <div id="app_container">
       <Menubar id="main_menubar">
         <MenubarMenu>
-          <MenubarTrigger>NhexChat</MenubarTrigger>
+          <MenubarTrigger>nhex</MenubarTrigger>
           <MenubarContent>
             <MenubarItem onClick={(e) => {
               alert('new tab!');
@@ -49,7 +50,7 @@ function App() {
         </MenubarMenu>
       </Menubar>
 
-      <ConnectBox />
+      <MainView />
     </div>
   );
 }

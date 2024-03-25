@@ -1,5 +1,5 @@
 {
-  "name": "nhexchat",
+  "name": "nhex",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-menubar": "^1.0.4",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@tauri-apps/api": "^1",

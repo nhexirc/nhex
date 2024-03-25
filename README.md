@@ -1,8 +1,8 @@
-# NhexChat
+# nhex
 
-A Next-generation [HexChat](https://hexchat.github.io/)
+A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/)
 
-![](./public/screenshots/2024-03-24_1.png)
+![](./public/screenshots/2024-03-25_1.png)
 
 ## Status
 
@@ -39,7 +39,7 @@ $ npm run tauri build
 
 ### Discuss
 
-[#nhexchat on irc.libera.chat](https://web.libera.chat/?channel=#nhexchat)
+[#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex)
 
 ### Development Guidelines
 
@@ -49,7 +49,7 @@ $ npm run tauri build
 1. For UX components: use [shadcn/ui](https://ui.shadcn.com/) whenever possible and *always* [manually install](https://ui.shadcn.com/docs/installation/manual).
 1. Lift out of Rust _early_ & _often_. So, as long as it is reasonable & performant* to do so, implementation should prefer to live in the frontend not the backend.
     * \* It nearly _always_ will be: this is an IRC client, not a 120 FPS video game.
-1. "Hex" is 6, this is "hex" + 1 so... 7 is a primary theme in design for NhexChat. Include it wherever you can, as subtly as possible!
+1. "Hex" is 6, this is "hex" + 1 so... 7 is a primary theme in design for nhex. Include it wherever you can, as subtly as possible!
 
 ### Contributors
 

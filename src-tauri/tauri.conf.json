@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "NhexChat",
+    "productName": "nhex",
     "version": "0.0.0"
   },
   "tauri": {
@@ -38,7 +38,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "be.computerpho.nhexchat",
+      "identifier": "be.computerpho.nhex",
       "icon": [
         "icons/icon.ico"
       ]

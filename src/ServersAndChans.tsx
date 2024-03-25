@@ -15,7 +15,7 @@ export interface SACSelectEvent {
 };
 
 function emitSelect(server: string, channel: string = "") {
-    emit("nhexchat://servers_and_chans/select", { server, channel })
+    emit("nhex://servers_and_chans/select", { server, channel })
 }
 
 export default function ServersAndChans(props: SACProps) {

@@ -1,17 +1,15 @@
 import { useRef } from "react";
 import { emit, listen } from '@tauri-apps/api/event';
+import { MessageBoxLines } from './lib/types';
 
-export interface MBUserInputRaw {
-    raw: string;
-    command: string;
-    args: string[];
-    argsStr: string;
+interface Props {
+    lines: MessageBoxLines;
 };
 
-export default function MessageBox(props) {
+export default function MessageBox(props: Props) {
     const mbRef = useRef(null);
 
-    listen("nhexchat://servers_and_chans/selected", () => {
+    listen("nhex://servers_and_chans/selected", () => {
         mbRef.current.scrollIntoView({behavior: "smooth", block:"end"});
     });
 
@@ -59,7 +57,7 @@ export default function MessageBox(props) {
                         }
 
                         const args = uiSplit.slice((command === "privmsg") ? 0 : 1);
-                        emit("nhexchat://user_input/raw", {
+                        emit("nhex://user_input/raw", {
                             raw: userInput,
                             command,
                             args,

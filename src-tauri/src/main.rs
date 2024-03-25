@@ -41,7 +41,7 @@ async fn connect(
         port: Some(port),
         use_tls: Some(false),
         channels: channels,
-        version: Some("NhexChat vFILLIN".to_owned()),
+        version: Some("nhex vFILLIN".to_owned()),
         ..Config::default()
     };
 
@@ -53,7 +53,7 @@ async fn connect(
     let mut sstream = stream.expect("!!!!");
 
     // DAMMIT just make all the handling happen in here to allow moving cclient into it?
-    app_handle.listen_global("nhexchat://user_input", move |event| {
+    app_handle.listen_global("nhex://user_input", move |event| {
         let payload: UserInput = serde_json::from_str(event.payload().expect("input")).expect("json");
         if payload.command.to_lowercase() == "privmsg" {
             // TODO: multiple networks will need to honor payload.server here!!
@@ -66,7 +66,7 @@ async fn connect(
 
     while let Ok(Some(message)) = sstream.next().await.transpose() {
         print!("<{}> {}", server_clone.clone(), message);
-        window.emit("nhexchat://irc_message", IRCMessage {
+        window.emit("nhex://irc_message", IRCMessage {
             server: server_clone.clone(),
             message: message.to_string(),
         }).expect("emit");
@@ -76,7 +76,7 @@ async fn connect(
 fn main() {
     /* Honestly, i think i prefer the in-browser-view menubar if only because it matches the look-n-feel...
     let hc_quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let hc_submenu = Submenu::new("NhexChat", Menu::new().add_item(hc_quit));
+    let hc_submenu = Submenu::new("nhex", Menu::new().add_item(hc_quit));
     let main_menu = Menu::new().add_submenu(hc_submenu);
      */
 
