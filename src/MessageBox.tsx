@@ -10,34 +10,34 @@ export default function MessageBox(props: Props) {
     const mbRef = useRef(null);
 
     listen("nhex://servers_and_chans/selected", () => {
-        mbRef.current.scrollIntoView({behavior: "smooth", block:"end"});
+        mbRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     });
 
     return (
         <div id="message_box">
             <div id="message_cont">
                 <div id="message_area" ref={mbRef}>
-                    {props.lines.map(({message, isUs}, i) => {
+                    {props.lines.map(({ message, isUs }, i) => {
                         if (message.command.toLowerCase() === "privmsg") {
                             return (
                                 <>
-                                <div id={`mb_line_${i}`}>
-                                    &lt;<span className={`name ${isUs ? 'ourName' : ''}`}>
-                                        {message.prefix}
-                                    </span>&gt;
-                                    <span className={`message ${isUs ? 'ourMessage' : ''}`}>
-                                        {message.params.slice(1).join(" ")}
-                                    </span>
-                                </div>
+                                    <div id={`mb_line_${i}`}>
+                                        &lt;<span className={`name ${isUs ? 'ourName' : ''}`}>
+                                            {message.prefix}
+                                        </span>&gt;
+                                        <span className={`message ${isUs ? 'ourMessage' : ''}`}>
+                                            {message.params.slice(1).join(" ")}
+                                        </span>
+                                    </div>
                                 </>
                             );
                         }
 
                         return (
                             <>
-                            <div id={`mb_line_${i}`}>
-                                {message.raw}
-                            </div>
+                                <div id={`mb_line_${i}`}>
+                                    {message.raw}
+                                </div>
                             </>
                         );
                     })}

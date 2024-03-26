@@ -45,40 +45,42 @@ export default function MainView() {
     console.log('connect!', nick, server, port, channels);
     CUR_SELECTION.server = server;
 
-    BUFFERS[server] = { server, buffers: {
-      "": {
-        name: "",
-        buffer: [],
-        names: []
-      },
-      ...channels.split(" ").reduce((a, chan) => ({
-        [chan]: {
-          name: chan,
+    BUFFERS[server] = {
+      server, buffers: {
+        "": {
+          name: "",
           buffer: [],
           names: []
         },
-        ...a
-      }), {})
-    } };
+        ...channels.split(" ").reduce((a, chan) => ({
+          [chan]: {
+            name: chan,
+            buffer: [],
+            names: []
+          },
+          ...a
+        }), {})
+      }
+    };
 
     const networkBuffers = BUFFERS[server].buffers;
 
     await listen('nhex://irc_message', (event: IRCMessageEvent) => {
-        if (event.payload.server !== server) {
-          return;
-        }
+      if (event.payload.server !== server) {
+        return;
+      }
 
-        const { currentBuffer } = messageParser(networkBuffers, parse(event.payload.message));
+      const { currentBuffer } = messageParser(networkBuffers, parse(event.payload.message));
 
-        if (event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
-          setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
-          setChannelNames(currentBuffer.names);
-          emit("nhex://servers_and_chans/selected", CUR_SELECTION);
-        }
+      if (event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
+        setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
+        setChannelNames(currentBuffer.names);
+        emit("nhex://servers_and_chans/selected", CUR_SELECTION);
+      }
 
-        setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
-          [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
-        ))));
+      setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
+        [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
+      ))));
     });
 
     await listen("nhex://servers_and_chans/select", (event: SACSelectEvent) => {
@@ -138,10 +140,10 @@ export default function MainView() {
           onInput={(e) => {
             const intVal = Number.parseInt(e.currentTarget.value);
             if (!Number.isNaN(intVal) && Number.isInteger(intVal) && intVal < 65536) {
-                setPort(e.currentTarget.value);
+              setPort(e.currentTarget.value);
             }
             else {
-                e.currentTarget.value = port;
+              e.currentTarget.value = port;
             }
           }}
           placeholder="Port"
