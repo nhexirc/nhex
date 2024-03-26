@@ -50,17 +50,18 @@ Remember to [build **successfully**](#building) before commiting changes.
 1. **Do not** share state between components! This is *paramount* for future maintainability. If one component (`A`) must affect the state of another (`B`), we use the actor model: `A` sends the appropriate message on the event system which `B` listens for and updates its internal state accordingly.
 1. Lift out of Rust _early_ & _often_. So, as long as it is reasonable & performant* to do so, implementation should prefer to live in the frontend not the backend.
     * \* It nearly _always_ will be: this is an IRC client, not a 120 FPS video game.
+    * This contributes directly to the [long-term goal of extracting the UX into a web app!](https://github.com/nhexirc/client/issues/17)
 1. 7 is a theme in design for nhex: include as subtly as possible! (["Hexa"](https://en.wikipedia.org/wiki/Numeral_prefix#Table_of_number_prefixes_in_English) is a prefix for "six", plus one, hence 7.)
 
 ### Contributors
 
 Not even two days old and already gaining contributors! Y'all rock ❤️
 
-* [gnprwx](https://github.com/gnprwx) -- Frontend
-* hmw[at] (irc.libera.chat) -- Logo design
-* InPhase (irc.libera.chat) -- Naming, logo design
-* systemfault (irc.libera.chat) -- Logo design
-* blueagain (irc.libera.chat) -- Naming, Community
-* PantelicGR (irc.libera.chat) -- Copy editing
+* [gnprwx](https://github.com/gnprwx)
+* [terrablue](https://github.com/terrablue)
+* hmw[at] (irc.libera.chat)
+* InPhase (irc.libera.chat)
+* systemfault (irc.libera.chat)
+* PantelicGR (irc.libera.chat)
 
 ... and everyone else in ##programming & elsewhere who chimed in on naming or anything else!
