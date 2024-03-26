@@ -37,6 +37,8 @@ $ npm run tauri build
 
 ## Contributing
 
+Remember to [build **successfully**](#building) before commiting changes.
+
 ### Discuss
 
 [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex)
