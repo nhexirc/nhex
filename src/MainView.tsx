@@ -3,7 +3,6 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import { parse } from 'irc-message';
 import "./App.css";
-import { ScrollArea } from './shadcn/ScrollArea'; // XXX: REMOVE ENTIRELY?
 import {
   ResizableHandle,
   ResizablePanel,
@@ -21,6 +20,7 @@ import {
 import ServersAndChans from './ServersAndChans';
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
+import ChannelNames from './ChannelNames';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -39,6 +39,7 @@ export default function MainView() {
   const [channels, setChannels] = useState("");
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
+  const [channelNames, setChannelNames] = useState<string[]>([]);
 
   async function connect() {
     console.log('connect!', nick, server, port, channels);
@@ -71,6 +72,7 @@ export default function MainView() {
 
         if (event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
           setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
+          setChannelNames(currentBuffer.names);
           emit("nhex://servers_and_chans/selected", CUR_SELECTION);
         }
 
@@ -82,7 +84,9 @@ export default function MainView() {
     await listen("nhex://servers_and_chans/select", (event: SACSelectEvent) => {
       const { server, channel } = event.payload;
       CUR_SELECTION = { server, channel };
-      setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[server].buffers[channel], nick));
+      const channelBuf = BUFFERS[server].buffers[channel];
+      setMessageBoxLines(messageBoxLinesFromBuffer(channelBuf, nick));
+      setChannelNames(channelBuf.names);
       emit("nhex://servers_and_chans/selected", CUR_SELECTION);
     });
 
@@ -166,7 +170,7 @@ export default function MainView() {
         <ResizableHandle />
         <ResizablePanel defaultSize={15}>
           <div>
-            <span>Names</span>
+            <ChannelNames names={channelNames} />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
