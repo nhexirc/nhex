@@ -1,7 +1,14 @@
 import { Buffer, IRCMessageParsed, MessageParserReturn } from './types';
+import { nickFromPrefix } from './common';
 
 type MessageHandler = (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => Buffer;
 type MessageHandlers = Record<string, MessageHandler>;
+
+function joinOrPartHandler(functorName: string, networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
+    const buf = networkBuffers[parsed.params[0].replace('\r\n', '')];
+    buf.names[functorName](nickFromPrefix(parsed.prefix));
+    return null; // return `buf` here to have joins & parts appear in the channel
+}
 
 const MESSAGE_HANDLERS: MessageHandlers = {
     privmsg: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
@@ -9,12 +16,14 @@ const MESSAGE_HANDLERS: MessageHandlers = {
             networkBuffers[parsed.params[0]] = {
                 name: parsed.params[0],
                 buffer: [],
-                names: []
+                names: new Set()
             };
         }
 
         return networkBuffers[parsed.params[0]];
-    }
+    },
+    join: joinOrPartHandler.bind(null, 'add'),
+    part: joinOrPartHandler.bind(null, 'delete'),
 };
 
 const NUMERIC_HANDLERS: MessageHandlers = {
@@ -24,12 +33,15 @@ const NUMERIC_HANDLERS: MessageHandlers = {
             networkBuffers[chanName] = {
                 name: chanName,
                 buffer: [],
-                names: []
+                names: new Set()
             };
         }
 
         const buf = networkBuffers[chanName];
-        buf.names = [...buf.names, ...parsed.params[3].split(" ").map((s) => s.replace('\r\n', ''))];
+        buf.names = new Set([
+            ...buf.names,
+            ...parsed.params[3].split(" ").map((s) => s.replace('\r\n', ''))
+        ]);
         return null;
     }
 };
@@ -47,6 +59,9 @@ export default function (
         const numeric = Number.parseInt(parsed.command);
         if (!Number.isNaN(numeric) && NUMERIC_HANDLERS[parsed.command]) {
             currentBuffer = NUMERIC_HANDLERS[parsed.command](networkBuffers, parsed);
+        }
+        else {
+            console.log('[UNHANDLED]', parsed.command, parsed);
         }
     }
 

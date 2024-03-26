@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { emit, listen } from '@tauri-apps/api/event';
 import { MessageBoxLines } from './lib/types';
+import { nickFromPrefix } from './lib/common';
 
 interface Props {
     lines: MessageBoxLines;
@@ -19,18 +20,11 @@ export default function MessageBox(props: Props) {
                 <div id="message_area" ref={mbRef}>
                     {props.lines.map(({ message, isUs }, i) => {
                         if (message.command.toLowerCase() === "privmsg") {
-                            let displayName = message.prefix;
-                            const bangdex = message.prefix.indexOf("!");
-
-                            if (bangdex > 0) {
-                                displayName = displayName.slice(0, bangdex);
-                            }
-
                             return (
                                 <>
                                     <div id={`mb_line_${i}`}>
                                         &lt;<span className={`name ${isUs ? 'ourName' : ''}`}>
-                                            {displayName}
+                                            {nickFromPrefix(message.prefix)}
                                         </span>&gt;
                                         <span className={`message ${isUs ? 'ourMessage' : ''}`}>
                                             {message.params.slice(1).join(" ")}
