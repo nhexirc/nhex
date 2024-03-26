@@ -18,7 +18,7 @@ export interface IRCMessageParsed {
 export class Buffer {
     name: string;
     buffer: IRCMessageParsed[];
-    names: string[];
+    names: Set<string>;
 };
 
 export interface NetworkBuffer {

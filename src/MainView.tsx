@@ -38,7 +38,7 @@ export default function MainView() {
   const [channels, setChannels] = useState("");
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
-  const [channelNames, setChannelNames] = useState<string[]>([]);
+  const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
 
   async function connect() {
     console.log('connect!', nick, server, port, channels);
@@ -49,13 +49,13 @@ export default function MainView() {
         "": {
           name: "",
           buffer: [],
-          names: []
+          names: new Set()
         },
         ...channels.split(" ").reduce((a, chan) => ({
           [chan]: {
             name: chan,
             buffer: [],
-            names: []
+            names: new Set()
           },
           ...a
         }), {})

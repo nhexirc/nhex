@@ -1,11 +1,11 @@
 interface Props {
-    names: string[];
+    names: Set<string>;
 }
 
 export default function ChannelNames(props: Props) {
     return (
         <div id="channel_names">
-            {props.names
+            {[...props.names]
                 .reduce((a, cur) => {
                     const [ops, voiced, normies] = a;
                     let target = normies;
