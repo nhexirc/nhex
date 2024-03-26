@@ -2,7 +2,7 @@
 
 A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/)
 
-![](./public/screenshots/2024-03-25_1.png)
+![](./public/screenshots/2024-03-26_1.png)
 
 ## Status
 
