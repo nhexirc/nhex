@@ -155,7 +155,7 @@ export default function MainView() {
           type="checkbox"
           checked={tls}
           onChange={(e) => setTLS(!tls)}
-        /> <label for="tls-input">Use TLS</label>
+        /> <label htmlFor="tls-input">Use TLS</label>
         <input
           id="channels"
           onInput={(e) => setChannels(e.currentTarget.value)}
