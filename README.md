@@ -55,6 +55,7 @@ $ npm run tauri build
 
 Not even two days old and already gaining contributors! Y'all rock ❤️
 
+* [gnprwx](https://github.com/gnprwx) -- Frontend
 * hmw[at] (irc.libera.chat) -- Logo design
 * InPhase (irc.libera.chat) -- Naming, logo design
 * systemfault (irc.libera.chat) -- Logo design
