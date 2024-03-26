@@ -19,11 +19,18 @@ export default function MessageBox(props: Props) {
                 <div id="message_area" ref={mbRef}>
                     {props.lines.map(({ message, isUs }, i) => {
                         if (message.command.toLowerCase() === "privmsg") {
+                            let displayName = message.prefix;
+                            const bangdex = message.prefix.indexOf("!");
+
+                            if (bangdex > 0) {
+                                displayName = displayName.slice(0, bangdex);
+                            }
+
                             return (
                                 <>
                                     <div id={`mb_line_${i}`}>
                                         &lt;<span className={`name ${isUs ? 'ourName' : ''}`}>
-                                            {message.prefix}
+                                            {displayName}
                                         </span>&gt;
                                         <span className={`message ${isUs ? 'ourMessage' : ''}`}>
                                             {message.params.slice(1).join(" ")}
