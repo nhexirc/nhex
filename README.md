@@ -49,7 +49,7 @@ $ npm run tauri build
 1. For UX components: use [shadcn/ui](https://ui.shadcn.com/) whenever possible and *always* [manually install](https://ui.shadcn.com/docs/installation/manual).
 1. Lift out of Rust _early_ & _often_. So, as long as it is reasonable & performant* to do so, implementation should prefer to live in the frontend not the backend.
     * \* It nearly _always_ will be: this is an IRC client, not a 120 FPS video game.
-1. "Hex" is 6, this is "hex" + 1 so... 7 is a primary theme in design for nhex. Include it wherever you can, as subtly as possible!
+1. 7 is a theme in design for nhex: include as subtly as possible! (["Hexa"](https://en.wikipedia.org/wiki/Numeral_prefix#Table_of_number_prefixes_in_English) is a prefix for "six", plus one, hence 7.)
 
 ### Contributors
 
@@ -58,5 +58,7 @@ Not even two days old and already gaining contributors! Y'all rock ❤️
 * hmw[at] (irc.libera.chat) -- Logo design
 * InPhase (irc.libera.chat) -- Naming, logo design
 * systemfault (irc.libera.chat) -- Logo design
+* blueagain (irc.libera.chat) -- Naming, Community
+* PantelicGR (irc.libera.chat) -- Copy editing
 
 ... and everyone else in ##programming & elsewhere who chimed in on naming or anything else!
