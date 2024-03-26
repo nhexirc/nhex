@@ -30,6 +30,7 @@ async fn connect(
     nick: String,
     server: String,
     port: u16,
+    tls: bool,
     channels: Vec<String>,
     window: Window,
     app_handle: tauri::AppHandle
@@ -39,7 +40,7 @@ async fn connect(
         nickname: Some(nick),
         server: Some(server),
         port: Some(port),
-        use_tls: Some(false),
+        use_tls: Some(tls),
         channels: channels,
         version: Some("nhex vFILLIN".to_owned()),
         ..Config::default()

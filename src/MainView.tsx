@@ -35,6 +35,7 @@ export default function MainView() {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
+  const [tls, setTLS] = useState(false);
   const [channels, setChannels] = useState("");
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
@@ -110,7 +111,9 @@ export default function MainView() {
     invoke("connect", {
       nick,
       server,
+      // how to properly handle rust underscore vs. JS camelcase?
       port: Number.parseInt(port),
+      tls,
       channels: channels.split(" ")
     });
   }
@@ -135,7 +138,7 @@ export default function MainView() {
           placeholder="Server"
         />
         <input
-          id="server-input"
+          id="port-input"
           onInput={(e) => {
             const intVal = Number.parseInt(e.currentTarget.value);
             if (!Number.isNaN(intVal) && Number.isInteger(intVal) && intVal < 65536) {
@@ -147,6 +150,12 @@ export default function MainView() {
           }}
           placeholder="Port"
         />
+        <input
+          id="tls-input"
+          type="checkbox"
+          checked={tls}
+          onChange={(e) => setTLS(!tls)}
+        /> <label for="tls-input">Use TLS</label>
         <input
           id="channels"
           onInput={(e) => setChannels(e.currentTarget.value)}
