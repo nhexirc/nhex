@@ -1,4 +1,3 @@
-import "./App.css";
 import MainView from "./MainView";
 import {
   Menubar,
