@@ -20,6 +20,7 @@ import ServersAndChans from './ServersAndChans';
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
 import ChannelNames from './ChannelNames';
+import IRCNicksSet from './lib/IRCNicksSet';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -50,13 +51,13 @@ export default function MainView() {
         "": {
           name: "",
           buffer: [],
-          names: new Set()
+          names: new IRCNicksSet()
         },
         ...channels.split(" ").reduce((a, chan) => ({
           [chan]: {
             name: chan,
             buffer: [],
-            names: new Set()
+            names: new IRCNicksSet()
           },
           ...a
         }), {})
@@ -70,9 +71,16 @@ export default function MainView() {
         return;
       }
 
-      const { currentBuffer } = messageParser(networkBuffers, parse(event.payload.message));
+      let { currentBuffer } = messageParser(networkBuffers, parse(event.payload.message));
 
-      if (event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
+      if (!currentBuffer) {
+        // messageParser will return null if it didn't add the message to any buffer (e.g. a JOIN that
+        // was handled to adjust channel names list but isn't to be printed in the message box), but we
+        // still want to refresh the user's current message box view
+        currentBuffer = BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel];
+      }
+
+      if (currentBuffer && event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
         setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
         setChannelNames(currentBuffer.names);
         emit("nhex://servers_and_chans/selected", CUR_SELECTION);
