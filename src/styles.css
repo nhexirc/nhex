@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  overflow: hidden;
-}
-
 .ourName {
   color: #24c8db;
 }
@@ -14,34 +10,13 @@ body {
   font-weight: bold;
 }
 
-.message {
-  margin-left: 0.5em;
-}
 
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-
+  font-family: 'Courier New', Courier, monospace;
   color: #c0c0c0;
   background-color: #222222;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
 }
 
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
 
 .logo {
   height: 6em;
@@ -54,10 +29,6 @@ body {
   filter: drop-shadow(0 0 2em #24c8db);
 }
 
-.row {
-  display: flex;
-  justify-content: center;
-}
 
 a {
   font-weight: 500;
@@ -73,53 +44,6 @@ h1 {
   text-align: center;
 }
 
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #ffffff;
-  background-color: #555555;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-input::placeholder {
-  color: #ffffff
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
-
-input,
-button {
-  outline: none;
-}
-
-#main_menubar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #222222;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 1px solid white;
-}
-
 
 #main_menubar button {
   border: 0;
@@ -131,49 +55,4 @@ button {
   margin: 0.2em;
   padding: 0.5em;
   border-radius: 0.1em;
-}
-
-#message_cont {
-  height: 500px;
-  background-color: #555555;
-  padding: 0.6em;
-  border: 2px solid #0f0f0f;
-  border-radius: 0.2em;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  word-wrap: break-word;
-  text-align: left;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: small;
-}
-
-#user_input_cont {
-  height: 100px;
-}
-
-#user_input {
-  width: 95%;
-}
-
-#servers_and_chans {
-  padding: 0.5em;
-  text-align: left;
-}
-
-#servers_and_chans p {
-  text-align: right;
-  cursor: pointer;
-}
-
-#servers_and_chans h2,
-h3 {
-  cursor: pointer;
-}
-
-#channel_names {
-  text-align: left;
-  overflow-y: auto;
-  padding-left: 0.2em;
-  padding-right: 0.2em;
-  height: 600px;
 }

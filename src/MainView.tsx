@@ -2,11 +2,6 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import { parse } from 'irc-message';
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from './shadcn/Resizable';
 import MessageBox from './MessageBox';
 import {
   Buffer,
@@ -119,9 +114,9 @@ export default function MainView() {
   }
 
   return (
-    <div className="container" id="connectbox_container">
+    <div className="flex flex-col mx-auto max-w-4xl">
       <form
-        className="row"
+        className="flex gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           connect();
@@ -167,23 +162,11 @@ export default function MainView() {
         >Connect</button>
       </form>
 
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={15}>
-          <div>
-            <ServersAndChans servers={serversAndChans} />
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={70}>
-          <MessageBox lines={messageBoxLines} />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={15}>
-          <div>
-            <ChannelNames names={channelNames} />
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <div className="flex">
+        <ServersAndChans servers={serversAndChans} />
+        <MessageBox lines={messageBoxLines} />
+        <ChannelNames names={channelNames} />
+      </div>
     </div>
   );
 }
