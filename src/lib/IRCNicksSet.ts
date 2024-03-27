@@ -1,4 +1,4 @@
-const IRCNicksSetStatusChars = ['@', '+'];
+export const IRCNicksSetStatusChars = ['@', '+'];
 
 export default class IRCNicksSet extends Set {
     _internalNick(rawNick: string): string {
