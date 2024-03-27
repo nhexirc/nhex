@@ -32,18 +32,17 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #c0c0c0;
   text-decoration: inherit;
 }
 
 a:hover {
-  color: #535bf2;
+  color: #c0c0c0;
 }
 
 h1 {
   text-align: center;
 }
-
 
 #main_menubar button {
   border: 0;

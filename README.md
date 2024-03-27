@@ -6,6 +6,8 @@ A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
 **[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR!
 
+Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex).
+
 ## Pre-requisites
 
 * [Tauri pre-requisites](https://tauri.app/v1/guides/getting-started/prerequisites/) ([node.js](https://nodejs.org/en/download) & [rust](https://www.rust-lang.org/tools/install))
@@ -30,10 +32,6 @@ $ npm run tauri build
 ## Contributing
 
 Remember to [build **successfully**](#building) before commiting changes.
-
-### Discuss
-
-[#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex)
 
 ### Development Guidelines
 
