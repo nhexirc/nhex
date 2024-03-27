@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .ourName {
-  color: #24c8db;
+  font-style: italic;
 }
 
 .name {
