@@ -1,26 +1,18 @@
 # nhex
 
-A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/)
+A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
-![](./public/screenshots/2024-03-26_2.png)
+![](./public/screenshots/2024-03-26_3.png)
 
-## Status
-
-This is currently in proof-of-concept phase, striving toward minimum-viable-product. As of this writing the project is less than 48 hours old, so please excuse the mess.
-
-_Technically_ it's already at MVP in as much as it is _usable_ as a client, though _just barely_.
-
-**Contributors needed & wanted!** Apply... by submitting a PR!
-
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+**[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR!
 
 ## Pre-requisites
 
-* [node.js](https://nodejs.org/en/download)
-* [rust](https://www.rust-lang.org/tools/install)
-* [Tauri pre-requisites](https://tauri.app/v1/guides/getting-started/prerequisites/)
+* [Tauri pre-requisites](https://tauri.app/v1/guides/getting-started/prerequisites/) ([node.js](https://nodejs.org/en/download) & [rust](https://www.rust-lang.org/tools/install))
+
+#### Recommended IDE Setup
+
+- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
 ## Developing
 
@@ -53,9 +45,7 @@ Remember to [build **successfully**](#building) before commiting changes.
     * This contributes directly to the [long-term goal of extracting the UX into a web app!](https://github.com/nhexirc/client/issues/17)
 1. 7 is a theme in design for nhex: include as subtly as possible! (["Hexa"](https://en.wikipedia.org/wiki/Numeral_prefix#Table_of_number_prefixes_in_English) is a prefix for "six", plus one, hence 7.)
 
-### Contributors
-
-Not even two days old and already gaining contributors! Y'all rock ❤️
+## Contributors
 
 * [gnprwx](https://github.com/gnprwx)
 * [terrablue](https://github.com/terrablue)
@@ -64,4 +54,4 @@ Not even two days old and already gaining contributors! Y'all rock ❤️
 * systemfault (irc.libera.chat)
 * PantelicGR (irc.libera.chat)
 
-... and everyone else in ##programming & elsewhere who chimed in on naming or anything else!
+... and everyone else in ##programming & elsewhere who chimed in on naming or anything else! Y'all rock ❤️
