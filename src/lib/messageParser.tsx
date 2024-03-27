@@ -1,5 +1,6 @@
 import { Buffer, IRCMessageParsed, MessageParserReturn } from './types';
 import { nickFromPrefix } from './common';
+import IRCNicksSet from './IRCNicksSet';
 
 type MessageHandler = (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => Buffer;
 type MessageHandlers = Record<string, MessageHandler>;
@@ -10,13 +11,20 @@ function joinOrPartHandler(functorName: string, networkBuffers: Record<string, B
     return null; // return `buf` here to have joins & parts appear in the channel
 }
 
+const MODES_TO_HATS = {
+    "+o": "@",
+    "-o": "",
+    "+v": "+",
+    "-v": ""
+};
+
 const MESSAGE_HANDLERS: MessageHandlers = {
     privmsg: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
         if (!networkBuffers[parsed.params[0]]) {
             networkBuffers[parsed.params[0]] = {
                 name: parsed.params[0],
                 buffer: [],
-                names: new Set()
+                names: new IRCNicksSet()
             };
         }
 
@@ -24,6 +32,39 @@ const MESSAGE_HANDLERS: MessageHandlers = {
     },
     join: joinOrPartHandler.bind(null, 'add'),
     part: joinOrPartHandler.bind(null, 'delete'),
+
+    quit: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
+        const nick = nickFromPrefix(parsed.prefix);
+
+        Object.entries(networkBuffers).forEach(([channel, buffer]) => {
+            if (channel.length > 0) {
+                buffer.names.delete(nick);
+            }
+        });
+
+        return null;
+    },
+
+    nick: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
+        const oldNick = nickFromPrefix(parsed.prefix);
+        const newNick = parsed.params[0].replace('\r\n', '');
+
+        Object.entries(networkBuffers).forEach(([channel, buffer]) => {
+            if (buffer.names.has(oldNick)) {
+                const currentHat = buffer.names._getCurrentHat(oldNick);
+                buffer.names.delete(oldNick);
+                buffer.names.add(`${currentHat}${newNick}`);
+            }
+        });
+
+        return null;
+    },
+
+    mode: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
+        const [channel, newMode, nick] = parsed.params;
+        networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${nick.replace("\r\n", "")}`);
+        return null;
+    }
 };
 
 const NUMERIC_HANDLERS: MessageHandlers = {
@@ -33,12 +74,12 @@ const NUMERIC_HANDLERS: MessageHandlers = {
             networkBuffers[chanName] = {
                 name: chanName,
                 buffer: [],
-                names: new Set()
+                names: new IRCNicksSet()
             };
         }
 
         const buf = networkBuffers[chanName];
-        buf.names = new Set([
+        buf.names = new IRCNicksSet([
             ...buf.names,
             ...parsed.params[3].split(" ").map((s) => s.replace('\r\n', ''))
         ]);

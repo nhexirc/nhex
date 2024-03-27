@@ -1,3 +1,5 @@
+import IRCNicksSet from './IRCNicksSet';
+
 export interface IRCMessagePayload {
     message: string;
     server: string;
@@ -18,7 +20,7 @@ export interface IRCMessageParsed {
 export class Buffer {
     name: string;
     buffer: IRCMessageParsed[];
-    names: Set<string>;
+    names: IRCNicksSet;
 };
 
 export interface NetworkBuffer {
