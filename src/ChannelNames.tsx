@@ -1,3 +1,5 @@
+import nickColor from './lib/nickColor';
+
 interface Props {
   names: Set<string>;
 }
@@ -21,11 +23,16 @@ export default function ChannelNames(props: Props) {
         }, [[], [], []])
         .map((inner) => inner.sort())
         .flat()
-        .map((name) => (
-          <div id={`channel_name__${name.replace(/\W*/, '')}`}>
-            {name}
-          </div>
-        ))}
+        .map((name) => {
+          const color = nickColor(name);
+          return (
+            <div
+              id={`channel_name__${name.replace(/\W*/, '')}`}
+              style={{ color }}>
+              {name}
+            </div>
+          );
+        })}
     </div>
   );
 }
