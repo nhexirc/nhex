@@ -32,6 +32,24 @@ function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): Message
   }));
 }
 
+// try to complete nickname
+export const completeNickname = (prefix: string, skipFrom: string): string => {
+  const { server, channel } = CUR_SELECTION;
+  // for comparison
+  const lcPrefix = prefix.toLowerCase();
+  const names = [...BUFFERS[server].buffers[channel].names].sort();
+  // we want to cycle through completions
+  const sliceFrom = skipFrom.endsWith(":")
+    ? names.findIndex(name =>
+      name.toLowerCase() === skipFrom.toLowerCase().slice(0, -1)) + 1
+    : 0;
+  const relevantNames = names.slice(sliceFrom);
+  const found = relevantNames.find(name =>
+    name.toLowerCase().startsWith(lcPrefix));
+
+  return found ? `${found}: ` : prefix;
+}
+
 export default function MainView() {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
