@@ -5,6 +5,6 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar')],
 }
 
