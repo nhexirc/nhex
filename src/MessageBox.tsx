@@ -3,6 +3,7 @@ import { emit, listen } from '@tauri-apps/api/event';
 import { MessageBoxLines } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
+import { completeNickname } from "./MainView";
 
 interface Props {
   lines: MessageBoxLines;
@@ -10,11 +11,10 @@ interface Props {
 
 export default function MessageBox(props: Props) {
   const mbRef = useRef(null);
-
+  let prefix = "";
   listen("nhex://servers_and_chans/selected", () => {
     mbRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   });
-
   return (
     <div>
       <div className="min-w-[600px] h-[600px] overflow-y-auto border">
@@ -23,7 +23,6 @@ export default function MessageBox(props: Props) {
             if (message.command.toLowerCase() === "privmsg") {
               const nick = nickFromPrefix(message.prefix);
               const color = nickColor(nick);
-
               return (
                 <>
                   <div id={`mb_line_${i}`}>
@@ -49,8 +48,22 @@ export default function MessageBox(props: Props) {
           })}
         </div>
       </div>
-      <div>
+      <div id="user_input_cont">
         <input type="text" className="w-full bg-zinc-900 " onKeyDown={(e) => {
+          if (e.key === "Tab") {
+            const [first, ...rest] = e.currentTarget.value.split(" ");
+            if (prefix === "") {
+              prefix = first;
+            }
+            const completed = completeNickname(prefix, first);
+            e.currentTarget.value = [completed,
+              ...rest.filter(r => r !== "")].join(" ")
+            e.preventDefault();
+            // prevent reseting prefix, for cycling through
+            return;
+          }
+          // reset prefix
+          prefix = "";
           if (e.key === "Enter") {
             const userInput = e.currentTarget.value;
             e.currentTarget.value = "";
@@ -63,6 +76,7 @@ export default function MessageBox(props: Props) {
             }
 
             const args = uiSplit.slice((command === "privmsg") ? 0 : 1);
+            console.error("TEST", userInput, command, args)
             emit("nhex://user_input/raw", {
               raw: userInput,
               command,
