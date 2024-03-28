@@ -2,11 +2,6 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import { parse } from 'irc-message';
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from './shadcn/Resizable';
 import MessageBox from './MessageBox';
 import {
   Buffer,
@@ -21,6 +16,7 @@ import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
 import ChannelNames from './ChannelNames';
 import IRCNicksSet from './lib/IRCNicksSet';
+import { MAINVIEW_STYLE, SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE } from "./style";
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -54,7 +50,7 @@ export default function MainView() {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
-  const [tls, setTLS] = useState(false);
+  const [tls, setTLS] = useState(true);
   const [channels, setChannels] = useState("");
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
@@ -145,71 +141,68 @@ export default function MainView() {
   }
 
   return (
-    <div className="container" id="connectbox_container">
+    <div className={MAINVIEW_STYLE}>
       <form
-        className="row"
+        className={SERVER_FORM_STYLE}
         onSubmit={(e) => {
           e.preventDefault();
           connect();
         }}
       >
-        <input
-          id="nick-input"
-          onInput={(e) => setNick(e.currentTarget.value)}
-          placeholder="Nickname"
-        />
-        <input
-          id="server-input"
-          onInput={(e) => setServer(e.currentTarget.value)}
-          placeholder="Server"
-        />
-        <input
-          id="port-input"
-          onInput={(e) => {
-            const intVal = Number.parseInt(e.currentTarget.value);
-            if (!Number.isNaN(intVal) && Number.isInteger(intVal) && intVal < 65536) {
-              setPort(e.currentTarget.value);
-            }
-            else {
-              e.currentTarget.value = port;
-            }
-          }}
-          placeholder="Port"
-        />
-        <input
-          id="tls-input"
-          type="checkbox"
-          checked={tls}
-          onChange={(e) => setTLS(!tls)}
-        /> <label htmlFor="tls-input">Use TLS</label>
-        <input
-          id="channels"
-          onInput={(e) => setChannels(e.currentTarget.value)}
-          placeholder="Channels, space separated"
-        />
-        <button
-          type="submit"
-          onClick={(e) => (e.currentTarget.style.display = 'none')}
-        >Connect</button>
+        <div className={SERVER_FORM_BLOCK_STYLE}>
+          <input
+            id="nick-input"
+            className={SERVER_INPUT_STYLE}
+            onInput={(e) => setNick(e.currentTarget.value)}
+            placeholder="Nickname"
+          />
+          <input
+            id="server-input"
+            className={SERVER_INPUT_STYLE}
+            onInput={(e) => setServer(e.currentTarget.value)}
+            placeholder="Server"
+          />
+          <input
+            id="port-input"
+            className={SERVER_INPUT_STYLE}
+            onInput={(e) => {
+              const intVal = Number.parseInt(e.currentTarget.value);
+              if (!Number.isNaN(intVal) && Number.isInteger(intVal) && intVal < 65536) {
+                setPort(e.currentTarget.value);
+              }
+              else {
+                e.currentTarget.value = port;
+              }
+            }}
+            placeholder="Port"
+          />
+          <input
+            id="tls-input"
+            type="checkbox"
+            checked={tls}
+            onChange={(e) => setTLS(!tls)}
+          /> <label htmlFor="tls-input">TLS</label>
+        </div>
+        <div className={SERVER_FORM_BLOCK_STYLE}>
+          <input
+            id="channels"
+            className={SERVER_INPUT_STYLE}
+            onInput={(e) => setChannels(e.currentTarget.value)}
+            placeholder="#nhex ##programming"
+          />
+          <button
+            type="submit"
+            onClick={(e) => (e.currentTarget.textContent = 'Disconnect')} //needs wiring
+            className="border px-2 py-1"
+          >Connect</button>
+        </div>
       </form>
 
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={15}>
-          <div>
-            <ServersAndChans servers={serversAndChans} />
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={70}>
-          <MessageBox lines={messageBoxLines} />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={15}>
-          <div>
-            <ChannelNames names={channelNames} />
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <div className="flex">
+        <ServersAndChans servers={serversAndChans} />
+        <MessageBox lines={messageBoxLines} />
+        <ChannelNames names={channelNames} />
+      </div>
     </div>
   );
 }

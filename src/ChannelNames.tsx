@@ -1,38 +1,39 @@
 import nickColor from './lib/nickColor';
+import { USER_LIST_STYLE } from './style';
 
 interface Props {
-    names: Set<string>;
+  names: Set<string>;
 }
 
 export default function ChannelNames(props: Props) {
-    return (
-        <div id="channel_names">
-            {[...props.names]
-                .reduce((a, cur) => {
-                    const [ops, voiced, normies] = a;
-                    let target = normies;
+  return (
+    <div className={USER_LIST_STYLE}>
+      {[...props.names]
+        .reduce((a, cur) => {
+          const [ops, voiced, normies] = a;
+          let target = normies;
 
-                    if (cur.indexOf("@") === 0) {
-                        target = ops;
-                    } else if (cur.indexOf("+") === 0) {
-                        target = voiced;
-                    }
+          if (cur.indexOf("@") === 0) {
+            target = ops;
+          } else if (cur.indexOf("+") === 0) {
+            target = voiced;
+          }
 
-                    target.push(cur);
-                    return a;
-                }, [[], [], []])
-                .map((inner) => inner.sort())
-                .flat()
-                .map((name) => {
-                    const color = nickColor(name);
-                    return (
-                        <div
-                        id={`channel_name__${name.replace(/\W*/, '')}`}
-                        style={{color}}>
-                            {name}
-                        </div>
-                    );
-                })}
-        </div>
-    );
+          target.push(cur);
+          return a;
+        }, [[], [], []])
+        .map((inner) => inner.sort())
+        .flat()
+        .map((name) => {
+          const color = nickColor(name);
+          return (
+            <div
+              id={`channel_name__${name.replace(/\W*/, '')}`}
+              style={{ color }}>
+              {name}
+            </div>
+          );
+        })}
+    </div>
+  );
 }
