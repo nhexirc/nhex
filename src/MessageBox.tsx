@@ -77,7 +77,6 @@ export default function MessageBox(props: Props) {
             }
 
             const args = uiSplit.slice((command === "privmsg") ? 0 : 1);
-            console.error("TEST", userInput, command, args)
             emit("nhex://user_input/raw", {
               raw: userInput,
               command,
