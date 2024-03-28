@@ -4,7 +4,7 @@ import { MessageBoxLines } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
 import { completeNickname } from "./MainView";
-import { USERNAME_STYLE, USER_INPUT } from "./style";
+import { MESSAGE_BOX, USERNAME_STYLE, USER_INPUT } from "./style";
 
 interface Props {
   lines: MessageBoxLines;
@@ -18,7 +18,7 @@ export default function MessageBox(props: Props) {
   });
   return (
     <div>
-      <div className="min-w-[600px] h-[600px] overflow-y-auto border">
+      <div className={MESSAGE_BOX}>
         <div id="message_area" ref={mbRef}>
           {props.lines.map(({ message, isUs }, i) => {
             if (message.command.toLowerCase() === "privmsg") {
@@ -49,8 +49,8 @@ export default function MessageBox(props: Props) {
           })}
         </div>
       </div>
-      <div id="user_input_cont">
-        <input type="text" className={USER_INPUT} onKeyDown={(e) => {
+      <div>
+        <input type="text" className={USER_INPUT} placeholder=">" onKeyDown={(e) => {
           if (e.key === "Tab") {
             const [first, ...rest] = e.currentTarget.value.split(" ");
             if (prefix === "") {
