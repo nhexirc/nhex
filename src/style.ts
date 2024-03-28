@@ -1,5 +1,5 @@
 //APP
-export const ROOT_STYLE = "flex flex-col justify-center space-between bg-zinc-900 text-zinc-300 h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700 overflow-hidden"
+export const ROOT_STYLE = "flex flex-col justify-center space-between bg-zinc-900 text-zinc-300 h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
 
 //MENU
 export const MENU_STYLE = "flex gap-2 justify-center border-b mb-8 p-2"
