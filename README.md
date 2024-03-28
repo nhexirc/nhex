@@ -2,7 +2,7 @@
 
 A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
-![](./public/screenshots/2024-03-26_3.png)
+![](./public/screenshots/2024-03-28_1.png)
 
 **[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR!
 
