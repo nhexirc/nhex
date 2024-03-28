@@ -10,7 +10,7 @@ export const USERNAME_STYLE = "italic font-bold"
 export const MESSAGE_BOX = "w-[600px] h-[600px] overflow-y-auto px-2"
 
 //SERVERANDCHANS
-export const SERVER_CHAN_STYLE = 'border-x border-b px-2'
+export const SERVER_CHAN_STYLE = 'border-x border-b px-2 w-48'
 export const SERVER_CHAN_LIST_STYLE = "text-right"
 
 //MAINVIEW
