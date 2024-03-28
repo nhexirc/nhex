@@ -4,6 +4,7 @@ import { MessageBoxLines } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
 import { completeNickname } from "./MainView";
+import { USERNAME_STYLE, USER_INPUT } from "./style";
 
 interface Props {
   lines: MessageBoxLines;
@@ -27,7 +28,7 @@ export default function MessageBox(props: Props) {
                 <>
                   <div id={`mb_line_${i}`}>
                     &lt;<span
-                      className={`name ${isUs ? 'ourName' : ''}`}
+                      className={`${USERNAME_STYLE} ${isUs ? 'ourName' : ''}`}
                       style={{ color }}>
                       {nick}
                     </span>&gt;
@@ -49,7 +50,7 @@ export default function MessageBox(props: Props) {
         </div>
       </div>
       <div id="user_input_cont">
-        <input type="text" className="w-full bg-zinc-900 " onKeyDown={(e) => {
+        <input type="text" className={USER_INPUT} onKeyDown={(e) => {
           if (e.key === "Tab") {
             const [first, ...rest] = e.currentTarget.value.split(" ");
             if (prefix === "") {

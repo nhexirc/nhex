@@ -1,9 +1,10 @@
 import MainView from "./MainView";
 import Menu from "./Menu";
-import "./styles.css";
+import { ROOT_STYLE } from "./style";
+import "./index.css";
 function App() {
   return (
-    <div className="bg-zinc-900 text-zinc-300 border">
+    <div className={ROOT_STYLE}>
       <Menu />
       <MainView />
     </div>
