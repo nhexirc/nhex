@@ -7,6 +7,7 @@ export const MENU_STYLE = "flex gap-2 justify-center border-b mb-8 p-2"
 //MESSAGEBOX
 export const USER_INPUT = "w-full bg-zinc-900 border-b border-t p-1 focus:outline-none placeholder:font-bold placeholder-zinc-300"
 export const USERNAME_STYLE = "italic font-bold"
+export const USER_MESSAGE_STYLE = "pl-2"
 export const MESSAGE_BOX = "w-[600px] h-[600px] overflow-y-auto px-2"
 
 //SERVERANDCHANS

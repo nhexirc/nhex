@@ -4,7 +4,7 @@ import { MessageBoxLines } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
 import { completeNickname } from "./MainView";
-import { MESSAGE_BOX, USERNAME_STYLE, USER_INPUT } from "./style";
+import { MESSAGE_BOX, USERNAME_STYLE, USER_INPUT, USER_MESSAGE_STYLE } from "./style";
 
 interface Props {
   lines: MessageBoxLines;
@@ -32,7 +32,7 @@ export default function MessageBox(props: Props) {
                       style={{ color }}>
                       {nick}
                     </span>&gt;
-                    <span className={`message ${isUs ? 'ourMessage' : ''}`}>
+                    <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
                       {message.params.slice(1).join(" ")}
                     </span>
                   </div>
