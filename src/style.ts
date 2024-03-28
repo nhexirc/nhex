@@ -10,18 +10,14 @@ export const USERNAME_STYLE = "italic font-bold"
 export const USER_MESSAGE_STYLE = "pl-2"
 export const MESSAGE_BOX = "w-[600px] h-[600px] overflow-y-auto px-2"
 
-//SERVERANDCHANS
-export const SERVER_CHAN_STYLE = 'border-x border-b px-2 w-48'
-export const SERVER_CHAN_LIST_STYLE = "text-right"
-
 //MAINVIEW
 export const MAINVIEW_STYLE = "max-w-4xl mx-auto"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 border p-2"
 export const SERVER_FORM_BLOCK_STYLE = "flex gap-2"
-export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 border px-1 focus:outline-none"
+export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 border p-1 focus:outline-none"
 
-//CHANNELNAMES
-export const USER_LIST_STYLE = "w-48 border-b border-x px-2 overflow-x-auto"
+//CHANNELNAMES + SERVER WINDOW
+export const SERVER_CHAN_USER_PANEL_STYLE = "w-48 border-b border-x px-2 overflow-x-auto overflow-y-auto h-[634px]"
 
 //FOOTER
 export const FOOTER_STYLE = "text-center p-2 border-t mt-8"

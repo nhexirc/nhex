@@ -1,5 +1,5 @@
 import { emit } from '@tauri-apps/api/event';
-import { SERVER_CHAN_LIST_STYLE, SERVER_CHAN_STYLE } from './style';
+import { SERVER_CHAN_USER_PANEL_STYLE } from './style';
 
 export type SACServers = Record<string, string[]>;
 export interface SACProps {
@@ -22,10 +22,10 @@ function emitSelect(server: string, channel: string = "") {
 
 export default function ServersAndChans(props: SACProps) {
   return (
-    <div className={SERVER_CHAN_STYLE}>
+    <div className={`${SERVER_CHAN_USER_PANEL_STYLE} text-right`}>
       {Object.entries(props.servers).map(([serverName, chans]) => {
         return (
-          <button id={`server_${serverName}`} className={SERVER_CHAN_LIST_STYLE}>
+          <button id={`server_${serverName}`} className='text-right'>
             <h3 className='font-bold' onClick={(e) => emitSelect(serverName)}>{serverName}</h3>
             {chans.map((channel) => (
               <p id={`chan_${channel.replace("#", "_")}`} onClick={(e) => emitSelect(serverName, channel)}>

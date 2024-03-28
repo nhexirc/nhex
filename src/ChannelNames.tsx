@@ -1,5 +1,5 @@
 import nickColor from './lib/nickColor';
-import { USER_LIST_STYLE } from './style';
+import { SERVER_CHAN_USER_PANEL_STYLE } from './style';
 
 interface Props {
   names: Set<string>;
@@ -7,7 +7,7 @@ interface Props {
 
 export default function ChannelNames(props: Props) {
   return (
-    <div className={USER_LIST_STYLE}>
+    <div className={SERVER_CHAN_USER_PANEL_STYLE}>
       {[...props.names]
         .reduce((a, cur) => {
           const [ops, voiced, normies] = a;

@@ -155,6 +155,7 @@ export default function MainView() {
             className={SERVER_INPUT_STYLE}
             onInput={(e) => setNick(e.currentTarget.value)}
             placeholder="Nickname"
+            autoFocus
           />
           <input
             id="server-input"
