@@ -5,7 +5,7 @@ const Menu = () => {
   const items = ["nhex", "view", "server", "settings", "window", "help"]
   return (
     <div className={MENU_STYLE}>
-      {items.map((item) => <MenuItem>{item}</MenuItem>)}
+      {items.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
     </div>
   )
 }
