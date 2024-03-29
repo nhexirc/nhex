@@ -21,17 +21,20 @@ export default function MessageBox(props: Props) {
       <div className={MESSAGE_BOX}>
         <div id="message_area" ref={mbRef}>
           {props.lines.map(({ message, isUs }, i) => {
-            if (message.command.toLowerCase() === "privmsg") {
+            const command = message.command.toLowerCase();
+            if (["action", "privmsg"].includes(command)) {
               const nick = nickFromPrefix(message.prefix);
               const color = nickColor(nick);
+              const before = command === "privmsg" ? "<" : "* ";
+              const after = command === "privmsg" ? ">" : "";
               return (
                 <>
                   <div id={`mb_line_${i}`}>
-                    &lt;<span
+                    {before}<span
                       className={`${USERNAME_STYLE} ${isUs ? 'ourName' : ''}`}
                       style={{ color }}>
                       {nick}
-                    </span>&gt;
+                    </span>{after}
                     <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
                       {message.params.slice(1).join(" ")}
                     </span>

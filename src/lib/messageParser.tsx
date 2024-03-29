@@ -30,6 +30,14 @@ const MESSAGE_HANDLERS: MessageHandlers = {
             retBuf = networkBuffers[pmPartner];
         }
         else {
+            const [, message] = parsed.params;
+            const me = message.match(/\u0001ACTION (?<me>.*)\u0001/)?.groups.me;
+            // overwrite parsed
+            if (me !== undefined) {
+                parsed.command = "action";
+                parsed.params[1] = me;
+            }
+
             if (!networkBuffers[parsed.params[0]]) {
                 networkBuffers[parsed.params[0]] = new Buffer(parsed.params[0]);
             }
