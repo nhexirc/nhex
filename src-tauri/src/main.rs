@@ -64,6 +64,10 @@ async fn connect(
             let target = payload.args[0].clone();
             let private_msg = payload.args[1..].join(" ");
             cclient.send_privmsg(target, private_msg).expect("/msg");
+        } else if cmd_lc == "join" {
+            // can join multiple channels at once if given in the command:
+            // e.g. /join #one #two #three
+            cclient.send_join(payload.args.join(",")).expect("join");
         } else {
             println!(
                 "UNHANDLED USER INPUT! {:?} {:?}",
