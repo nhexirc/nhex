@@ -4,7 +4,11 @@ A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
 ![](./public/screenshots/nhex_preview.png)
 
-**[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR!
+Pronounced "_nex_" (the "_h_" is silent).
+
+We're still pre-1.0 but are striving very quickly towards it. That will be the first public release with pre-built installers for all OSes made available.
+
+**[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR! [The 1.0 milestone](https://github.com/nhexirc/client/milestone/1) is a great place to start looking for tasks with immediate impact.
 
 Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex).
 
@@ -45,11 +49,6 @@ Remember to [build **successfully**](#building) before commiting changes.
 
 ## Contributors
 
-* [gnprwx](https://github.com/gnprwx)
-* [terrablue](https://github.com/terrablue)
-* hmw[at] (irc.libera.chat)
-* InPhase (irc.libera.chat)
-* systemfault (irc.libera.chat)
-* PantelicGR (irc.libera.chat)
+In addition to our amazing team (which is growing fast!) the list of incredible folks who have contributed ideas, advice, suggestions, etc. on irc.libera.chat has already grown too numerous to easily keep track of here (and the project is less than a week old)!
 
-... and everyone else in ##programming & elsewhere who chimed in on naming or anything else! Y'all rock ❤️
+The response has been overwhelming, so a huge thanks to all of those who did contribute. Y'all rock! 🤘❤️
