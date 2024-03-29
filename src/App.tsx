@@ -3,7 +3,8 @@ import Menu from "./Menu";
 import { ROOT_STYLE } from "./style";
 import "./index.css";
 import Footer from "./Footer";
-function App() {
+
+const App = () => {
   return (
     <div className={ROOT_STYLE}>
       <Menu />

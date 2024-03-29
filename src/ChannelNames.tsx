@@ -5,7 +5,7 @@ interface Props {
   names: Set<string>;
 }
 
-export default function ChannelNames(props: Props) {
+const ChannelNames = (props: Props) => {
   return (
     <div className={`${SERVER_CHAN_USER_PANEL_STYLE} ${NAMES_PANEL_STYLE}`}>
       {[...props.names]
@@ -37,3 +37,5 @@ export default function ChannelNames(props: Props) {
     </div>
   );
 }
+
+export default ChannelNames

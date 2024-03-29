@@ -20,7 +20,7 @@ function emitSelect(server: string, channel: string = "") {
   emit("nhex://servers_and_chans/select", { server, channel })
 }
 
-export default function ServersAndChans(props: SACProps) {
+const ServersAndChans = (props: SACProps) => {
   return (
     <div className={`${SERVER_CHAN_USER_PANEL_STYLE} ${SERVER_PANEL_STYLE}`}>
       {Object.entries(props.servers).map(([serverName, chans]) => {
@@ -38,3 +38,5 @@ export default function ServersAndChans(props: SACProps) {
     </div>
   );
 }
+
+export default ServersAndChans
