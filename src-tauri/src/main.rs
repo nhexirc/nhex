@@ -3,6 +3,7 @@
 
 use futures::prelude::*;
 use irc::client::prelude::*;
+use irc::proto::Command;
 use serde::{Deserialize, Serialize};
 use tauri::{Manager, Window};
 
@@ -68,6 +69,13 @@ async fn connect(
             // can join multiple channels at once if given in the command:
             // e.g. /join #one #two #three
             cclient.send_join(payload.args.join(",")).expect("join");
+        } else if cmd_lc == "whois" {
+            cclient
+                .send(Command::WHOIS(
+                    Some("".to_string()),
+                    payload.args[0].to_string(),
+                ))
+                .expect("whois");
         } else {
             println!(
                 "UNHANDLED USER INPUT! {:?} {:?}",
