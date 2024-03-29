@@ -66,17 +66,13 @@ export default function MessageBox(props: Props) {
           // reset prefix
           prefix = "";
           if (e.key === "Enter") {
-            const userInput = e.currentTarget.value;
+            const userInput = e.currentTarget.value.trim();
             e.currentTarget.value = "";
 
             const uiSplit = userInput.split(" ");
-            let command = "privmsg";
+            const command = userInput.match(/^\s*\/(\w+)/)?.[1] ?? "";
 
-            if (userInput[0] === "/") {
-              command = uiSplit[0].slice(1);
-            }
-
-            const args = uiSplit.slice((command === "privmsg") ? 0 : 1);
+            const args = uiSplit.slice((command === "") ? 0 : 1);
             emit("nhex://user_input/raw", {
               raw: userInput,
               command,

@@ -1,16 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use irc::client::prelude::*;
 use futures::prelude::*;
-use tauri::{Manager, Window};
+use irc::client::prelude::*;
 use serde::{Deserialize, Serialize};
-//use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+use tauri::{Manager, Window};
 
 #[derive(Clone, serde::Serialize)]
 struct IRCMessage {
-  message: String,
-  server: String,
+    message: String,
+    server: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -21,7 +20,7 @@ struct UserInput {
     raw: String,
     command: String,
     args: Vec<String>,
-    argsStr: String, 
+    argsStr: String,
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -33,56 +32,63 @@ async fn connect(
     tls: bool,
     channels: Vec<String>,
     window: Window,
-    app_handle: tauri::AppHandle
+    app_handle: tauri::AppHandle,
 ) {
-    let server_clone = server.clone();
     let config = Config {
-        nickname: Some(nick),
-        server: Some(server),
+        nickname: Some(nick.clone()),
+        server: Some(server.clone()),
         port: Some(port),
         use_tls: Some(tls),
         channels: channels,
-        version: Some("nhex vFILLIN".to_owned()),
+        version: Some("https://nhex.dev".to_owned()),
         ..Config::default()
     };
 
     let client = Client::from_config(config).await;
-    let mut cclient =  client.expect("!");
+    let mut cclient = client.expect("!");
     cclient.identify().expect("ident");
 
     let stream = cclient.stream();
     let mut sstream = stream.expect("!!!!");
 
-    // DAMMIT just make all the handling happen in here to allow moving cclient into it?
-    app_handle.listen_global("nhex://user_input", move |event| {
-        let payload: UserInput = serde_json::from_str(event.payload().expect("input")).expect("json");
-        if payload.command.to_lowercase() == "privmsg" {
-            // TODO: multiple networks will need to honor payload.server here!!
-            cclient.send_privmsg(payload.channel, payload.argsStr).expect("send_privmsg");
-        }
-        else {
-            println!("UNHANDLED USER INPUT! {:?} {:?}", payload.command, payload.argsStr);
+    app_handle.listen_global("nhex://user_input/cooked", move |event| {
+        let payload: UserInput =
+            serde_json::from_str(event.payload().expect("input")).expect("json");
+        let cmd_lc = payload.command.to_lowercase();
+        // TODO: multiple networks (#33) will need to honor payload.server here!!
+        if cmd_lc == "" {
+            cclient
+                .send_privmsg(payload.channel, payload.argsStr)
+                .expect("send_privmsg");
+        } else if cmd_lc == "msg" {
+            let target = payload.args[0].clone();
+            let private_msg = payload.args[1..].join(" ");
+            cclient.send_privmsg(target, private_msg).expect("/msg");
+        } else {
+            println!(
+                "UNHANDLED USER INPUT! {:?} {:?}",
+                payload.command, payload.argsStr
+            );
         }
     });
 
+    let server_clone = server.clone();
     while let Ok(Some(message)) = sstream.next().await.transpose() {
         print!("<{}> {}", server_clone.clone(), message);
-        window.emit("nhex://irc_message", IRCMessage {
-            server: server_clone.clone(),
-            message: message.to_string(),
-        }).expect("emit");
+        window
+            .emit(
+                "nhex://irc_message",
+                IRCMessage {
+                    server: server_clone.clone(),
+                    message: message.to_string(),
+                },
+            )
+            .expect("emit");
     }
 }
 
 fn main() {
-    /* Honestly, i think i prefer the in-browser-view menubar if only because it matches the look-n-feel...
-    let hc_quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let hc_submenu = Submenu::new("nhex", Menu::new().add_item(hc_quit));
-    let main_menu = Menu::new().add_submenu(hc_submenu);
-     */
-
     tauri::Builder::default()
-        //.menu(main_menu)
         .invoke_handler(tauri::generate_handler![connect])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

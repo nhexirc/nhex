@@ -19,8 +19,12 @@ export interface IRCMessageParsed {
 
 export class Buffer {
     name: string;
-    buffer: IRCMessageParsed[];
-    names: IRCNicksSet;
+    buffer: IRCMessageParsed[] = [];
+    names: IRCNicksSet = new IRCNicksSet();
+
+    constructor(name: string) {
+        this.name = name;
+    }
 };
 
 export interface NetworkBuffer {

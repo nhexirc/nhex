@@ -56,6 +56,12 @@ export default function MainView() {
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
 
+  const refreshServersAndChans = () => {
+    setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
+      [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
+    ))));
+  }
+
   async function connect() {
     console.log('connect!', nick, server, port, channels);
     CUR_SELECTION.server = server;
@@ -85,7 +91,7 @@ export default function MainView() {
         return;
       }
 
-      let { currentBuffer } = messageParser(networkBuffers, parse(event.payload.message));
+      let { currentBuffer, parsed } = messageParser(networkBuffers, parse(event.payload.message));
 
       if (!currentBuffer) {
         // messageParser will return null if it didn't add the message to any buffer (e.g. a JOIN that
@@ -100,9 +106,7 @@ export default function MainView() {
         emit("nhex://servers_and_chans/selected", CUR_SELECTION);
       }
 
-      setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
-        [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
-      ))));
+      refreshServersAndChans();
     });
 
     await listen("nhex://servers_and_chans/select", (event: SACSelectEvent) => {
@@ -115,9 +119,9 @@ export default function MainView() {
     });
 
     await listen("nhex://user_input/raw", (event: MBUserInputEvent) => {
-      if (event.payload.command.toLowerCase() === "privmsg") {
+      if (event.payload.command === "") {
         BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel].buffer.push({
-          command: event.payload.command,
+          command: "PRIVMSG",
           params: [CUR_SELECTION.channel, ...event.payload.args],
           prefix: nick, ///TODO: this better
           raw: event.payload.raw,
@@ -126,8 +130,27 @@ export default function MainView() {
 
         emit("nhex://servers_and_chans/select", CUR_SELECTION);
       }
+      else if (event.payload.command === "msg") {
+        const pmPartnerNick = event.payload.args[0];
+        const messageParams = event.payload.args.slice(1);
 
-      emit("nhex://user_input", { ...CUR_SELECTION, ...event.payload });
+        let buf = BUFFERS[CUR_SELECTION.server].buffers[pmPartnerNick];
+        if (!buf) {
+          buf = BUFFERS[CUR_SELECTION.server].buffers[pmPartnerNick] = new Buffer(pmPartnerNick);
+        }
+
+        buf.buffer.push({
+          command: "PRIVMSG",
+          params: [pmPartnerNick, ...messageParams],
+          prefix: nick, ///TODO: this better
+          raw: messageParams.join(" "),
+          tags: {}
+        });
+
+        refreshServersAndChans();
+      }
+
+      emit("nhex://user_input/cooked", { ...CUR_SELECTION, ...event.payload });
     });
 
     invoke("connect", {

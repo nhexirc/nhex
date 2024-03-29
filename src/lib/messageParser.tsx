@@ -20,15 +20,24 @@ const MODES_TO_HATS = {
 
 const MESSAGE_HANDLERS: MessageHandlers = {
     privmsg: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
-        if (!networkBuffers[parsed.params[0]]) {
-            networkBuffers[parsed.params[0]] = {
-                name: parsed.params[0],
-                buffer: [],
-                names: new IRCNicksSet()
-            };
+        let retBuf;
+        if (parsed.prefix && networkBuffers[parsed.params[0]]?.name[0] !== "#" /* should check that this is US */) {
+            const pmPartner = nickFromPrefix(parsed.prefix);
+            if (!networkBuffers[pmPartner]) {
+                networkBuffers[pmPartner] = new Buffer(pmPartner);
+            }
+
+            retBuf = networkBuffers[pmPartner];
+        }
+        else {
+            if (!networkBuffers[parsed.params[0]]) {
+                networkBuffers[parsed.params[0]] = new Buffer(parsed.params[0]);
+            }
+
+            retBuf = networkBuffers[parsed.params[0]];
         }
 
-        return networkBuffers[parsed.params[0]];
+        return retBuf;
     },
     join: joinOrPartHandler.bind(null, 'add'),
     part: joinOrPartHandler.bind(null, 'delete'),
