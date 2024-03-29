@@ -10,7 +10,7 @@ interface Props {
   lines: MessageBoxLines;
 };
 
-export default function MessageBox(props: Props) {
+const MessageBox = (props: Props) => {
   const mbRef = useRef(null);
   let prefix = "";
   listen("nhex://servers_and_chans/selected", () => {
@@ -53,7 +53,7 @@ export default function MessageBox(props: Props) {
         </div>
       </div>
       <div>
-        <input type="text" className={USER_INPUT} placeholder=">" onKeyDown={(e) => {
+        <input type="text" className={USER_INPUT} onKeyDown={(e) => {
           if (e.key === "Tab") {
             const [first, ...rest] = e.currentTarget.value.split(" ");
             if (prefix === "") {
@@ -88,3 +88,5 @@ export default function MessageBox(props: Props) {
     </div>
   );
 }
+
+export default MessageBox

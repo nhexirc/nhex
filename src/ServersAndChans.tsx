@@ -1,5 +1,5 @@
 import { emit } from '@tauri-apps/api/event';
-import { SERVER_CHAN_USER_PANEL_STYLE } from './style';
+import { SERVER_CHAN_USER_PANEL_STYLE, SERVER_PANEL_STYLE } from './style';
 
 export type SACServers = Record<string, string[]>;
 export interface SACProps {
@@ -20,9 +20,9 @@ function emitSelect(server: string, channel: string = "") {
   emit("nhex://servers_and_chans/select", { server, channel })
 }
 
-export default function ServersAndChans(props: SACProps) {
+const ServersAndChans = (props: SACProps) => {
   return (
-    <div className={`${SERVER_CHAN_USER_PANEL_STYLE} text-right`}>
+    <div className={`${SERVER_CHAN_USER_PANEL_STYLE} ${SERVER_PANEL_STYLE}`}>
       {Object.entries(props.servers).map(([serverName, chans]) => {
         return (
           <button id={`server_${serverName}`} className='text-right'>
@@ -38,3 +38,5 @@ export default function ServersAndChans(props: SACProps) {
     </div>
   );
 }
+
+export default ServersAndChans

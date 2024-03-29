@@ -2,7 +2,6 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import { parse } from 'irc-message';
-import MessageBox from './MessageBox';
 import {
   Buffer,
   NetworkBuffer,
@@ -11,22 +10,16 @@ import {
   MBUserInputEvent,
   MessageBoxLines
 } from './lib/types';
-import ServersAndChans from './ServersAndChans';
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
-import ChannelNames from './ChannelNames';
 import IRCNicksSet from './lib/IRCNicksSet';
-import { MAINVIEW_STYLE, SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE } from "./style";
+import { MAINVIEW_STYLE } from "./style";
+import IRC from "./IRC";
+import Connect from "./Connect";
+
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
-
-function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
-  return buffer.buffer.map((parsed: IRCMessageParsed) => ({
-    message: parsed,
-    isUs: currentNick === parsed.prefix,
-  }));
-}
 
 // try to complete nickname
 export const completeNickname = (prefix: string, skipFrom: string): string => {
@@ -46,7 +39,7 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
   return found ? `${found}: ` : prefix;
 }
 
-export default function MainView() {
+const MainView = () => {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
@@ -55,6 +48,14 @@ export default function MainView() {
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
+
+
+  function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
+    return buffer.buffer.map((parsed: IRCMessageParsed) => ({
+      message: parsed,
+      isUs: currentNick === parsed.prefix,
+    }));
+  }
 
   const refreshServersAndChans = () => {
     setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
@@ -163,70 +164,14 @@ export default function MainView() {
     });
   }
 
+  // Connect will be conditionally rendering IRC, so they will never exist at the same time
+
   return (
     <div className={MAINVIEW_STYLE}>
-      <form
-        className={SERVER_FORM_STYLE}
-        onSubmit={(e) => {
-          e.preventDefault();
-          connect();
-        }}
-      >
-        <div className={SERVER_FORM_BLOCK_STYLE}>
-          <input
-            id="nick-input"
-            className={SERVER_INPUT_STYLE}
-            onInput={(e) => setNick(e.currentTarget.value)}
-            placeholder="Nickname"
-            autoFocus
-          />
-          <input
-            id="server-input"
-            className={SERVER_INPUT_STYLE}
-            onInput={(e) => setServer(e.currentTarget.value)}
-            placeholder="Server"
-          />
-          <input
-            id="port-input"
-            className={SERVER_INPUT_STYLE}
-            onInput={(e) => {
-              const intVal = Number.parseInt(e.currentTarget.value);
-              if (!Number.isNaN(intVal) && Number.isInteger(intVal) && intVal < 65536) {
-                setPort(e.currentTarget.value);
-              }
-              else {
-                e.currentTarget.value = port;
-              }
-            }}
-            placeholder="Port"
-          />
-          <input
-            id="tls-input"
-            type="checkbox"
-            checked={tls}
-            onChange={(e) => setTLS(!tls)}
-          /> <label htmlFor="tls-input">TLS</label>
-        </div>
-        <div className={SERVER_FORM_BLOCK_STYLE}>
-          <input
-            id="channels"
-            className={SERVER_INPUT_STYLE}
-            onInput={(e) => setChannels(e.currentTarget.value)}
-            placeholder="#nhex ##programming"
-          />
-          <button
-            type="submit"
-            onClick={(e) => (e.currentTarget.textContent = 'Disconnect')} //needs wiring
-            className="border px-2 py-1"
-          >Connect</button>
-        </div>
-      </form>
-
-      <div className="flex">
-        <ServersAndChans servers={serversAndChans} />
-        <MessageBox lines={messageBoxLines} />
-        <ChannelNames names={channelNames} />
-      </div>
+      <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} setTLS={setTLS} tls={tls} setChannels={setChannels} connectFunction={connect} />
+      <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
     </div>
   );
 }
+
+export default MainView
