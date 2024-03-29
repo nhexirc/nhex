@@ -17,15 +17,9 @@ import { MAINVIEW_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 
+
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
-
-function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
-  return buffer.buffer.map((parsed: IRCMessageParsed) => ({
-    message: parsed,
-    isUs: currentNick === parsed.prefix,
-  }));
-}
 
 // try to complete nickname
 export const completeNickname = (prefix: string, skipFrom: string): string => {
@@ -54,6 +48,14 @@ const MainView = () => {
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
+
+
+  function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
+    return buffer.buffer.map((parsed: IRCMessageParsed) => ({
+      message: parsed,
+      isUs: currentNick === parsed.prefix,
+    }));
+  }
 
   const refreshServersAndChans = () => {
     setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
@@ -162,7 +164,9 @@ const MainView = () => {
     });
   }
 
-  return ( // Connect will be conditionally rendering IRC, so they will never exist at the same time
+  // Connect will be conditionally rendering IRC, so they will never exist at the same time
+
+  return (
     <div className={MAINVIEW_STYLE}>
       <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} setTLS={setTLS} tls={tls} setChannels={setChannels} connectFunction={connect} />
       <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
