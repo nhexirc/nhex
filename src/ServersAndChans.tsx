@@ -27,7 +27,7 @@ const ServersAndChans = (props: SACProps) => {
         return (
           <button id={`server_${serverName}`} className='text-right'>
             <h3 className='font-bold' onClick={(e) => emitSelect(serverName)}>{serverName}</h3>
-            {chans.map((channel) => (
+            {chans.sort().map((channel) => (
               <p id={`chan_${channel.replace("#", "_")}`} onClick={(e) => emitSelect(serverName, channel)}>
                 {channel}
               </p>
