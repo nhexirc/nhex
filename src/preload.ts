@@ -13,9 +13,11 @@
  */
 export default async () => {
     // to avoid vite complaining about a missing preload.json file
+    const name = "./preload";
+    const ext = ".json";
     try {
        /* @vite-ignore */
-       return (await import("./preload.json")).default;
+       return (await import(name + ext)).default;
     } catch (_) {
        // do nothing both on import and JSON.parse errors
        return {};
