@@ -11,7 +11,15 @@ Pronounced "_nex_" (the "_h_" is silent).
 
 Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex).
 
-## Pre-requisites
+# Download
+
+See the latest [Release](https://github.com/nhexirc/nhex/releases) to download installers for Debian-based Linux distros, Windows & Mac OS.
+
+Until version 1.0, only prereleases are available.
+
+# Developing
+
+## Prerequisites
 
 * [Tauri pre-requisites](https://tauri.app/v1/guides/getting-started/prerequisites/) ([node.js](https://nodejs.org/en/download) & [rust](https://www.rust-lang.org/tools/install))
 
@@ -19,14 +27,14 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
-# Developing
-
 ```shell
 $ npm install
 $ npm run tauri dev
 ```
 
 ## Building
+
+[![Build Check](https://github.com/nhexirc/nhex/actions/workflows/build_check.yml/badge.svg)](https://github.com/nhexirc/nhex/actions/workflows/build_check.yml)
 
 ### Locally
 
