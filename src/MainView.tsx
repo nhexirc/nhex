@@ -178,11 +178,11 @@ const MainView = () => {
           <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} handleTLS={handleTLS} tls={tls} setChannels={setChannels} connect={connect} />
         </div>
         :
-        <>
-          <div className={IRC_STYLE}>
-            <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
-          </div>
-        </>
+
+        <div className={IRC_STYLE}>
+          <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
+        </div>
+
       }
     </>
   );
