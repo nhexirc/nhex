@@ -24,6 +24,10 @@ struct UserInput {
     argsStr: String,
 }
 
+fn deserde(payload: &str) -> UserInput {
+    return serde_json::from_str(payload).expect("json");
+}
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 async fn connect(
@@ -52,36 +56,39 @@ async fn connect(
     let stream = cclient.stream();
     let mut sstream = stream.expect("!!!!");
 
-    app_handle.listen_global("nhex://user_input/cooked", move |event| {
-        let payload: UserInput =
-            serde_json::from_str(event.payload().expect("input")).expect("json");
-        let cmd_lc = payload.command.to_lowercase();
-        // TODO: multiple networks (#33) will need to honor payload.server here!!
-        if cmd_lc == "" {
-            cclient
-                .send_privmsg(payload.channel, payload.argsStr)
-                .expect("send_privmsg");
-        } else if cmd_lc == "msg" {
-            let target = payload.args[0].clone();
-            let private_msg = payload.args[1..].join(" ");
-            cclient.send_privmsg(target, private_msg).expect("/msg");
-        } else if cmd_lc == "join" {
-            // can join multiple channels at once if given in the command:
-            // e.g. /join #one #two #three
-            cclient.send_join(payload.args.join(",")).expect("join");
-        } else if cmd_lc == "whois" {
-            cclient
-                .send(Command::WHOIS(
-                    Some("".to_string()),
-                    payload.args[0].to_string(),
-                ))
-                .expect("whois");
-        } else {
-            println!(
-                "UNHANDLED USER INPUT! {:?} {:?}",
-                payload.command, payload.argsStr
-            );
-        }
+    let privmsg_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/privmsg", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("input"));
+        privmsg_sender
+            .send_privmsg(payload.channel, "test")
+            .expect("send_privmsg");
+    });
+
+    let join_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/join", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("join"));
+        // can join multiple channels at once if given in the command:
+        // e.g. /join #one #two #three
+        join_sender.send_join(payload.args.join(",")).expect("join");
+    });
+
+    let msg_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/msg", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("join"));
+        // can join multiple channels at once if given in the command:
+        // e.g. /join #one #two #three
+        let target = payload.args[0].clone();
+        let private_msg = payload.args[1..].join(" ");
+        msg_sender.send_privmsg(target, private_msg).expect("/msg");
+    });
+
+    let whois_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/whois", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("join"));
+        whois_sender.send(Command::WHOIS(
+            Some("".to_string()),
+            payload.args[0].to_string(),
+        )).expect("whois");
     });
 
     let server_clone = server.clone();
