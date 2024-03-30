@@ -2,7 +2,7 @@
 
 A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
-![](./public/screenshots/nhex_preview_login.png)
+![](./public/screenshots/nhex_connect.png)
 ![](./public/screenshots/nhex_preview.png)
 
 Pronounced "_nex_" (the "_h_" is silent).
