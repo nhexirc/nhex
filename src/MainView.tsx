@@ -155,8 +155,19 @@ const MainView = () => {
             refreshServersAndChans();
             return "msg";
         },
-        join(event: MBUserInputEvent) {
+        // alias to `join`
+        j(event: MBUserInputEvent) {
+            return this.join(event);
+        },
+        join() {
             return "join";
+        },
+        // alias to `part`
+        p(event: MBUserInputEvent) {
+            return this.part(event);
+        },
+        part() {
+            return "part";
         },
         whois(event: MBUserInputEvent) {
             return "whois";

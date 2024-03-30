@@ -72,6 +72,12 @@ async fn connect(
         join_sender.send_join(payload.args.join(",")).expect("join");
     });
 
+    let part_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/part", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("join"));
+        part_sender.send_part(payload.channel).expect("part");
+    });
+
     let msg_sender = cclient.sender();
     app_handle.listen_global("nhex://user_input/msg", move |event| {
         let payload: UserInput = deserde(event.payload().expect("join"));
