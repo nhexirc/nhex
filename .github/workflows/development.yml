@@ -5,7 +5,7 @@ on:
     branches:
       - 'build-this-branch/*'
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, edited]
 
 jobs:
   publish-tauri:
