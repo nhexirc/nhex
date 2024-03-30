@@ -1,7 +1,7 @@
 [package]
 name = "nhex"
 version = "0.0.0"
-description = "A Tauri App"
+description = "nhex"
 authors = ["you"]
 edition = "2021"
 

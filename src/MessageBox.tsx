@@ -16,17 +16,38 @@ const MessageBox = (props: Props) => {
   listen("nhex://servers_and_chans/selected", () => {
     mbRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   });
+  const commands = {
+    action(message: { params: [] }) {
+        return ["*", message.params.slice(1).join(" "), ""];
+    },
+    privmsg(message: { params: [] }) {
+        return ["<", message.params.slice(1).join(" "), ">"];
+    },
+    join(message: { params: string[] }) {
+        return ["", `has joined ${message.params[1]}`, ""]
+    },
+    part(message: { params: string[] }) {
+        return ["", `has left ${message.params[1]}`, ""]
+    },
+  };
+  // dont show our own join/part messages etc.
+  const nonReflected = ["join", "part"];
+
   return (
     <div>
       <div className={MESSAGE_BOX}>
         <div id="message_area" ref={mbRef}>
-          {props.lines.map(({ message, isUs }, i) => {
+          {props.lines
+            .filter(({ message, isUs }) => {
+                const command = message.command.toLowerCase();
+                return !isUs || !nonReflected.includes(command);
+            })
+            .map(({ message, isUs }, i) => {
             const command = message.command.toLowerCase();
-            if (["action", "privmsg"].includes(command)) {
+            if (Object.keys(commands).includes(command)) {
               const nick = nickFromPrefix(message.prefix);
               const color = nickColor(nick);
-              const before = command === "privmsg" ? "<" : "* ";
-              const after = command === "privmsg" ? ">" : "";
+              const [before, $message, after] = commands[command](message);
               return (
                 <>
                   <div id={`mb_line_${i}`}>
@@ -36,7 +57,7 @@ const MessageBox = (props: Props) => {
                       {nick}
                     </span>{after}
                     <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
-                      {message.params.slice(1).join(" ")}
+                      {$message}
                     </span>
                   </div>
                 </>

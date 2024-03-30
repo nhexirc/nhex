@@ -1,7 +1,7 @@
 const MenuItem = ({ children }) => {
   return (
     <button>
-      <a href="#" className="px-2 py-1">{children}</a>
+      <a href="#">{children}</a>
     </button>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import { parse } from 'irc-message';
@@ -16,7 +16,7 @@ import IRCNicksSet from './lib/IRCNicksSet';
 import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
-
+import preload from "./preload";
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -49,12 +49,27 @@ const MainView = () => {
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
+  useEffect(() => {
+    preload().then((preloaded: {
+      nick?: string,
+      server?: string,
+      port?: number,
+      channels?: string,
+      tls?: boolean
+    }) => {
+      preloaded.nick && setNick(preloaded.nick);
+      preloaded.server && setServer(preloaded.server);
+      preloaded.port && setPort(`${preloaded.port}`);
+      preloaded.channels && setChannels(preloaded.channels);
+      preloaded.tls !== undefined && setTLS(preloaded.tls);
+    })
+  }, []);
 
 
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
     return buffer.buffer.map((parsed: IRCMessageParsed) => ({
       message: parsed,
-      isUs: currentNick === parsed.prefix,
+      isUs: currentNick === parsed.prefix || parsed.prefix.startsWith(currentNick),
     }));
   }
 
@@ -122,8 +137,8 @@ const MainView = () => {
       emit("nhex://servers_and_chans/selected", CUR_SELECTION);
     });
 
-    await listen("nhex://user_input/raw", (event: MBUserInputEvent) => {
-      if (event.payload.command === "") {
+    const handlers = {
+      privmsg(event: MBUserInputEvent) {
         BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel].buffer.push({
           command: "PRIVMSG",
           params: [CUR_SELECTION.channel, ...event.payload.args],
@@ -133,8 +148,9 @@ const MainView = () => {
         });
 
         emit("nhex://servers_and_chans/select", CUR_SELECTION);
-      }
-      else if (event.payload.command === "msg") {
+        return "privmsg";
+      },
+      msg(event: MBUserInputEvent) {
         const pmPartnerNick = event.payload.args[0];
         const messageParams = event.payload.args.slice(1);
 
@@ -152,9 +168,40 @@ const MainView = () => {
         });
 
         refreshServersAndChans();
+        return "msg";
+      },
+      // alias to `join`
+      j(event: MBUserInputEvent) {
+        return this.join(event);
+      },
+      join() {
+        return "join";
+      },
+      // alias to `part`
+      p(event: MBUserInputEvent) {
+        return this.part(event);
+      },
+      part() {
+        return "part";
+      },
+      whois(event: MBUserInputEvent) {
+        return "whois";
       }
+    };
+    const implementedHandlers = Object.keys(handlers);
 
-      emit("nhex://user_input/cooked", { ...CUR_SELECTION, ...event.payload });
+    listen("nhex://user_input/raw", (event: MBUserInputEvent) => {
+      const command = event.payload.command.toLowerCase();
+      const nrmCommand = command === "" ? "privmsg" : command;
+      if (implementedHandlers.includes(nrmCommand)) {
+        // this handles any special logic, could be a noop, and returns the name
+        // of the rust event to be called
+        const eventName = handlers[nrmCommand](event);
+        // inform rust
+        emit(`nhex://user_input/${eventName}`, { ...CUR_SELECTION, ...event.payload });
+      } else {
+        console.warn(`command ${nrmCommand} not supported`);
+      }
     });
 
     invoke("connect", {
@@ -175,14 +222,25 @@ const MainView = () => {
     <>
       {!isConnected ?
         <div className={CONNECT_STYLE} >
-          <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} handleTLS={handleTLS} tls={tls} setChannels={setChannels} connect={connect} />
+          <Connect
+            nick={nick}
+            setNick={setNick}
+            server={server}
+            setServer={setServer}
+            port={port}
+            setPort={setPort}
+            channels={channels}
+            setChannels={setChannels}
+            handleTLS={handleTLS}
+            tls={tls}
+            connect={connect} />
         </div>
         :
-
-        <div className={IRC_STYLE}>
-          <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
-        </div>
-
+        <>
+          <div className={IRC_STYLE}>
+            <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
+          </div>
+        </>
       }
     </>
   );
