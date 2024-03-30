@@ -1,11 +1,9 @@
-name: 'Publish Tagged Release'
+name: 'Publish Release'
 
 on:
   push:
     tags:
       - 'v*'
-    branches:
-      - 'build-me/*'
 
 jobs:
   publish-tauri:

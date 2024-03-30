@@ -21,7 +21,7 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
-## Developing
+# Developing
 
 ```shell
 $ npm install
@@ -30,13 +30,22 @@ $ npm run tauri dev
 
 ## Building
 
+### Locally
+
 ```shell
 $ npm run tauri build
 ```
 
-## Contributing
+### In CI/CD
 
-Remember to [build **successfully**](#building) before commiting changes.
+
+You can manually trigger builds by appending `build-this-branch/` to any branch name.
+
+All Pull Requests will automatically trigger the development pipeline.
+
+The development pipeline will create a draft pre[release](https://github.com/nhexirc/nhex/releases) with your assets attached.
+
+## Contributing
 
 ### Development Guidelines
 
@@ -47,6 +56,12 @@ Remember to [build **successfully**](#building) before commiting changes.
     * \* It nearly _always_ will be: this is an IRC client, not a 120 FPS video game.
     * This contributes directly to the [long-term goal of extracting the UX into a web app!](https://github.com/nhexirc/client/issues/17)
 1. 7 is a theme in design for nhex: include as subtly as possible! (["Hexa"](https://en.wikipedia.org/wiki/Numeral_prefix#Table_of_number_prefixes_in_English) is a prefix for "six", plus one, hence 7.)
+
+### Creating a release
+
+Tags beginning with `v` will automatically trigger the release pipeline.
+
+The resulting [release](https://github.com/nhexirc/nhex/releases) will be a draft, not yet visible to the public, until you publish it.
 
 ## Contributors
 

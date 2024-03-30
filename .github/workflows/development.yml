@@ -41,8 +41,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseName: "nhex Development $GITHUB_REF_NAME"
+          releaseName: "nhex Development $GITHUB_REF_NAME __VERSION__"
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
-          prerelease: true
-          includeDebug: true
+          prerelease: false
