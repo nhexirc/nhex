@@ -7,8 +7,6 @@ A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
 Pronounced "_nex_" (the "_h_" is silent).
 
-We're still pre-1.0 but are striving very quickly towards it. That will be the first public release with pre-built installers for all OSes made available.
-
 **[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR! [The 1.0 milestone](https://github.com/nhexirc/client/milestone/1) is a great place to start looking for tasks with immediate impact.
 
 Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex).
@@ -60,7 +58,7 @@ The development pipeline will create a draft pre[release](https://github.com/nhe
 
 Bump the version number in a separate commit. It must be changed in three places: [package.json](https://github.com/nhexirc/nhex/blob/f74ff9810af2007162e98e7cd84f2f6347662407/package.json#L4), [src-tauri/Cargo.toml](https://github.com/nhexirc/nhex/blob/f74ff9810af2007162e98e7cd84f2f6347662407/src-tauri/Cargo.toml#L3) and [src-tauri/tauri.conf.json](https://github.com/nhexirc/nhex/blob/f74ff9810af2007162e98e7cd84f2f6347662407/src-tauri/tauri.conf.json#L10)
  
-Tags beginning with `v` will automatically trigger the release pipeline: tag the version-bump commit accordingly & push. Check the 
+Tags beginning with `v` will automatically trigger the release pipeline: tag the version-bump commit accordingly & push.
 
 The resulting [release](https://github.com/nhexirc/nhex/releases) will be a draft, not yet visible to the public, until you publish it.
 
