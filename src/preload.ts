@@ -11,20 +11,13 @@
  *
  *  You don't have to specify all values.
  */
-let preloadedConfig: {
-    server?: string,
-    port?: number,
-    nick?: string,
-    channels?: string,
+export default async () => {
+    // to avoid vite complaining about a missing preload.json file
+    try {
+       /* @vite-ignore */
+       return (await import("./preload.json")).default;
+    } catch (_) {
+       // do nothing both on import and JSON.parse errors
+       return {};
+    }
 };
-// to avoid vite complaining about a missing preload.json file
-try {
-   /* @vite-ignore */
-   preloadedConfig = (await import("./preload.json")).default;
-} catch (_) {
-   // do nothing both on import and JSON.parse errors
-   preloadedConfig = {};
-}
-
-
-export default preloadedConfig;

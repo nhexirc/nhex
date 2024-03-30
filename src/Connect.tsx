@@ -1,7 +1,17 @@
 import { SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
-import preload from "./preload";
 
-const Connect = ({ setNick, setServer, setPort, port, handleTLS, tls, setChannels, connect }) => {
+const Connect = ({
+    nick,
+    setNick,
+    server,
+    setServer,
+    port,
+    setPort,
+    channels,
+    setChannels,
+    handleTLS,
+    tls,
+    connect }) => {
   //TLS is a div and not a button due to it stealing enter from connect button. It has to do with form rules. As a side-effect and a bonus, the tls handler does not need preventDefault. Just pretend it's a button ok!?!
   return (
     <>
@@ -13,14 +23,14 @@ const Connect = ({ setNick, setServer, setPort, port, handleTLS, tls, setChannel
       >
         <div className={SERVER_FORM_BLOCK_STYLE}>
           <input
-            defaultValue={preload.server}
+            value={server}
             className={SERVER_INPUT_STYLE}
             onInput={(e) => setServer(e.currentTarget.value)}
             placeholder="Server"
             autoFocus
           />
           <input
-            defaultValue={preload.port}
+            value={port}
             className={SERVER_INPUT_STYLE}
             onInput={(e) => {
               const intVal = Number.parseInt(e.currentTarget.value);
@@ -36,14 +46,14 @@ const Connect = ({ setNick, setServer, setPort, port, handleTLS, tls, setChannel
         </div>
         <div className={SERVER_FORM_BLOCK_STYLE}>
           <input
-            defaultValue={preload.nick}
+            value={nick}
             className={SERVER_INPUT_STYLE}
             onInput={(e) => setNick(e.currentTarget.value)}
             placeholder="Nickname"
 
           />
           <input
-            defaultValue={preload.channels}
+            value={channels}
             id="channels"
             className={SERVER_INPUT_STYLE}
             onInput={(e) => setChannels(e.currentTarget.value)}

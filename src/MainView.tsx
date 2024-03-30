@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import { parse } from 'irc-message';
@@ -17,7 +17,6 @@ import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 import preload from "./preload";
-
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -41,15 +40,29 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
 }
 
 const MainView = () => {
-  const [nick, setNick] = useState(preload.nick ?? "");
-  const [server, setServer] = useState(preload.server ?? "");
-  const [port, setPort] = useState(preload.port ?? "");
+  const [nick, setNick] = useState("");
+  const [server, setServer] = useState("");
+  const [port, setPort] = useState("");
   const [tls, setTLS] = useState(true);
-  const [channels, setChannels] = useState(preload.channels ?? "");
+  const [channels, setChannels] = useState("");
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    preload().then((preloaded: {
+        nick?: string,
+        server?: string,
+        port?: number,
+        channels?: string,
+    }) => {
+        preloaded.nick && setNick(preloaded.nick);
+        preloaded.server && setServer(preloaded.server);
+        preloaded.port && setPort(`${preloaded.port}`);
+        preloaded.channels && setChannels(preloaded.channels);
+    })
+  }, []);
 
 
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
@@ -208,7 +221,18 @@ const MainView = () => {
     <>
       {!isConnected ?
         <div className={CONNECT_STYLE} >
-          <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} handleTLS={handleTLS} tls={tls} setChannels={setChannels} connect={connect} />
+          <Connect
+            nick={nick}
+            setNick={setNick}
+            server={server}
+            setServer={setServer}
+            port={port}
+            setPort={setPort}
+            channels={channels}
+            setChannels={setChannels}
+            handleTLS={handleTLS}
+            tls={tls}
+            connect={connect} />
         </div>
         :
         <>
