@@ -16,6 +16,7 @@ import IRCNicksSet from './lib/IRCNicksSet';
 import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
+import preload from "./preload";
 
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
@@ -40,11 +41,11 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
 }
 
 const MainView = () => {
-  const [nick, setNick] = useState("");
-  const [server, setServer] = useState("");
-  const [port, setPort] = useState("");
+  const [nick, setNick] = useState(preload.nick ?? "");
+  const [server, setServer] = useState(preload.server ?? "");
+  const [port, setPort] = useState(preload.port ?? "");
   const [tls, setTLS] = useState(true);
-  const [channels, setChannels] = useState("");
+  const [channels, setChannels] = useState(preload.channels ?? "");
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
