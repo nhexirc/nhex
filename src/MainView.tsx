@@ -13,7 +13,7 @@ import {
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
 import IRCNicksSet from './lib/IRCNicksSet';
-import { MAINVIEW_STYLE } from "./style";
+import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 
@@ -48,6 +48,7 @@ const MainView = () => {
   const [messageBoxLines, setMessageBoxLines] = useState<MessageBoxLines>([]);
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
+  const [isConnected, setIsConnected] = useState(false);
 
 
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
@@ -63,7 +64,9 @@ const MainView = () => {
     ))));
   }
 
-  async function connect() {
+  async function connect(e: any) {
+    e.preventDefault();
+    setIsConnected(true)
     console.log('connect!', nick, server, port, channels);
     CUR_SELECTION.server = server;
 
@@ -163,14 +166,25 @@ const MainView = () => {
       channels: channels.split(" ")
     });
   }
+  const handleTLS = () => {
+    setTLS(!tls);
+  }
 
-  // Connect will be conditionally rendering IRC, so they will never exist at the same time
-
+  // will need a disconnect function above with the bool state variable to bring us back to login after disconnecting
   return (
-    <div className={MAINVIEW_STYLE}>
-      <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} setTLS={setTLS} tls={tls} setChannels={setChannels} connectFunction={connect} />
-      <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
-    </div>
+    <>
+      {!isConnected ?
+        <div className={CONNECT_STYLE} >
+          <Connect setNick={setNick} setServer={setServer} setPort={setPort} port={port} handleTLS={handleTLS} tls={tls} setChannels={setChannels} connect={connect} />
+        </div>
+        :
+        <>
+          <div className={IRC_STYLE}>
+            <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
+          </div>
+        </>
+      }
+    </>
   );
 }
 
