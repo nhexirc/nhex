@@ -21,7 +21,7 @@ export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 border p-1 f
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_CHAN_USER_PANEL_STYLE = "min-w-96 md:min-w-32 sm:min-w-24  px-2 overflow-x-hidden overflow-y-auto scrollbar-thin h-24 sm:h-[634px]"
+export const SERVER_CHAN_USER_PANEL_STYLE = "w-36 md:min-w-32 sm:min-w-24  px-2 overflow-x-hidden overflow-y-auto scrollbar-thin h-24 sm:h-[634px]"
 
 //SERVER WINDOW
 export const SERVER_PANEL_STYLE = "border-r text-right"
