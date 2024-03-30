@@ -6,7 +6,8 @@
  *   "server": "irc.libera.chat",
  *   "port": 6697,
  *   "nick": "nhex-tester",
- *   "channels": "#nhex"
+ *   "channels": "#nhex",
+ *   "tls": true
  *  }
  *
  *  You don't have to specify all values.

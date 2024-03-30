@@ -56,11 +56,13 @@ const MainView = () => {
         server?: string,
         port?: number,
         channels?: string,
+        tls?: boolean
     }) => {
         preloaded.nick && setNick(preloaded.nick);
         preloaded.server && setServer(preloaded.server);
         preloaded.port && setPort(`${preloaded.port}`);
         preloaded.channels && setChannels(preloaded.channels);
+        preloaded.tls !== undefined && setTLS(preloaded.tls);
     })
   }, []);
 
