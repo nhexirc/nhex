@@ -17,14 +17,8 @@ export interface SACSelectEvent {
 };
 
 const ServersAndChans = ({ servers, setIsServerSelected }: { servers: SACProps, setIsServerSelected: Dispatch<SetStateAction<boolean>> }) => {
-
-  function emitServer(server: string) {
-    setIsServerSelected(true);
-    emit("nhex://servers_and_chans/select", { server })
-  }
-  //this works better with server still attached, but it blows the server log out. needs further decoupling on a deeper level i am unfamiliar with -v
-  function emitChannel(server: string, channel: string = "") {
-    setIsServerSelected(false);
+  function emitServer(server: string, channel: string = "") {
+    setIsServerSelected(channel === "");
     emit("nhex://servers_and_chans/select", { server, channel })
   }
 
@@ -35,7 +29,7 @@ const ServersAndChans = ({ servers, setIsServerSelected }: { servers: SACProps, 
           <button id={`server_${serverName}`} className='text-right'>
             <h3 className='font-bold' onClick={() => emitServer(serverName)}>{serverName}</h3>
             {chans.sort().map((channel: string) => (
-              <p id={`chan_${channel.replace("#", "_")}`} onClick={() => emitChannel(serverName, channel)}>
+              <p id={`chan_${channel.replace("#", "_")}`} onClick={() => emitServer(serverName, channel)}>
                 {channel}
               </p>
             ))}
