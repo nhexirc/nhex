@@ -60,7 +60,7 @@ async fn connect(
     app_handle.listen_global("nhex://user_input/privmsg", move |event| {
         let payload: UserInput = deserde(event.payload().expect("input"));
         privmsg_sender
-            .send_privmsg(payload.channel, "test")
+            .send_privmsg(payload.channel, payload.argsStr)
             .expect("send_privmsg");
     });
 
