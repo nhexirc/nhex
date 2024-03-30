@@ -1,14 +1,12 @@
-name: 'Create Development Builds'
+name: 'Build Check'
 
 on:
   push:
     branches:
-      - 'dev-build/*'
-  pull_request:
-    types: [opened, reopened, synchronize, review_requested]
+      - '*'
 
 jobs:
-  publish-dev-build:
+  build-check:
     permissions:
       contents: write
     strategy:
@@ -37,12 +35,5 @@ jobs:
       - name: install frontend dependencies
         run: npm install # change this to npm or pnpm depending on which one you use
 
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: dev-${{ github.ref_name }}-v__VERSION__
-          releaseName: "nhex dev build from ${{ github.ref_name }}"
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: true
+      - name: build check
+        run: npm run tauri build
