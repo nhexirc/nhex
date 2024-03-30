@@ -4,7 +4,8 @@ const Connect = ({ setNick, setServer, setPort, port, handleTLS, tls, setChannel
   //TLS is a div and not a button due to it stealing enter from connect button. It has to do with form rules. As a side-effect and a bonus, the tls handler does not need preventDefault. Just pretend it's a button ok!?!
   return (
     <>
-      <p className="text-8xl italic text-center pb-8">nHEX</p>
+      <p className="text-8xl italic text-center">NHEX</p>
+      <p className="text-center text-sm">IRC Client</p>
       <form
         className={SERVER_FORM_STYLE}
         onSubmit={connect}
