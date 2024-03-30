@@ -18,9 +18,9 @@ let preloadedConfig: {
     channels?: string,
 };
 // to avoid vite complaining about a missing preload.json file
-let ext = ".json";
 try {
-   preloadedConfig = (await import("./preload" + ext)).default;
+   /* @vite-ignore */
+   preloadedConfig = (await import("./preload.json")).default;
 } catch (_) {
    // do nothing both on import and JSON.parse errors
    preloadedConfig = {};

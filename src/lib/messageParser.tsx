@@ -7,8 +7,12 @@ type MessageHandlers = Record<string, MessageHandler>;
 
 function joinOrPartHandler(functorName: string, networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
     const buf = networkBuffers[parsed.params[0].replace('\r\n', '')];
-    buf.names[functorName](nickFromPrefix(parsed.prefix));
-    return null; // return `buf` here to have joins & parts appear in the channel
+    const nick = nickFromPrefix(parsed.prefix);
+    buf.names[functorName](nick);
+    const { channel } = parsed.params[0].match(/^(?<channel>.*)\r\n/).groups;
+    parsed.command = functorName === "add" ? "join" : "part";
+    parsed.params[1] = channel;
+    return networkBuffers[channel];
 }
 
 const MODES_TO_HATS = {

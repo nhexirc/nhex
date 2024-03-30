@@ -55,7 +55,7 @@ const MainView = () => {
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
     return buffer.buffer.map((parsed: IRCMessageParsed) => ({
       message: parsed,
-      isUs: currentNick === parsed.prefix,
+      isUs: currentNick === parsed.prefix || parsed.prefix.startsWith(currentNick),
     }));
   }
 
