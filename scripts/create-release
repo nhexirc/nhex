@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+import fs from 'fs/promises';
+import path from 'path';
+import process from 'process';
+import semver from 'semver';
+import { parse, stringify } from 'smol-toml';
+
+const allowedTypes = ['major', 'minor', 'patch', 'prerelease', 'preminor', 'premajor'];
+const lastArg = process.argv.slice(-1)[0];
+const incrementType = allowedTypes.includes(lastArg) ? lastArg : 'patch';
+
+const verFiles = [
+    ['package.json', ['version']],
+    ['src-tauri/Cargo.toml', ['package', 'version']],
+    ['src-tauri/tauri.conf.json', ['package', 'version']],
+];
+
+const parsers = {
+    '.json': JSON.parse,
+    '.toml': parse,
+};
+
+const serializers = {
+    '.json': (o) => JSON.stringify(o, null, 2),
+    '.toml': stringify,
+};
+
+function findKeyPath(obj, path) {
+    const next = obj[path[0]];
+    if (typeof(next) === 'object' && !Array.isArray(next)) {
+        return findKeyPath(next, path.slice(1));
+    }
+
+    return [next, (newVal) => {
+        // setter
+        obj[path[0]] = newVal;
+    }];
+}
+
+const loadedVerFiles = await Promise.all(verFiles.map(async ([filePath, verFieldKeyPath]) => {
+    const contents = (await fs.readFile(filePath)).toString('utf-8');
+    const pathParsed = path.parse(filePath);
+
+    if (!parsers[pathParsed.ext]) {
+        console.error(pathParsed);
+        throw new Error(`no parser for ${pathParsed.ext}`);
+    }
+
+    const parsed = parsers[pathParsed.ext](contents);
+    return {
+        filePath,
+        parsed,
+        serializer: serializers[pathParsed.ext],
+        version: findKeyPath(parsed, verFieldKeyPath),
+    };
+}));
+
+// SHOULD check that these are all equal!
+const currentVer = loadedVerFiles[0].version[0];
+const nextVer = semver.inc(currentVer, incrementType);
+
+console.log(`Incrementing v${currentVer} -> v${nextVer} (${incrementType})\n\n`);
+loadedVerFiles.forEach(({ version: [_ver, setter]}) => setter(nextVer));
+
+const written = (await Promise.all(loadedVerFiles.map(({ parsed, filePath, serializer }) => 
+    fs.writeFile(filePath, serializer(parsed)))))
+    .every((x) => x === undefined);
+
+if (!written) {
+    throw new Error("!written");
+}
+
+console.log('Done! Now run:\n');
+console.log(`  $ git commit -am 'chore: bump version to v${nextVer}' && git tag v${nextVer} && git push --tags`);
+console.log('\n... and wait for the build to finish!');
+console.log('');
+console.log('Or, if something went wrong, just run:\n');
+console.log(`  $ git checkout -- .`);
+console.log('\n... to and start over.');

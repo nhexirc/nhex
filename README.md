@@ -64,11 +64,21 @@ The development pipeline will create a draft pre[release](https://github.com/nhe
 
 ### Creating a release
 
-Bump the version number in a separate commit. It must be changed in three places: [package.json](https://github.com/nhexirc/nhex/blob/f74ff9810af2007162e98e7cd84f2f6347662407/package.json#L4), [src-tauri/Cargo.toml](https://github.com/nhexirc/nhex/blob/f74ff9810af2007162e98e7cd84f2f6347662407/src-tauri/Cargo.toml#L3) and [src-tauri/tauri.conf.json](https://github.com/nhexirc/nhex/blob/f74ff9810af2007162e98e7cd84f2f6347662407/src-tauri/tauri.conf.json#L10)
- 
-Tags beginning with `v` will automatically trigger the release pipeline: tag the version-bump commit accordingly & push.
+Use the included [`create-release` script](./scripts/create-release) to prepare the release:
 
-The resulting [release](https://github.com/nhexirc/nhex/releases) will be a draft, not yet visible to the public, until you publish it.
+```shell
+$ ./scripts/create-release major
+```
+
+Where `major` is the release type as supported by [`semver.inc()`](https://www.npmjs.com/package/semver). If not provided, the default value for this argument is `patch`.
+
+The script will increment the appropriate `version` field in all necessary metadata files and provide a set of `git` CLI invocations to commit, tag & push the release.
+
+Any tag beginning with `v` will trigger the release pipeline, and this script suggests just a tag to be used.
+
+The resulting [release](https://github.com/nhexirc/nhex/releases) will be a draft - not yet visible to the public - until you publish it. When you do, please include a short high-level description of the release and use GitHub's "Create Release Notes" functionality to generate a changelog.
+
+
 
 ## Contributors
 
