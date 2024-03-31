@@ -1,17 +1,17 @@
 import { SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
 
 const Connect = ({
-    nick,
-    setNick,
-    server,
-    setServer,
-    port,
-    setPort,
-    channels,
-    setChannels,
-    handleTLS,
-    tls,
-    connect }) => {
+  nick,
+  setNick,
+  server,
+  setServer,
+  port,
+  setPort,
+  channels,
+  setChannels,
+  handleTLS,
+  tls,
+  connect }) => {
   //TLS is a div and not a button due to it stealing enter from connect button. It has to do with form rules. As a side-effect and a bonus, the tls handler does not need preventDefault. Just pretend it's a button ok!?!
   return (
     <>

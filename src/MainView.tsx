@@ -49,20 +49,19 @@ const MainView = () => {
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
-
   useEffect(() => {
     preload().then((preloaded: {
-        nick?: string,
-        server?: string,
-        port?: number,
-        channels?: string,
-        tls?: boolean
+      nick?: string,
+      server?: string,
+      port?: number,
+      channels?: string,
+      tls?: boolean
     }) => {
-        preloaded.nick && setNick(preloaded.nick);
-        preloaded.server && setServer(preloaded.server);
-        preloaded.port && setPort(`${preloaded.port}`);
-        preloaded.channels && setChannels(preloaded.channels);
-        preloaded.tls !== undefined && setTLS(preloaded.tls);
+      preloaded.nick && setNick(preloaded.nick);
+      preloaded.server && setServer(preloaded.server);
+      preloaded.port && setPort(`${preloaded.port}`);
+      preloaded.channels && setChannels(preloaded.channels);
+      preloaded.tls !== undefined && setTLS(preloaded.tls);
     })
   }, []);
 
@@ -139,55 +138,55 @@ const MainView = () => {
     });
 
     const handlers = {
-        privmsg(event: MBUserInputEvent) {
-            BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel].buffer.push({
-              command: "PRIVMSG",
-              params: [CUR_SELECTION.channel, ...event.payload.args],
-              prefix: nick, ///TODO: this better
-              raw: event.payload.raw,
-              tags: {}
-            });
+      privmsg(event: MBUserInputEvent) {
+        BUFFERS[CUR_SELECTION.server].buffers[CUR_SELECTION.channel].buffer.push({
+          command: "PRIVMSG",
+          params: [CUR_SELECTION.channel, ...event.payload.args],
+          prefix: nick, ///TODO: this better
+          raw: event.payload.raw,
+          tags: {}
+        });
 
-            emit("nhex://servers_and_chans/select", CUR_SELECTION);
-            return "privmsg";
-        },
-        msg(event: MBUserInputEvent) {
-            const pmPartnerNick = event.payload.args[0];
-            const messageParams = event.payload.args.slice(1);
+        emit("nhex://servers_and_chans/select", CUR_SELECTION);
+        return "privmsg";
+      },
+      msg(event: MBUserInputEvent) {
+        const pmPartnerNick = event.payload.args[0];
+        const messageParams = event.payload.args.slice(1);
 
-            let buf = BUFFERS[CUR_SELECTION.server].buffers[pmPartnerNick];
-            if (!buf) {
-              buf = BUFFERS[CUR_SELECTION.server].buffers[pmPartnerNick] = new Buffer(pmPartnerNick);
-            }
-
-            buf.buffer.push({
-              command: "PRIVMSG",
-              params: [pmPartnerNick, ...messageParams],
-              prefix: nick, ///TODO: this better
-              raw: messageParams.join(" "),
-              tags: {}
-            });
-
-            refreshServersAndChans();
-            return "msg";
-        },
-        // alias to `join`
-        j(event: MBUserInputEvent) {
-            return this.join(event);
-        },
-        join() {
-            return "join";
-        },
-        // alias to `part`
-        p(event: MBUserInputEvent) {
-            return this.part(event);
-        },
-        part() {
-            return "part";
-        },
-        whois(event: MBUserInputEvent) {
-            return "whois";
+        let buf = BUFFERS[CUR_SELECTION.server].buffers[pmPartnerNick];
+        if (!buf) {
+          buf = BUFFERS[CUR_SELECTION.server].buffers[pmPartnerNick] = new Buffer(pmPartnerNick);
         }
+
+        buf.buffer.push({
+          command: "PRIVMSG",
+          params: [pmPartnerNick, ...messageParams],
+          prefix: nick, ///TODO: this better
+          raw: messageParams.join(" "),
+          tags: {}
+        });
+
+        refreshServersAndChans();
+        return "msg";
+      },
+      // alias to `join`
+      j(event: MBUserInputEvent) {
+        return this.join(event);
+      },
+      join() {
+        return "join";
+      },
+      // alias to `part`
+      p(event: MBUserInputEvent) {
+        return this.part(event);
+      },
+      part() {
+        return "part";
+      },
+      whois(event: MBUserInputEvent) {
+        return "whois";
+      }
     };
     const implementedHandlers = Object.keys(handlers);
 
@@ -195,13 +194,13 @@ const MainView = () => {
       const command = event.payload.command.toLowerCase();
       const nrmCommand = command === "" ? "privmsg" : command;
       if (implementedHandlers.includes(nrmCommand)) {
-          // this handles any special logic, could be a noop, and returns the name
-          // of the rust event to be called
-          const eventName = handlers[nrmCommand](event);
-          // inform rust
-          emit(`nhex://user_input/${eventName}`, { ...CUR_SELECTION, ...event.payload });
+        // this handles any special logic, could be a noop, and returns the name
+        // of the rust event to be called
+        const eventName = handlers[nrmCommand](event);
+        // inform rust
+        emit(`nhex://user_input/${eventName}`, { ...CUR_SELECTION, ...event.payload });
       } else {
-          console.warn(`command ${nrmCommand} not supported`);
+        console.warn(`command ${nrmCommand} not supported`);
       }
     });
 
