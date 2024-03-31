@@ -1,0 +1,6 @@
+{
+  "Network": {},
+  "MessageBox": {
+    "show": ["action", "privmsg", "join", "part"]
+  }
+}
