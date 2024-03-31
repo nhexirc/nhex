@@ -71,7 +71,7 @@ if (!written) {
 }
 
 console.log('Done! Now run:\n');
-console.log(`  $ git commit -am 'chore: bump version to v${nextVer}' && git tag v${nextVer} && git push && git push --tags`);
+console.log(`  $ npm install && \\\n\tgit commit -am 'chore: bump version to v${nextVer}' && \\\n\tgit tag v${nextVer} && \\\n\tgit push && \\\n\tgit push --tags`);
 console.log('\n... and wait for the build to finish!');
 console.log('');
 console.log('Or, if something went wrong, just run:\n');
