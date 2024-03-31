@@ -15,6 +15,19 @@ function joinOrPartHandler(functorName: string, networkBuffers: Record<string, B
     return networkBuffers[channel];
 }
 
+function topicHandler(networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
+    let chanIdx = 0, topicIdx = 1;
+    if (parsed.command !== "TOPIC") {
+        chanIdx = 1;
+        topicIdx = 2;
+    }
+
+    const channel = parsed.params[chanIdx];
+    const newTopicComps = parsed.params.slice(topicIdx);
+    networkBuffers[channel].topic = newTopicComps.join(" ").replace("\r\n", "");
+    return null;
+}
+
 const MODES_TO_HATS = {
     "+o": "@",
     "-o": "",
@@ -85,18 +98,16 @@ const MESSAGE_HANDLERS: MessageHandlers = {
         const [channel, newMode, nick] = parsed.params;
         networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${nick.replace("\r\n", "")}`);
         return null;
-    }
+    },
+
+    topic: topicHandler,
 };
 
 const NUMERIC_HANDLERS: MessageHandlers = {
     353 /*RPL_NAMREPLY*/: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
         const chanName = parsed.params[2];
         if (!networkBuffers[chanName]) {
-            networkBuffers[chanName] = {
-                name: chanName,
-                buffer: [],
-                names: new IRCNicksSet()
-            };
+            networkBuffers[chanName] = new Buffer(chanName);
         }
 
         const buf = networkBuffers[chanName];
@@ -105,7 +116,9 @@ const NUMERIC_HANDLERS: MessageHandlers = {
             ...parsed.params[3].split(" ").map((s) => s.replace('\r\n', ''))
         ]);
         return null;
-    }
+    },
+
+    332 /* RPL_TOPIC */: topicHandler
 };
 
 export default function (

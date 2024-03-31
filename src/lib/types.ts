@@ -20,6 +20,7 @@ export interface IRCMessageParsed {
 
 export class Buffer {
     name: string;
+    topic: string = "";
     buffer: IRCMessageParsed[] = [];
     names: IRCNicksSet = new IRCNicksSet();
 

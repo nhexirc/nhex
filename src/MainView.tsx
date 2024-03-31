@@ -57,6 +57,7 @@ const MainView = () => {
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
   const [userSettings, setUserSettings] = useState({});
+  const [topic, setTopic] = useState("");
 
   const realSetIsConnected = (val) => {
     STATE.connected = val;
@@ -146,17 +147,9 @@ const MainView = () => {
 
     BUFFERS[server] = {
       server, buffers: {
-        "": {
-          name: "",
-          buffer: [],
-          names: new IRCNicksSet()
-        },
+        "": new Buffer(""),
         ...channels.split(" ").reduce((a, chan) => ({
-          [chan]: {
-            name: chan,
-            buffer: [],
-            names: new IRCNicksSet()
-          },
+          [chan]: new Buffer(chan),
           ...a
         }), {})
       }
@@ -186,6 +179,7 @@ const MainView = () => {
       if (currentBuffer && event.payload.server === CUR_SELECTION.server && currentBuffer.name === CUR_SELECTION.channel) {
         setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
         setChannelNames(currentBuffer.names);
+        setTopic(currentBuffer.topic);
         emit("nhex://servers_and_chans/selected", CUR_SELECTION);
       }
 
@@ -198,6 +192,7 @@ const MainView = () => {
       const channelBuf = BUFFERS[server].buffers[channel];
       setMessageBoxLines(messageBoxLinesFromBuffer(channelBuf, nick));
       setChannelNames(channelBuf.names);
+      setTopic(channelBuf.topic);
       emit("nhex://servers_and_chans/selected", CUR_SELECTION);
     });
 
@@ -318,7 +313,7 @@ const MainView = () => {
         </div>
         :
         <div className={IRC_STYLE}>
-          <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} settings={settings} />
+          <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} settings={settings} topic={topic} />
         </div>
       }
     </>
