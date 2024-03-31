@@ -3,7 +3,7 @@ export const ROOT_STYLE = "flex flex-col bg-zinc-900 text-zinc-300 h-dvh scrollb
 
 //MENU
 export const MENU_STYLE = "flex justify-center py-2 gap-5"
-export const MENU_LOGO = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
+export const NHEX = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const USER_MESSAGE_STYLE = "pl-2"

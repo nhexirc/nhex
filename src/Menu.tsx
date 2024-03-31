@@ -1,5 +1,5 @@
 import MenuItem from "./menu/MenuItem"
-import { MENU_LOGO, MENU_STYLE } from "./style"
+import { MENU_STYLE, NHEX } from "./style"
 
 const Menu = () => {
 
@@ -7,7 +7,7 @@ const Menu = () => {
 
   return (
     <div className={MENU_STYLE}>
-      <a href="https://github.com/nhexirc/client" target="_blank" className={MENU_LOGO}>NHEX</a>
+      <a href="https://github.com/nhexirc/client" target="_blank" className={NHEX}>nhex</a>
       {items.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
     </div>
   )
