@@ -1,5 +1,5 @@
 import { emit } from '@tauri-apps/api/event';
-import { SERVER_CHAN_USER_PANEL_STYLE, SERVER_PANEL_STYLE } from './style';
+import { SERVER_NAMES_PANEL_STYLE, SERVER_PANEL_STYLE } from './style';
 import { Dispatch, SetStateAction } from 'react';
 
 export type SACServers = Record<string, string[]>;
@@ -23,7 +23,7 @@ const ServersAndChans = ({ servers, setIsServerSelected }: { servers: SACProps, 
   }
 
   return (
-    <div className={`${SERVER_CHAN_USER_PANEL_STYLE} ${SERVER_PANEL_STYLE}`}>
+    <div className={`${SERVER_NAMES_PANEL_STYLE} ${SERVER_PANEL_STYLE}`}>
       {Object.entries(servers).map(([serverName, chans]) => {
         return (
           <button id={`server_${serverName}`} className='text-right'>
