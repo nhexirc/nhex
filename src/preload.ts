@@ -18,7 +18,7 @@ export default async () => {
     const ext = ".json";
     try {
        /* @vite-ignore */
-       return (await import(name + ext, { assert: { type: "json" }})).default;
+       return (await import(name + ext)).default;
     } catch (_) {
        // do nothing both on import and JSON.parse errors
        return {};
