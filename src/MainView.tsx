@@ -42,6 +42,10 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
   return found ? `${found}: ` : prefix;
 }
 
+const STATE = {
+  connected: false
+};
+
 const MainView = () => {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
@@ -53,24 +57,28 @@ const MainView = () => {
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
   const [userSettings, setUserSettings] = useState({});
+
+  const realSetIsConnected = (val) => {
+    STATE.connected = val;
+    setIsConnected(val);
+  };
+
   const reloadUserSettings = () => UserSettings.load().then((settings) => {
     setUserSettings(settings);
     return settings;
   });
 
   async function disconnect() {
-    return;
-    /* setIsConnected(true) in connect() has no effect?! i have no idea why...
-    if (!isConnected) {
+    if (!STATE.connected) {
       return;
     }
-    */
 
     // when #33 is implemented properly, all the buffers, selections, etc. must be cleared here!
 
     let resolve;
     const promise = new Promise((res) => (resolve = res));
     const unlisten = await listen("nhex://user_input/quit/sent_ack", () => {
+      realSetIsConnected(false);
       unlisten();
       resolve();
     });
@@ -133,8 +141,7 @@ const MainView = () => {
 
   async function connect(e: any) {
     e.preventDefault();
-    setIsConnected(true);
-    console.log('connect!', nick, server, port, channels);
+    console.log('connect...', nick, server, port, channels, isConnected);
     CUR_SELECTION.server = server;
 
     BUFFERS[server] = {
@@ -163,6 +170,11 @@ const MainView = () => {
       }
 
       let { currentBuffer, parsed } = messageParser(server, networkBuffers, parse(event.payload.message));
+
+      if (parsed.command === "376" /* RPL_ENDOFMOTD */) {
+        realSetIsConnected(true);
+        console.log('connected!', nick, server, port, channels, isConnected);
+      }
 
       if (!currentBuffer) {
         // messageParser will return null if it didn't add the message to any buffer (e.g. a JOIN that
@@ -239,13 +251,14 @@ const MainView = () => {
       whois(event: MBUserInputEvent) {
         return "whois";
       },
-      /* this cannot be wired up until we can properly track connection state so
-         that disconnect() above won't call nhex://user_input/quit when not connected,
-         which will panic the rust backend
       quit() {
+        if (!STATE.connected) {
+          return null;
+        }
+
+        realSetIsConnected(false);
         return "quit";
       },
-      */
     };
     const implementedHandlers = Object.keys(handlers);
 
@@ -263,7 +276,7 @@ const MainView = () => {
       }
     });
 
-    invoke("connect", {
+    await invoke("connect", {
       nick,
       server,
       // how to properly handle rust underscore vs. JS camelcase?
@@ -271,6 +284,9 @@ const MainView = () => {
       tls,
       channels: channels.split(" ")
     });
+
+    // shows the main UI
+    setIsConnected(true);
   }
 
   const handleTLS = () => {
