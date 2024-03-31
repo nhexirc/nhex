@@ -3,27 +3,37 @@ import MessageBox from "./MessageBox"
 import ChannelNames from "./ChannelNames"
 import { SERV_MSG_NAMES_PANEL_STYLE } from "./style"
 import { useState } from "react"
+import UserInput from "./UserInput"
 
 const IRC = ({ servers, names, message, settings }) => {
 
   const [isServerSelected, setIsServerSelected] = useState(true);
 
   return (
-    <div className={SERV_MSG_NAMES_PANEL_STYLE}>
+    <>
       {isServerSelected ?
         <>
-          <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
-          <MessageBox lines={message} settings={settings} />
+          <div className="flex flex-col gap-4">
+            <div className={SERV_MSG_NAMES_PANEL_STYLE}>
+              <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
+              <MessageBox lines={message} settings={settings} />
+            </div>
+            <UserInput />
+          </div>
         </>
         :
         <>
-          <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
-          <MessageBox lines={message} settings={settings} />
-          <ChannelNames names={names} />
+          <div className="flex flex-col gap-4">
+            <div className={SERV_MSG_NAMES_PANEL_STYLE}>
+              <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
+              <MessageBox lines={message} settings={settings} />
+              <ChannelNames names={names} />
+            </div>
+            <UserInput />
+          </div>
         </>
-
       }
-    </div>
+    </>
   )
 }
 
