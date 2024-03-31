@@ -2,7 +2,7 @@
 export const ROOT_STYLE = "flex flex-col bg-zinc-900 text-zinc-300 h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
 
 //MENU
-export const MENU_STYLE = "flex justify-center py-2 gap-3"
+export const MENU_STYLE = "flex justify-center py-2 gap-5"
 export const MENU_LOGO = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
@@ -16,7 +16,7 @@ export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-4"
 export const USER_INPUT = "border-x border-t w-full bg-zinc-900 p-1 focus:outline-none placeholder:font-bold placeholder-zinc-300"
 
 //CONNECT COMPONENT
-export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-700 rounded-lg p-2 min-w-80"
+export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-700 rounded-lg p-2 min-w-96"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
 export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 p-1 focus:outline-none"
