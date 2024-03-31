@@ -9,7 +9,7 @@ function joinOrPartHandler(functorName: string, networkBuffers: Record<string, B
     const buf = networkBuffers[parsed.params[0].replace('\r\n', '')];
     const nick = nickFromPrefix(parsed.prefix);
     buf.names[functorName](nick);
-    const { channel } = parsed.params[0].match(/^(?<channel>.*)\r\n/).groups;
+    const { channel } = parsed.params[0].match(/^(?<channel>.*)(?:\r\n)?/).groups;
     parsed.command = functorName === "add" ? "join" : "part";
     parsed.params[1] = channel;
     return networkBuffers[channel];

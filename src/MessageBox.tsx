@@ -18,16 +18,16 @@ const MessageBox = (props: Props) => {
   });
   const commands = {
     action(message: { params: [] }) {
-        return ["*", message.params.slice(1).join(" "), ""];
+        return ["*", message.params.slice(1).join(" "), "", ""];
     },
     privmsg(message: { params: [] }) {
-        return ["<", message.params.slice(1).join(" "), ">"];
+        return ["<", message.params.slice(1).join(" "), ">", ""];
     },
     join(message: { params: string[] }) {
-        return ["", `has joined ${message.params[1]}`, ""]
+        return ["", `has joined ${message.params[1]}`, "", "italic"];
     },
     part(message: { params: string[] }) {
-        return ["", `has left ${message.params[1]}`, ""]
+        return ["", `has left ${message.params[1]}`, "", "italic"];
     },
   };
   // dont show our own join/part messages etc.
@@ -47,7 +47,7 @@ const MessageBox = (props: Props) => {
             if (Object.keys(commands).includes(command)) {
               const nick = nickFromPrefix(message.prefix);
               const color = nickColor(nick);
-              const [before, $message, after] = commands[command](message);
+              const [before, $message, after, msgStyleExtra] = commands[command](message);
               return (
                 <>
                   <div id={`mb_line_${i}`}>
@@ -56,7 +56,7 @@ const MessageBox = (props: Props) => {
                       style={{ color }}>
                       {nick}
                     </span>{after}
-                    <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
+                    <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''} ${msgStyleExtra}`}>
                       {$message}
                     </span>
                   </div>
