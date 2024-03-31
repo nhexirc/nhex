@@ -56,7 +56,7 @@ const MessageBox = (props: Props) => {
               if (Object.keys(commands).includes(command)) {
                 const nick = nickFromPrefix(message.prefix);
                 const color = nickColor(nick);
-                const [before, $message, after] = commands[command](message);
+                const [before, $message, after, msgStyleExtra] = commands[command](message);
                 return (
                   <div id={`mb_line_${i}`}>
                     {before}<span
@@ -64,7 +64,7 @@ const MessageBox = (props: Props) => {
                       style={{ color }}>
                       {nick}
                     </span>{after}
-                    <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
+                    <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''} ${msgStyleExtra}`}>
                       {$message}
                     </span>
                   </div>
