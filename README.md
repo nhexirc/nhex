@@ -13,7 +13,7 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 
 # Download
 
-See the latest [Release](https://github.com/nhexirc/nhex/releases) to download installers for Debian-based Linux distros, Windows & Mac OS.
+See the [latest release](https://github.com/nhexirc/nhex/releases/latest) to download installers for Debian-based Linux distros, Windows & Mac OS.
 
 Until version 1.0, only prereleases are available.
 
@@ -85,3 +85,5 @@ The resulting [release](https://github.com/nhexirc/nhex/releases) will be a draf
 In addition to our amazing team (which is growing fast!) the list of incredible folks who have contributed ideas, advice, suggestions, etc. on irc.libera.chat has already grown too numerous to easily keep track of here (and the project is less than a week old)!
 
 The response has been overwhelming, so a huge thanks to all of those who did contribute. Y'all rock! 🤘❤️
+
+<img src="./public/screenshots/nh_mobile.png" width="240" />
