@@ -10,6 +10,11 @@ interface Props {
   lines: MessageBoxLines;
 };
 
+const fromMarkdown = (input: any): string => {
+    return input.replaceAll(/\*(.*?)\*/g, (_, p1: string) =>
+        "<i>" + p1 + "</i>");
+}
+
 const MessageBox = (props: Props) => {
   const mbRef = useRef(null);
   let prefix = "";
@@ -21,7 +26,7 @@ const MessageBox = (props: Props) => {
         return ["*", message.params.slice(1).join(" "), ""];
     },
     privmsg(message: { params: [] }) {
-        return ["<", message.params.slice(1).join(" "), ">"];
+        return ["<", fromMarkdown(message.params.slice(1).join(" ")), ">"];
     },
     join(message: { params: string[] }) {
         return ["", `has joined ${message.params[1]}`, ""]
