@@ -109,6 +109,7 @@ const NUMERIC_HANDLERS: MessageHandlers = {
 };
 
 export default function (
+    currentServer: string,
     networkBuffers: Record<string, Buffer>,
     parsed: IRCMessageParsed
 ): MessageParserReturn {
@@ -125,6 +126,15 @@ export default function (
         else {
             console.log('[UNHANDLED]', parsed.command, parsed);
         }
+    }
+
+    // the prefix identifies the actual hostname in the network whereas our "currentServer"
+    // is the DNS name we connect to (may be RR DNS for example). this current strategy will break
+    // with #33 implemented if users connect to the same TLD twice (incl if subdomains or ports different)
+    const ourTLDComps = currentServer.split(".");
+    let ourTLD = ourTLDComps.length > 2 ? ourTLDComps.slice(-2).join(".") : currentServer;
+    if (parsed.prefix.endsWith(ourTLD)) {
+        parsed.fromServer = true;
     }
 
     if (currentBuffer) {

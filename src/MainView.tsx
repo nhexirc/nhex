@@ -115,7 +115,7 @@ const MainView = () => {
         return;
       }
 
-      let { currentBuffer, parsed } = messageParser(networkBuffers, parse(event.payload.message));
+      let { currentBuffer, parsed } = messageParser(server, networkBuffers, parse(event.payload.message));
 
       if (!currentBuffer) {
         // messageParser will return null if it didn't add the message to any buffer (e.g. a JOIN that

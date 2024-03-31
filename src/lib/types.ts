@@ -15,6 +15,7 @@ export interface IRCMessageParsed {
     prefix: string;
     raw: string;
     tags: Record<string, any>;
+    fromServer?: boolean;
 };
 
 export class Buffer {

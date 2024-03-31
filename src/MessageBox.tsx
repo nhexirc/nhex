@@ -40,6 +40,10 @@ const MessageBox = (props: Props) => {
         <div id="message_area" ref={mbRef}>
           {props.lines
             .filter(({ message, isUs }) => {
+                if (message.fromServer) {
+                    return true;
+                }
+
                 const command = message.command.toLowerCase();
                 
                 if (!props.settings.userSettings.MessageBox.show.includes(command)) {
