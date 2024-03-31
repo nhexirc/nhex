@@ -1,0 +1,8 @@
+# This file lives at $APPCONFIG/dev.nhdex/nhex.toml
+# where $APPCONFIG is defined per platform:
+#  * Windows: C:\Users\<username>\AppData\Roaming
+#  * Linux: ~/.config
+#  * Mac OS: ??
+
+[MessageBox]
+show = [ "action", "privmsg", "join", "part" ]

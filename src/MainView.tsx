@@ -17,6 +17,7 @@ import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 import preload from "./preload";
+import UserSettings from './lib/userSettings';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -49,6 +50,9 @@ const MainView = () => {
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
+  const [userSettings, setUserSettings] = useState({});
+  const reloadUserSettings = () => UserSettings.load().then(setUserSettings);
+
   useEffect(() => {
     preload().then((preloaded: {
       nick?: string,
@@ -63,8 +67,9 @@ const MainView = () => {
       preloaded.channels && setChannels(preloaded.channels);
       preloaded.tls !== undefined && setTLS(preloaded.tls);
     })
-  }, []);
 
+    reloadUserSettings();
+  }, []);
 
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
     return buffer.buffer.map((parsed: IRCMessageParsed) => ({
@@ -213,9 +218,15 @@ const MainView = () => {
       channels: channels.split(" ")
     });
   }
+
   const handleTLS = () => {
     setTLS(!tls);
   }
+
+  const settings = {
+    userSettings,
+    setUserSettings,
+  };
 
   // will need a disconnect function above with the bool state variable to bring us back to login after disconnecting
   return (
@@ -238,7 +249,7 @@ const MainView = () => {
         :
         <>
           <div className={IRC_STYLE}>
-            <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} />
+            <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} settings={settings} />
           </div>
         </>
       }

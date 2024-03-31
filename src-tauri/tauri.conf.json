@@ -12,6 +12,13 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "fs": {
+        "all": true,
+        "scope": ["**"]
+      },
+      "path": {
+        "all": true
+      },
       "shell": {
         "all": false,
         "open": true
@@ -38,7 +45,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "be.computerpho.nhex",
+      "identifier": "dev.nhex",
       "icon": [
         "icons/icon.ico"
       ]

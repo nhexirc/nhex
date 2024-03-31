@@ -8,6 +8,7 @@ import { MESSAGE_BOX, USERNAME_STYLE, USER_INPUT, USER_MESSAGE_STYLE } from "./s
 
 interface Props {
   lines: MessageBoxLines;
+  settings: Record<string, any>;
 };
 
 const MessageBox = (props: Props) => {
@@ -40,6 +41,11 @@ const MessageBox = (props: Props) => {
           {props.lines
             .filter(({ message, isUs }) => {
                 const command = message.command.toLowerCase();
+                
+                if (!props.settings.userSettings.MessageBox.show.includes(command)) {
+                  return false;
+                }
+
                 return !isUs || !nonReflected.includes(command);
             })
             .map(({ message, isUs }, i) => {
