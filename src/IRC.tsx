@@ -12,26 +12,22 @@ const IRC = ({ servers, names, message, settings }) => {
   return (
     <>
       {isServerSelected ?
-        <>
-          <div className={IRC_CONDITIONAL_STYLE}>
-            <div className={SERV_MSG_NAMES_PANEL_STYLE}>
-              <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
-              <MessageBox lines={message} settings={settings} />
-            </div>
-            <UserInput />
+        <div className={IRC_CONDITIONAL_STYLE}>
+          <div className={SERV_MSG_NAMES_PANEL_STYLE}>
+            <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
+            <MessageBox lines={message} settings={settings} />
           </div>
-        </>
+          <UserInput />
+        </div>
         :
-        <>
-          <div className={IRC_CONDITIONAL_STYLE}>
-            <div className={SERV_MSG_NAMES_PANEL_STYLE}>
-              <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
-              <MessageBox lines={message} settings={settings} />
-              <ChannelNames names={names} />
-            </div>
-            <UserInput />
+        <div className={IRC_CONDITIONAL_STYLE}>
+          <div className={SERV_MSG_NAMES_PANEL_STYLE}>
+            <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
+            <MessageBox lines={message} settings={settings} />
+            <ChannelNames names={names} />
           </div>
-        </>
+          <UserInput />
+        </div>
       }
     </>
   )

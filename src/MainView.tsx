@@ -257,11 +257,9 @@ const MainView = () => {
             connect={connect} />
         </div>
         :
-        <>
-          <div className={IRC_STYLE}>
-            <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} settings={settings} />
-          </div>
-        </>
+        <div className={IRC_STYLE}>
+          <IRC servers={serversAndChans} message={messageBoxLines} names={channelNames} settings={settings} />
+        </div>
       }
     </>
   );
