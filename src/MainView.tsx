@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
+import { appWindow } from "@tauri-apps/api/window";
 import { parse } from 'irc-message';
 import {
   Buffer,
@@ -8,7 +9,8 @@ import {
   IRCMessageEvent,
   IRCMessageParsed,
   MBUserInputEvent,
-  MessageBoxLines
+  MessageBoxLines,
+  UserInput,
 } from './lib/types';
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
@@ -56,6 +58,30 @@ const MainView = () => {
     return settings;
   });
 
+  async function disconnect() {
+    /* setIsConnected(true) in connect() has no effect?! i have no idea why...
+    if (!isConnected) {
+      return;
+    }
+    */
+
+    // when #33 is implemented properly, all the buffers, selections, etc. must be cleared here!
+
+    let resolve;
+    const promise = new Promise((res) => (resolve = res));
+    const unlisten = await listen("nhex://user_input/quit/sent_ack", () => {
+      unlisten();
+      resolve();
+    });
+
+    await emit("nhex://user_input/quit", {
+      ...CUR_SELECTION,
+      ...(new UserInput("quit"))
+    });
+
+    return promise;
+  };
+
   useEffect(() => {
     preload().then((preloaded: {
       nick?: string,
@@ -78,7 +104,17 @@ const MainView = () => {
         !preloaded.channels && Network["channels"] && setChannels(Network["channels"]);
         preloaded.tls === undefined && Network["tls"] !== undefined && setTLS(Network["tls"]);
       });
-    })
+    });
+
+    let unlistenAppClose;
+    appWindow.onCloseRequested(async (event) => {
+      await disconnect();
+      appWindow.close();
+    }).then((closeFn) => (unlistenAppClose = closeFn));
+
+    return () => {
+      unlistenAppClose?.();
+    };
   }, []);
 
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
@@ -96,7 +132,7 @@ const MainView = () => {
 
   async function connect(e: any) {
     e.preventDefault();
-    setIsConnected(true)
+    setIsConnected(true);
     console.log('connect!', nick, server, port, channels);
     CUR_SELECTION.server = server;
 
@@ -201,7 +237,14 @@ const MainView = () => {
       },
       whois(event: MBUserInputEvent) {
         return "whois";
-      }
+      },
+      /* this cannot be wired up until we can properly track connection state so
+         that disconnect() above won't call nhex://user_input/quit when not connected,
+         which will panic the rust backend
+      quit() {
+        return "quit";
+      },
+      */
     };
     const implementedHandlers = Object.keys(handlers);
 

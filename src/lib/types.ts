@@ -55,3 +55,16 @@ export interface MessageParserReturn {
     currentBuffer: Buffer;
     parsed: IRCMessageParsed;
 };
+
+export class UserInput {
+    server: string = "";
+    channel: string = "";
+    raw: string = "";
+    command: string = "";
+    args: string[] = [];
+    argsStr: string = "";
+
+    constructor(command: string) {
+        this.command = command;
+    }
+};

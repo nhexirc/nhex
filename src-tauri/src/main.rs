@@ -5,7 +5,7 @@ use futures::prelude::*;
 use irc::client::prelude::*;
 use irc::proto::Command;
 use serde::{Deserialize, Serialize};
-use tauri::{Manager, Window};
+use tauri::{Manager, Window, async_runtime};
 
 #[derive(Clone, serde::Serialize)]
 struct IRCMessage {
@@ -28,9 +28,7 @@ fn deserde(payload: &str) -> UserInput {
     return serde_json::from_str(payload).expect("json");
 }
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-async fn connect(
+async fn connect_impl(
     nick: String,
     server: String,
     port: u16,
@@ -97,6 +95,18 @@ async fn connect(
         )).expect("whois");
     });
 
+    let quit_sender = cclient.sender();
+    let quit_handle = app_handle.app_handle();
+    app_handle.listen_global("nhex://user_input/quit", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("quit"));
+        let mut quit_msg = "https://nhex.dev".to_string();
+        if payload.argsStr.len() > 0 {
+            quit_msg = payload.argsStr.to_string();
+        }
+        quit_sender.send_quit(quit_msg).expect("quit");
+        quit_handle.emit_all("nhex://user_input/quit/sent_ack", "").expect("quit/sent");
+    });
+
     let server_clone = server.clone();
     while let Ok(Some(message)) = sstream.next().await.transpose() {
         print!("<{}> {}", server_clone.clone(), message);
@@ -110,6 +120,23 @@ async fn connect(
             )
             .expect("emit");
     }
+}
+
+
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+#[tauri::command]
+async fn connect(
+    nick: String,
+    server: String,
+    port: u16,
+    tls: bool,
+    channels: Vec<String>,
+    window: Window,
+    app_handle: tauri::AppHandle,
+) {
+    async_runtime::spawn(
+        connect_impl(nick, server, port, tls, channels, window, app_handle)
+    );
 }
 
 fn main() {
