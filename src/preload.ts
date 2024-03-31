@@ -13,14 +13,13 @@
  *  You don't have to specify all values.
  */
 export default async () => {
-    // to avoid vite complaining about a missing preload.json file
+    // to avoid TS borking the build
     const name = "./preload";
     const ext = ".json";
     try {
-       /* @vite-ignore */
-       return (await import(name + ext)).default;
+       return (await import(/* @vite-ignore */name + ext)).default;
     } catch (_) {
-       // do nothing both on import and JSON.parse errors
+       // noop on error
        return {};
     }
 };
