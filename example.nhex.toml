@@ -4,5 +4,12 @@
 #  * Linux: ~/.config
 #  * Mac OS: ??
 
+[Network]
+server = "irc.libera.chat"
+port = 6697
+nick = "nhex-user"
+channels = "#nhex"
+tls = true
+
 [MessageBox]
 show = [ "action", "privmsg", "join", "part" ]

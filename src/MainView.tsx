@@ -51,7 +51,10 @@ const MainView = () => {
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
   const [userSettings, setUserSettings] = useState({});
-  const reloadUserSettings = () => UserSettings.load().then(setUserSettings);
+  const reloadUserSettings = () => UserSettings.load().then((settings) => {
+    setUserSettings(settings);
+    return settings;
+  });
 
   useEffect(() => {
     preload().then((preloaded: {
@@ -66,9 +69,16 @@ const MainView = () => {
       preloaded.port && setPort(`${preloaded.port}`);
       preloaded.channels && setChannels(preloaded.channels);
       preloaded.tls !== undefined && setTLS(preloaded.tls);
-    })
 
-    reloadUserSettings();
+      reloadUserSettings().then(({ Network }) => {
+        // preloads override user settings
+        !preloaded.nick && Network["nick"] && setNick(Network["nick"]);
+        !preloaded.server && Network["server"] && setServer(Network["server"]);
+        !preloaded.port && Network["port"] && setPort(Network["port"]);
+        !preloaded.channels && Network["channels"] && setChannels(Network["channels"]);
+        preloaded.tls === undefined && Network["tls"] !== undefined && setTLS(Network["tls"]);
+      });
+    })
   }, []);
 
   function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
