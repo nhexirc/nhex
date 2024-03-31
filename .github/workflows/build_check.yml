@@ -3,7 +3,7 @@ name: 'Build Check'
 on:
   push:
     branches:
-      - '*'
+      - 'main'
 
 jobs:
   build-check:
