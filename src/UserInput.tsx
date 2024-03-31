@@ -1,7 +1,9 @@
 import { emit } from "@tauri-apps/api/event";
 import { USER_INPUT } from "./style";
 import { completeNickname } from "./MainView";
+
 const UserInput = () => {
+
   let prefix = "";
   return (
     <input type="text" className={USER_INPUT} autoFocus onKeyDown={(e) => {
