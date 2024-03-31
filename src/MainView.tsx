@@ -59,6 +59,7 @@ const MainView = () => {
   });
 
   async function disconnect() {
+    return;
     /* setIsConnected(true) in connect() has no effect?! i have no idea why...
     if (!isConnected) {
       return;
