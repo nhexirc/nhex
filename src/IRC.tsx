@@ -25,8 +25,8 @@ const IRC = ({ servers, names, message, settings, topic }) => {
           <Topic topic={topic} />
           <div className={SERV_MSG_NAMES_PANEL_STYLE}>
             <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
-            <MessageBox lines={message} settings={settings} />
             <ChannelNames names={names} />
+            <MessageBox lines={message} settings={settings} />
           </div>
           <UserInput />
         </div>
