@@ -70,10 +70,19 @@ if (!written) {
     throw new Error("!written");
 }
 
+const postCommands = [
+    'npm install',
+    'npm run tauri build',
+    `git commit -am 'chore: bump version to v${nextVer}'`,
+    `git tag v${nextVer}`,
+    'git push',
+    'git push --tags'
+];
+
 console.log('Done! Now run:\n');
-console.log(`  $ npm install && \\\n\tgit commit -am 'chore: bump version to v${nextVer}' && \\\n\tgit tag v${nextVer} && \\\n\tgit push && \\\n\tgit push --tags`);
+console.log(`  $ ${postCommands.join(' && \\\n    ')}`);
 console.log('\n... and wait for the build to finish!');
-console.log('');
+console.log('\n------\n');
 console.log('Or, if something went wrong, just run:\n');
 console.log(`  $ git checkout -- .`);
-console.log('\n... to and start over.');
+console.log('\n... to start over.');
