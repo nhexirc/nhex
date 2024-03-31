@@ -7,7 +7,7 @@ export const MENU_LOGO = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-2
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const USER_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[400px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border sm:border-0 sm:border-b"
+export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[400px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border sm:border-0 sm:border-b sm:border-r"
 
 //IRC COMPONENT
 export const IRC_STYLE = "max-w-7xl mx-auto border-y"
@@ -31,7 +31,7 @@ export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflo
 export const SERVER_PANEL_STYLE = "text-right"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "border-b"
+export const NAMES_PANEL_STYLE = "border-b sm:border-l-0"
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
