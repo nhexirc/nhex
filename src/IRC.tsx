@@ -1,7 +1,7 @@
 import ServersAndChans from "./ServersAndChans"
 import MessageBox from "./MessageBox"
 import ChannelNames from "./ChannelNames"
-import { SERV_MSG_NAMES_PANEL_STYLE } from "./style"
+import { IRC_CONDITIONAL_STYLE, SERV_MSG_NAMES_PANEL_STYLE } from "./style"
 import { useState } from "react"
 import UserInput from "./UserInput"
 
@@ -13,7 +13,7 @@ const IRC = ({ servers, names, message, settings }) => {
     <>
       {isServerSelected ?
         <>
-          <div className="flex flex-col gap-4">
+          <div className={IRC_CONDITIONAL_STYLE}>
             <div className={SERV_MSG_NAMES_PANEL_STYLE}>
               <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
               <MessageBox lines={message} settings={settings} />
@@ -23,7 +23,7 @@ const IRC = ({ servers, names, message, settings }) => {
         </>
         :
         <>
-          <div className="flex flex-col gap-4">
+          <div className={IRC_CONDITIONAL_STYLE}>
             <div className={SERV_MSG_NAMES_PANEL_STYLE}>
               <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
               <MessageBox lines={message} settings={settings} />
