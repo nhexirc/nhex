@@ -34,7 +34,7 @@ const MessageBox = (props: Props) => {
   const nonReflected = ["join", "part"];
 
   return (
-    <div>
+    <>
       <div className={MESSAGE_BOX}>
         <div id="message_area" ref={mbRef}>
           {props.lines
@@ -58,33 +58,27 @@ const MessageBox = (props: Props) => {
                 const color = nickColor(nick);
                 const [before, $message, after] = commands[command](message);
                 return (
-                  <>
-                    <div id={`mb_line_${i}`}>
-                      {before}<span
-                        className={`${USERNAME_STYLE} ${isUs ? 'ourName' : ''}`}
-                        style={{ color }}>
-                        {nick}
-                      </span>{after}
-                      <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
-                        {$message}
-                      </span>
-                    </div>
-                  </>
+                  <div id={`mb_line_${i}`}>
+                    {before}<span
+                      className={`${USERNAME_STYLE} ${isUs ? 'ourName' : ''}`}
+                      style={{ color }}>
+                      {nick}
+                    </span>{after}
+                    <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''}`}>
+                      {$message}
+                    </span>
+                  </div>
                 );
               }
               return (
-                <>
-                  <div id={`mb_line_${i}`}>
-                    {message.raw}
-                  </div>
-                </>
+                <div id={`mb_line_${i}`}>
+                  {message.raw}
+                </div>
               );
             })}
         </div>
       </div>
-      <div>
-      </div>
-    </div>
+    </>
   );
 }
 
