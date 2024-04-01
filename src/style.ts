@@ -23,7 +23,7 @@ export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 p-1 focus:ou
 export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-900 p-1"
 
 //TOPIC
-export const TOPIC_BAR = "italic h-8 overflow-x-hidden";
+export const TOPIC_BAR = "italic h-8 overflow-hidden";
 
 //USER INPUT COMPONENT
 export const USER_INPUT = "focus:outline-none"
@@ -32,7 +32,7 @@ export const USER_INPUT = "focus:outline-none"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-hidden overflow-y-auto scrollbar-thin h-24 sm:h-[600px] border-x border-y sm:border-b"
+export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[600px] border-x border-y sm:border-b"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
