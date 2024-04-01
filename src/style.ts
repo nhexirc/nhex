@@ -33,7 +33,7 @@ export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
 export const SERVER_NAMES_GROUP_TABS = "flex flex-row sm:gap-2 sm:flex-col"
-export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-full p-1 bg-zinc-900 sm:border-l-4 sm:border-y border-zinc-300 border-t-4 sm:border-x-0 border-x"
+export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-44 sm:w-44 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-full p-1 bg-zinc-900 sm:border-l-4 sm:border-y border-zinc-300 border-t-4 sm:border-x-0 border-x"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "cursor-pointer"
