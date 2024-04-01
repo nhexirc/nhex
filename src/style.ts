@@ -23,7 +23,7 @@ export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 p-1 focus:ou
 export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-900 p-1"
 
 //TOPIC
-export const TOPIC_BAR = "italic h-8 resize-none text-center";
+export const TOPIC_BAR = "italic h-8 resize-none text-center overflow-hidden";
 
 //USER INPUT COMPONENT
 export const USER_INPUT = "focus:outline-none"
