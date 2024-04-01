@@ -1,5 +1,5 @@
 //APP
-export const ROOT_STYLE = "flex flex-col bg-zinc-900 text-zinc-300 h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
+export const ROOT_STYLE = "flex flex-col bg-zinc-800 text-zinc-300 h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
 
 //MENU
 export const MENU_STYLE = "flex justify-center py-2 gap-5"
@@ -7,7 +7,7 @@ export const NHEX = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const USER_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[505px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-b border-x sm:border"
+export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[505px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-b border-x sm:border bg-zinc-900"
 
 //IRC COMPONENT
 export const IRC_STYLE = "max-w-7xl mx-auto"
@@ -32,7 +32,8 @@ export const USER_INPUT = "focus:outline-none"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-full p-1 bg-zinc-700 rounded"
+export const SERVER_NAMES_GROUP_TABS = "flex flex-row gap-2 sm:flex-col"
+export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-full p-1 bg-zinc-900 sm:border-l-4 sm:border-y border-zinc-300"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "cursor-pointer"
