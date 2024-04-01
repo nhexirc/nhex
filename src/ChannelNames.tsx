@@ -23,13 +23,13 @@ const ChannelNames = (props: Props) => {
           return a;
         }, [[], [], []])
         .map((inner) => inner.sort((a: string, b: string) =>
-            a.toLowerCase() > b.toLowerCase() ? 1 : -1
+          a.toLowerCase() > b.toLowerCase() ? 1 : -1
         ))
         .flat()
         .map((name) => {
           const color = nickColor(name);
           return (
-            <div
+            <div className='cursor-default select-none'
               id={`channel_name__${name.replace(/\W*/, '')}`}
               style={{ color }}>
               {name}
