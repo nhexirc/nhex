@@ -14,12 +14,12 @@ import {
 } from './lib/types';
 import { SACServers, SACSelect, SACSelectEvent } from './ServersAndChans';
 import messageParser from './lib/messageParser';
-import IRCNicksSet from './lib/IRCNicksSet';
 import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 import preload from "./preload";
 import UserSettings from './lib/userSettings';
+import { nickFromPrefix } from './lib/common';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -240,7 +240,32 @@ const MainView = () => {
       p(event: MBUserInputEvent) {
         return this.part(event);
       },
-      part() {
+      part(event: MBUserInputEvent) {
+        let channel = CUR_SELECTION.channel;
+        if (event.payload.args.length !== 0) {
+          [channel] = event.payload.args;
+        } else {
+          event.payload.args = [channel];
+        }
+
+        if (channel === "") {
+          // can't PART the server!
+          return null;
+        }
+
+        // should probably add - and wait for - and ACK that we actually PART'ed before this?
+
+        delete BUFFERS[CUR_SELECTION.server].buffers[channel];
+
+        if (channel === CUR_SELECTION.channel) {
+          CUR_SELECTION.channel = "";
+          setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[CUR_SELECTION.server].buffers[""], nick));
+        }
+
+        refreshServersAndChans();
+
+        // force override of CUR_SELECTION.channel in the resulting event
+        event.payload["channel"] = channel;
         return "part";
       },
       whois(event: MBUserInputEvent) {

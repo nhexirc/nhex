@@ -6,10 +6,9 @@ type MessageHandler = (networkBuffers: Record<string, Buffer>, parsed: IRCMessag
 type MessageHandlers = Record<string, MessageHandler>;
 
 function joinOrPartHandler(functorName: string, networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
-    const buf = networkBuffers[parsed.params[0].replace('\r\n', '')];
-    const nick = nickFromPrefix(parsed.prefix);
-    buf.names[functorName](nick);
     const { channel } = parsed.params[0].match(/^(?<channel>.*)(?:\r\n)?/).groups;
+    const nick = nickFromPrefix(parsed.prefix);
+    networkBuffers[channel].names[functorName](nick);
     parsed.command = functorName === "add" ? "join" : "part";
     parsed.params[1] = channel;
     return networkBuffers[channel];
@@ -24,6 +23,11 @@ function topicHandler(networkBuffers: Record<string, Buffer>, parsed: IRCMessage
 
     const channel = parsed.params[chanIdx];
     const newTopicComps = parsed.params.slice(topicIdx);
+
+    if (!networkBuffers[channel]) {
+        networkBuffers[channel] = new Buffer(channel);
+    }
+
     networkBuffers[channel].topic = newTopicComps.join(" ").replace("\r\n", "");
     return null;
 }
