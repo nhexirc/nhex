@@ -26,14 +26,14 @@ export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full b
 export const TOPIC_BAR = "italic h-8 resize-none border-b-0";
 
 //USER INPUT COMPONENT
-export const USER_INPUT = "focus:outline-none border-t-0"
+export const USER_INPUT = "focus:outline-none border-t-0 border-b-2"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
 export const SERVER_NAMES_GROUP_TABS = "flex flex-row sm:flex-col"
-export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-44 sm:w-44 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-full p-1 bg-zinc-900 sm:border-l-4 sm:border-y border-zinc-300 border-t sm:border-x-0 border-x"
+export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-44 sm:w-44 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[317px] p-1 bg-zinc-900 sm:border-l-4 sm:border-y border-zinc-300 border-t sm:border-x-0 border-x"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "cursor-pointer"
