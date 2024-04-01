@@ -32,13 +32,13 @@ export const USER_INPUT = "focus:outline-none"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[300px] border-x border-y sm:border-b "
+export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-72 my-1 bg-zinc-700 rounded-l-lg"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "cursor-pointer"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "border-b sm:border-l"
+export const NAMES_PANEL_STYLE = ""
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
