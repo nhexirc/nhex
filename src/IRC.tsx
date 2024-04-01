@@ -25,7 +25,7 @@ const IRC = ({ servers, names, message, settings, topic }) => {
         <div className={IRC_CONDITIONAL_STYLE}>
           <Topic topic={topic} />
           <div className={SERV_MSG_NAMES_PANEL_STYLE}>
-            <div className="flex flex-row sm:flex-col">
+            <div className="flex flex-row gap-2 sm:flex-col">
               <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
               <ChannelNames names={names} />
             </div>
