@@ -11,7 +11,7 @@ export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[38
 
 //IRC COMPONENT
 export const IRC_STYLE = "max-w-7xl mx-auto"
-export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-4"
+export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-2"
 
 //CONNECT COMPONENT
 export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-700 rounded-lg p-2 min-w-96"
