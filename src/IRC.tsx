@@ -14,6 +14,7 @@ const IRC = ({ servers, names, message, settings, topic }) => {
     <>
       {isServerSelected ?
         <div className={IRC_CONDITIONAL_STYLE}>
+          <Topic topic={topic} />
           <div className={SERV_MSG_NAMES_PANEL_STYLE}>
             <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
             <MessageBox lines={message} settings={settings} />
