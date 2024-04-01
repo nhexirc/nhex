@@ -7,7 +7,7 @@ export const NHEX = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const USER_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-x sm:border-t sm:border-0 sm:border-b sm:border-r"
+export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[505px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-b border-x sm:border"
 
 //IRC COMPONENT
 export const IRC_STYLE = "max-w-7xl mx-auto"
@@ -32,13 +32,13 @@ export const USER_INPUT = "focus:outline-none"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[600px] border-x border-y sm:border-b"
+export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[300px] border-x border-y sm:border-b cursor-pointer"
 
 //SERVER
-export const SERVER_PANEL_STYLE = "text-right"
+export const SERVER_PANEL_STYLE = ""
 
 //NAMES
-export const NAMES_PANEL_STYLE = "border-b sm:border-l-0"
+export const NAMES_PANEL_STYLE = "border-b sm:border-l"
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
