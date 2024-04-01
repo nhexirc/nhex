@@ -17,9 +17,11 @@ const IRC = ({ servers, names, message, settings, topic }) => {
           <Topic topic={topic} />
           <div className={SERV_MSG_NAMES_PANEL_STYLE}>
             <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
-            <MessageBox lines={message} settings={settings} />
+            <div>
+              <MessageBox lines={message} settings={settings} />
+              <UserInput />
+            </div>
           </div>
-          <UserInput />
         </div>
         :
         <div className={IRC_CONDITIONAL_STYLE}>
@@ -29,9 +31,11 @@ const IRC = ({ servers, names, message, settings, topic }) => {
               <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} />
               <ChannelNames names={names} />
             </div>
-            <MessageBox lines={message} settings={settings} />
+            <div>
+              <MessageBox lines={message} settings={settings} />
+              <UserInput />
+            </div>
           </div>
-          <UserInput />
         </div>
       }
     </>
