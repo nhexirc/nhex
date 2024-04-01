@@ -11,7 +11,7 @@ export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[38
 
 //IRC COMPONENT
 export const IRC_STYLE = "max-w-7xl mx-auto"
-export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-4"
+export const IRC_CONDITIONAL_STYLE = "flex flex-col"
 
 //CONNECT COMPONENT
 export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-700 rounded-lg p-2 min-w-96"
@@ -23,7 +23,7 @@ export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 p-1 focus:ou
 export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-900 p-1"
 
 //TOPIC
-export const TOPIC_BAR = "italic h-8 resize-none";
+export const TOPIC_BAR = "italic h-8 resize-none border-b-0";
 
 //USER INPUT COMPONENT
 export const USER_INPUT = "focus:outline-none border-t-0"
@@ -32,14 +32,14 @@ export const USER_INPUT = "focus:outline-none border-t-0"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_GROUP_TABS = "flex flex-row sm:gap-2 sm:flex-col"
+export const SERVER_NAMES_GROUP_TABS = "flex flex-row sm:flex-col"
 export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-44 sm:w-44 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-full p-1 bg-zinc-900 sm:border-l-4 sm:border-y border-zinc-300 border-t-4 sm:border-x-0 border-x"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "cursor-pointer"
 
 //NAMES
-export const NAMES_PANEL_STYLE = ""
+export const NAMES_PANEL_STYLE = "sm:border-t-0"
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
