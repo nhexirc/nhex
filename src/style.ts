@@ -26,7 +26,7 @@ export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full b
 export const TOPIC_BAR = "italic h-8 resize-none border-b-0";
 
 //USER INPUT COMPONENT
-export const USER_INPUT = "focus:outline-none border-t-0 border-b-2"
+export const USER_INPUT = "focus:outline-none  border-b-1"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
@@ -39,7 +39,7 @@ export const SERVER_NAMES_PANEL_STYLE = "w-full sm:min-w-44 sm:w-44 px-2 overflo
 export const SERVER_PANEL_STYLE = "cursor-pointer"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "sm:border-t-0"
+export const NAMES_PANEL_STYLE = ""
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
