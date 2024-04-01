@@ -1,12 +1,12 @@
 import { emit } from "@tauri-apps/api/event";
-import { USER_INPUT } from "./style";
+import { TOPIC_USER_INPUT, USER_INPUT } from "./style";
 import { completeNickname } from "./MainView";
 
 const UserInput = () => {
 
   let prefix = "";
   return (
-    <input type="text" className={USER_INPUT} autoFocus onKeyDown={(e) => {
+    <input type="text" className={`${TOPIC_USER_INPUT} ${USER_INPUT}`} autoFocus onKeyDown={(e) => {
       if (e.key === "Tab") {
         const [first, ...rest] = e.currentTarget.value.split(" ");
         if (prefix === "") {
