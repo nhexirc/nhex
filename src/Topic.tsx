@@ -1,8 +1,10 @@
-const TOPIC_BAR = "border-x border-t w-full bg-zinc-900 p-1 focus:outline-none placeholder:font-bold placeholder-zinc-300";
-export default function Topic({ topic }) {
-    return (
-        <div id="topic_bar" className={TOPIC_BAR}>
-            {topic}
-        </div>
-    )
+import { TOPIC_BAR, TOPIC_USER_INPUT } from "./style";
+
+const Topic = ({ topic }) => {
+  return (
+    <textarea placeholder={topic} rows={1} disabled className={`${TOPIC_USER_INPUT} ${TOPIC_BAR}`}>
+    </textarea>
+  )
 };
+
+export default Topic
