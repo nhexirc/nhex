@@ -26,14 +26,14 @@ const ServersAndChans = ({ servers, setIsServerSelected }: { servers: SACProps, 
     <div className={`${SERVER_NAMES_PANEL_STYLE} ${SERVER_PANEL_STYLE}`}>
       {Object.entries(servers).map(([serverName, chans]) => {
         return (
-          <button id={`server_${serverName}`} className='text-right'>
+          <p id={`server_${serverName}`}>
             <h3 className='font-bold' onClick={() => emitServer(serverName)}>{serverName}</h3>
             {chans.sort().map((channel: string) => (
               <p id={`chan_${channel.replace("#", "_")}`} onClick={() => emitServer(serverName, channel)}>
                 {channel}
               </p>
             ))}
-          </button>
+          </p>
         )
       })}
     </div>
