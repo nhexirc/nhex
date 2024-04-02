@@ -7,8 +7,8 @@ export const NHEX = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
 
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
-export const USER_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-x sm:border-t sm:border-0 sm:border-b sm:border-r"
+export const GLOBAL_MESSAGE_STYLE = "pl-2"
+export const MESSAGE_BOX = "font-mono w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-x sm:border-t sm:border-0 sm:border-b sm:border-r"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 

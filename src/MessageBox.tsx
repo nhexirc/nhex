@@ -3,7 +3,7 @@ import { listen } from '@tauri-apps/api/event';
 import { MessageBoxLines } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
-import { MESSAGE_BOX, USERNAME_STYLE, USER_MESSAGE_STYLE, JOIN_PART_MSG, JOIN_PART_MSG_DIM } from "./style";
+import { MESSAGE_BOX, USERNAME_STYLE, JOIN_PART_MSG, JOIN_PART_MSG_DIM, GLOBAL_MESSAGE_STYLE } from "./style";
 
 interface Props {
   lines: MessageBoxLines;
@@ -18,7 +18,7 @@ const MessageBox = (props: Props) => {
   });
 
   const joinPartStyling = () => (JOIN_PART_MSG + " " + (
-    props.settings.userSettings.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : "" 
+    props.settings.userSettings.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : ""
   ));
 
   const commands = {
@@ -58,7 +58,7 @@ const MessageBox = (props: Props) => {
             if (!props.settings.userSettings.MessageBox.show.includes(command)) {
               return false;
             }
-            
+
             return !isUs || !nonReflected.includes(command);
           })
           .map(({ message, isUs }, i) => {
@@ -70,11 +70,11 @@ const MessageBox = (props: Props) => {
               return (
                 <div id={`mb_line_${i}`}>
                   {before}<span
-                    className={`${USERNAME_STYLE} ${isUs ? 'ourName' : ''}`}
+                    className={`${isUs && USERNAME_STYLE}`}
                     style={{ color }}>
                     {nick}
                   </span>{after}
-                  <span className={`${USER_MESSAGE_STYLE} ${isUs ? 'ourMessage' : ''} ${msgStyleExtra}`}>
+                  <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
                     {$message}
                   </span>
                 </div>
