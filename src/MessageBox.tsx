@@ -3,7 +3,7 @@ import { listen } from '@tauri-apps/api/event';
 import { MessageBoxLines } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
-import { MESSAGE_BOX, USERNAME_STYLE, USER_MESSAGE_STYLE } from "./style";
+import { MESSAGE_BOX, USERNAME_STYLE, USER_MESSAGE_STYLE, JOIN_PART_MSG, JOIN_PART_MSG_DIM } from "./style";
 
 interface Props {
   lines: MessageBoxLines;
@@ -12,9 +12,15 @@ interface Props {
 
 const MessageBox = (props: Props) => {
   const mbRef = useRef(null);
+
   listen("nhex://servers_and_chans/selected", () => {
     mbRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   });
+
+  const joinPartStyling = () => (JOIN_PART_MSG + " " + (
+    props.settings.userSettings.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : "" 
+  ));
+
   const commands = {
     action(message: { params: [] }) {
       return ["*", message.params.slice(1).join(" "), "", ""];
@@ -23,16 +29,19 @@ const MessageBox = (props: Props) => {
       return ["<", message.params.slice(1).join(" "), ">", ""];
     },
     join(message: { params: string[] }) {
-      return ["", `has joined ${message.params[1]}`, "", "italic"];
+      console.log('J', props.settings.userSettings.MessageBox);
+      return ["", `has joined ${message.params[1]}`, "", joinPartStyling()];
     },
     part(message: { params: string[] }) {
       let quitMsg = "";
       if (message.params[0] !== message.params[1]) {
         quitMsg = ` (${message.params[0].trim()})`;
       }
-      return ["", `has left ${message.params[1]}${quitMsg}`, "", "italic"];
+      console.log('P', props.settings.userSettings.MessageBox);
+      return ["", `has left ${message.params[1]}${quitMsg}`, "", joinPartStyling()];
     },
   };
+
   // dont show our own join/part messages etc.
   const nonReflected = ["join", "part"];
 

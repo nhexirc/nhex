@@ -13,3 +13,4 @@ tls = true
 
 [MessageBox]
 show = [ "action", "privmsg", "join", "part" ]
+dimJoinsAndParts = false
