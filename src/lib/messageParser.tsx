@@ -76,7 +76,14 @@ const MESSAGE_HANDLERS: MessageHandlers = {
 
         Object.entries(networkBuffers).forEach(([channel, buffer]) => {
             if (channel.length > 0) {
-                buffer.names.delete(nick);
+                // if the user was in the channel, add a "part" message for them to it
+                if (buffer.names.delete(nick)) {
+                    networkBuffers[channel].buffer.push({
+                        ...parsed,
+                        params: [...parsed.params, channel],
+                        command: "part"
+                    });
+                }
             }
         });
 

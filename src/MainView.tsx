@@ -19,7 +19,6 @@ import IRC from "./IRC";
 import Connect from "./Connect";
 import preload from "./preload";
 import UserSettings from './lib/userSettings';
-import { nickFromPrefix } from './lib/common';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };

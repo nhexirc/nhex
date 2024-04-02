@@ -26,7 +26,11 @@ const MessageBox = (props: Props) => {
       return ["", `has joined ${message.params[1]}`, "", "italic"];
     },
     part(message: { params: string[] }) {
-      return ["", `has left ${message.params[1]}`, "", "italic"];
+      let quitMsg = "";
+      if (message.params[0] !== message.params[1]) {
+        quitMsg = ` (${message.params[0].trim()})`;
+      }
+      return ["", `has left ${message.params[1]}${quitMsg}`, "", "italic"];
     },
   };
   // dont show our own join/part messages etc.
