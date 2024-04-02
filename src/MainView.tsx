@@ -121,7 +121,14 @@ const MainView = () => {
       appWindow.close();
     }).then((closeFn) => (unlistenAppClose = closeFn));
 
+    let unlistenSettingsClick;
+    // we could setup a file watcher for the user settings file and not need an explicit
+    // "refresh" button, but for now this works in a pinch
+    listen("nhex://menu/settings", reloadUserSettings)
+      .then((ulFunc) => (unlistenSettingsClick = ulFunc));
+
     return () => {
+      unlistenSettingsClick?.();
       unlistenAppClose?.();
     };
   }, []);

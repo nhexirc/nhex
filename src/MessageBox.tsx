@@ -49,6 +49,7 @@ const MessageBox = (props: Props) => {
             if (!props.settings.userSettings.MessageBox.show.includes(command)) {
               return false;
             }
+            
             return !isUs || !nonReflected.includes(command);
           })
           .map(({ message, isUs }, i) => {
