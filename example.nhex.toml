@@ -2,7 +2,7 @@
 # where $APPCONFIG is defined per platform:
 #  * Windows: C:\Users\<username>\AppData\Roaming
 #  * Linux: ~/.config
-#  * Mac OS: ??
+#  * Mac OS: /Users/<username>/Library/Application Support
 
 [Network]
 server = "irc.libera.chat"
