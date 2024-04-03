@@ -1,20 +1,7 @@
 import { emit } from '@tauri-apps/api/event';
 import { SERVER_NAMES_PANEL_STYLE, SERVER_PANEL_STYLE } from './style';
 import { Dispatch, SetStateAction } from 'react';
-
-export type SACServers = Record<string, string[]>;
-export interface SACProps {
-  servers: SACServers;
-};
-
-export interface SACSelect {
-  server: string;
-  channel: string;
-};
-
-export interface SACSelectEvent {
-  payload: SACSelect
-};
+import { SACProps } from './lib/types';
 
 const ServersAndChans = ({ servers, setIsServerSelected }: { servers: SACProps, setIsServerSelected: Dispatch<SetStateAction<boolean>> }) => {
   function emitServer(server: string, channel: string = "") {
@@ -40,4 +27,4 @@ const ServersAndChans = ({ servers, setIsServerSelected }: { servers: SACProps, 
   );
 }
 
-export default ServersAndChans
+export default ServersAndChans;

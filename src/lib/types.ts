@@ -69,3 +69,17 @@ export class UserInput {
         this.command = command;
     }
 };
+
+export type SACServers = Record<string, string[]>;
+export interface SACProps {
+  servers: SACServers;
+};
+
+export interface SACSelect {
+  server: string;
+  channel: string;
+};
+
+export interface SACSelectEvent {
+  payload: SACSelect
+};
