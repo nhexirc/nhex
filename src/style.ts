@@ -12,6 +12,7 @@ export const MESSAGE_BOX = "bg-zinc-900 font-mono w-96 xl:w-[950px] lg:w-[730px]
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
+export const LINK_ELEMENT_STYLE = "text-sky-500"
 
 //IRC COMPONENT
 export const IRC_STYLE = "max-w-7xl mx-auto"

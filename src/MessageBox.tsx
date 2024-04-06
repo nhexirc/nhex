@@ -3,7 +3,16 @@ import { listen } from '@tauri-apps/api/event';
 import { MessageBoxLines, UserSettingsIface } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
-import { MESSAGE_BOX, USERNAME_STYLE, JOIN_PART_MSG, JOIN_PART_MSG_DIM, GLOBAL_MESSAGE_STYLE, TIMESTAMP_STYLE } from "./style";
+import {
+  MESSAGE_BOX,
+  USERNAME_STYLE,
+  JOIN_PART_MSG,
+  JOIN_PART_MSG_DIM,
+  GLOBAL_MESSAGE_STYLE,
+  TIMESTAMP_STYLE,
+  LINK_ELEMENT_STYLE
+} from "./style";
+import extract_urls from 'extract-urls';
 
 interface PropsSettings {
   userSettings: UserSettingsIface;
@@ -23,6 +32,29 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   second: "numeric",
   hour12: false,
 };
+
+function jsxElementsFromMessage(message: string) {
+  let origMsg = message;
+  let messageElems = [<>{message}</>];
+  const foundLinks = extract_urls(message);
+
+  if (foundLinks?.length) {
+    messageElems = foundLinks.map((l) => {
+      const linkDex = origMsg.indexOf(l);
+      const linkElem = <a href={l} target="_blank" className={LINK_ELEMENT_STYLE}>{l}</a>;
+      const postChunk = origMsg.slice(linkDex + l.length);
+      const next = (<>
+        <span>{origMsg.slice(0, linkDex)}</span>
+        <span>{linkElem}</span>
+        <span>{postChunk}</span>
+      </>);
+      origMsg = postChunk;
+      return next;
+    });
+  }
+
+  return messageElems;
+}
 
 const MessageBox = (props: Props) => {
   const mbRef = useRef(null);
@@ -89,7 +121,7 @@ const MessageBox = (props: Props) => {
               return (
                 <div id={`mb_line_${i}`}>
                   {timestampEle}
-                  {message.raw}
+                  {jsxElementsFromMessage(message.raw)}
                 </div>
               );
             }
@@ -107,7 +139,7 @@ const MessageBox = (props: Props) => {
                   {nick}
                 </span>{after}
                 <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
-                  {$message}
+                  {jsxElementsFromMessage($message)}
                 </span>
               </div>
             );
