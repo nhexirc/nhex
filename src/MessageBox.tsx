@@ -41,13 +41,11 @@ function jsxElementsFromMessage(message: string) {
   if (foundLinks?.length) {
     messageElems = foundLinks.map((l) => {
       const linkDex = origMsg.indexOf(l);
-      const linkElem = <a href={l} target="_blank" className={LINK_ELEMENT_STYLE}>{l}</a>;
-      const postChunk = origMsg.slice(linkDex + l.length);
       const next = (<>
         <span>{origMsg.slice(0, linkDex)}</span>
-        <span>{linkElem}</span>
+        <span><a href={l} target="_blank" className={LINK_ELEMENT_STYLE}>{l}</a></span>
       </>);
-      origMsg = postChunk;
+      origMsg = origMsg.slice(linkDex + l.length);
       return next;
     });
 
