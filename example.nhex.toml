@@ -11,7 +11,7 @@ nick = "nhex-user"
 channels = "#nhex"
 tls = true
 connectCommands = [
-    "/msg NickServ IDENTIFY nhex is4c001C1i3nt"
+    "/msg NickServ IDENTIFY nhex-user p4ssw0rd"
 ]
 expectLoggedInAfterConnectCommands = true
 
