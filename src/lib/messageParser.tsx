@@ -1,6 +1,7 @@
-import { Buffer, IRCMessageParsed, MessageParserReturn } from './types';
+import { Buffer, IRCMessageEvent, IRCMessageParsed, MessageParserReturn } from './types';
 import { nickFromPrefix } from './common';
 import IRCNicksSet from './IRCNicksSet';
+import { parse } from 'irc-message';
 
 type MessageHandler = (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => Buffer;
 type MessageHandlers = Record<string, MessageHandler>;
@@ -135,8 +136,11 @@ const NUMERIC_HANDLERS: MessageHandlers = {
 export default function (
     currentServer: string,
     networkBuffers: Record<string, Buffer>,
-    parsed: IRCMessageParsed
+    event: IRCMessageEvent,
 ): MessageParserReturn {
+    const parsed: IRCMessageParsed = parse(event.payload.message);
+    parsed.timestamp = event.payload.timestamp;
+
     let currentBuffer: Buffer = networkBuffers[""];
 
     if (MESSAGE_HANDLERS[parsed.command.toLowerCase()]) {

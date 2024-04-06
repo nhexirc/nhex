@@ -1,13 +1,27 @@
 import { useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
-import { MessageBoxLines } from './lib/types';
+import { MessageBoxLines, UserSettingsIface } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
-import { MESSAGE_BOX, USERNAME_STYLE, JOIN_PART_MSG, JOIN_PART_MSG_DIM, GLOBAL_MESSAGE_STYLE } from "./style";
+import { MESSAGE_BOX, USERNAME_STYLE, JOIN_PART_MSG, JOIN_PART_MSG_DIM, GLOBAL_MESSAGE_STYLE, TIMESTAMP_STYLE } from "./style";
+
+interface PropsSettings {
+  userSettings: UserSettingsIface;
+};
 
 interface Props {
   lines: MessageBoxLines;
-  settings: Record<string, any>;
+  settings: PropsSettings;
+};
+
+const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: false,
 };
 
 const MessageBox = (props: Props) => {
@@ -63,26 +77,38 @@ const MessageBox = (props: Props) => {
           })
           .map(({ message, isUs }, i) => {
             const command = message.command.toLowerCase();
-            if (Object.keys(commands).includes(command)) {
-              const nick = nickFromPrefix(message.prefix);
-              const color = nickColor(nick);
-              const [before, $message, after, msgStyleExtra] = commands[command](message);
+            let timestampEle = <></>;
+
+            if (props.settings.userSettings.MessageBox?.showTimestamps === true) {
+              timestampEle = <span className={TIMESTAMP_STYLE}>[{
+                Intl.DateTimeFormat(undefined, MessageTimestampFormatOptions).format(new Date(message.timestamp))
+              }]</span>;
+            }
+
+            if (!Object.keys(commands).includes(command)) {
               return (
                 <div id={`mb_line_${i}`}>
-                  {before}<span
-                    className={`${isUs && USERNAME_STYLE}`}
-                    style={{ color }}>
-                    {nick}
-                  </span>{after}
-                  <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
-                    {$message}
-                  </span>
+                  {timestampEle}
+                  {message.raw}
                 </div>
               );
             }
+
+            const nick = nickFromPrefix(message.prefix);
+            const color = nickColor(nick);
+            const [before, $message, after, msgStyleExtra] = commands[command](message);
+
             return (
               <div id={`mb_line_${i}`}>
-                {message.raw}
+                {timestampEle}
+                {before}<span
+                  className={`${isUs && USERNAME_STYLE}`}
+                  style={{ color }}>
+                  {nick}
+                </span>{after}
+                <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
+                  {$message}
+                </span>
               </div>
             );
           })}

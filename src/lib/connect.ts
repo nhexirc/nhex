@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
-import { parse } from 'irc-message';
 import messageParser from './messageParser';
 import {
   Buffer,
@@ -63,7 +62,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       return;
     }
 
-    let { currentBuffer, parsed } = messageParser(server, networkBuffers, parse(event.payload.message));
+    let { currentBuffer, parsed } = messageParser(server, networkBuffers, event);
 
     if (parsed.command === "376" /* RPL_ENDOFMOTD */) {
       realSetIsConnected(true);
@@ -103,13 +102,12 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
 
   const handlers = {
     privmsg(event: MBUserInputEvent) {
-      BUFFERS[getCurSelection().server].buffers[getCurSelection().channel].buffer.push({
-        command: "PRIVMSG",
-        params: [getCurSelection().channel, ...event.payload.args],
-        prefix: nick, ///TODO: this better
-        raw: event.payload.raw,
-        tags: {}
-      });
+      BUFFERS[getCurSelection().server].buffers[getCurSelection().channel].buffer.push(new IRCMessageParsed(
+        "PRIVMSG",
+        [getCurSelection().channel, ...event.payload.args],
+        nick, ///TODO: this better
+        event.payload.raw,
+      ));
 
       emit("nhex://servers_and_chans/select", getCurSelection());
       return "privmsg";
@@ -123,13 +121,12 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
         buf = BUFFERS[getCurSelection().server].buffers[pmPartnerNick] = new Buffer(pmPartnerNick);
       }
 
-      buf.buffer.push({
-        command: "PRIVMSG",
-        params: [pmPartnerNick, ...messageParams],
-        prefix: nick, ///TODO: this better
-        raw: messageParams.join(" "),
-        tags: {}
-      });
+      buf.buffer.push(new IRCMessageParsed(
+        "PRIVMSG",
+        [pmPartnerNick, ...messageParams],
+        nick, ///TODO: this better
+        messageParams.join(" "),
+      ));
 
       refreshServersAndChans();
       return "msg";

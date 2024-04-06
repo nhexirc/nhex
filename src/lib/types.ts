@@ -3,19 +3,28 @@ import IRCNicksSet from './IRCNicksSet';
 export interface IRCMessagePayload {
     message: string;
     server: string;
+    timestamp: number;
 };
 
 export interface IRCMessageEvent {
     payload: IRCMessagePayload;
 };
 
-export interface IRCMessageParsed {
+export class IRCMessageParsed {
     command: string;
     params: string[];
     prefix: string;
     raw: string;
-    tags: Record<string, any>;
-    fromServer?: boolean;
+    tags: Record<string, any> = {};
+    timestamp: number = Number(new Date());
+    fromServer: boolean = false;
+
+    constructor(command: string, params: string[], prefix: string, raw: string) {
+        this.command = command;
+        this.params = params;
+        this.prefix = prefix;
+        this.raw = raw;
+    }
 };
 
 export class Buffer {
@@ -39,6 +48,7 @@ export interface MBUserInputRaw {
     command: string;
     args: string[];
     argsStr: string;
+    timestamp: number;
 };
 
 export interface MBUserInputEvent {
@@ -87,6 +97,7 @@ export interface SACSelectEvent {
 export interface MessageBoxUserSettings {
     show?: string[]; // valid values are: [ "action", "privmsg", "part", "join" ]
     dimJoinsAndParts?: boolean;
+    showTimestamps?: boolean;
 };
 
 export interface NetworkUserSettings {

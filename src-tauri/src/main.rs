@@ -1,16 +1,19 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::time::{SystemTime, UNIX_EPOCH};
 use futures::prelude::*;
 use irc::client::prelude::*;
 use irc::proto::Command;
 use serde::{Deserialize, Serialize};
 use tauri::{Manager, Window, async_runtime};
+use chrono::prelude::*;
 
 #[derive(Clone, serde::Serialize)]
 struct IRCMessage {
     message: String,
     server: String,
+    timestamp: u128,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -107,13 +110,17 @@ async fn connect_impl(
 
     let server_clone = server.clone();
     while let Ok(Some(message)) = sstream.next().await.transpose() {
-        print!("<{}> {}", server_clone.clone(), message);
+        let now = SystemTime::now();
+        let now_since_epoch = now.duration_since(UNIX_EPOCH).expect("time");
+        let now_dt: DateTime<Local> = now.into();
+        print!("[{}] <{}> {}", now_dt.format("%d/%m/%Y %T%.3f"), server_clone.clone(), message);
         window
             .emit(
                 "nhex://irc_message",
                 IRCMessage {
                     server: server_clone.clone(),
                     message: message.to_string(),
+                    timestamp: now_since_epoch.as_millis(),
                 },
             )
             .expect("emit");

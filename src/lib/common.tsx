@@ -21,5 +21,6 @@ export function parseMBUserInputRaw(raw: string): MBUserInputRaw {
       command,
       args,
       argsStr: args.join(" "),
+      timestamp: Number(new Date()),
     };
 }
