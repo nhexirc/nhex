@@ -91,6 +91,11 @@ const MessageBox = (props: Props) => {
   // dont show our own join/part messages etc.
   const nonReflected = ["join", "part"];
 
+  let messageContainerStyle = "text-base";
+  if (props.settings.userSettings.MessageBox?.fontSize) {
+    messageContainerStyle = `text-${props.settings.userSettings.MessageBox?.fontSize}`;
+  }
+
   return (
     <div className={MESSAGE_BOX}>
       <div id="message_area" ref={mbRef}>
@@ -119,7 +124,7 @@ const MessageBox = (props: Props) => {
 
             if (!Object.keys(commands).includes(command)) {
               return (
-                <div id={`mb_line_${i}`}>
+                <div id={`mb_line_${i}`} className={messageContainerStyle}>
                   {timestampEle}
                   {jsxElementsFromMessage(message.raw)}
                 </div>
@@ -131,7 +136,7 @@ const MessageBox = (props: Props) => {
             const [before, $message, after, msgStyleExtra] = commands[command](message);
 
             return (
-              <div id={`mb_line_${i}`}>
+              <div id={`mb_line_${i}`} className={messageContainerStyle}>
                 {timestampEle}
                 {before}<span
                   className={`${isUs && USERNAME_STYLE}`}

@@ -19,3 +19,4 @@ expectLoggedInAfterConnectCommands = true
 show = [ "action", "privmsg", "join", "part" ]
 dimJoinsAndParts = false
 showTimestamps = false
+fontSize = "sm"
