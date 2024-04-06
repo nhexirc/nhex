@@ -10,9 +10,8 @@ import {
   JOIN_PART_MSG_DIM,
   GLOBAL_MESSAGE_STYLE,
   TIMESTAMP_STYLE,
-  LINK_ELEMENT_STYLE
 } from "./style";
-import extract_urls from 'extract-urls';
+import transformMessage from "./lib/transformMessage.jsx";
 
 interface PropsSettings {
   userSettings: UserSettingsIface;
@@ -32,32 +31,6 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   second: "numeric",
   hour12: false,
 };
-
-function jsxElementsFromMessage(message: string) {
-  let origMsg = message;
-  let messageElems = [<>{message}</>];
-  const foundLinks = extract_urls(message);
-
-  if (foundLinks?.length) {
-    messageElems = foundLinks.map((l) => {
-      const linkDex = origMsg.indexOf(l);
-      const next = (<>
-        <span>{origMsg.slice(0, linkDex)}</span>
-        <span><a href={l} target="_blank" className={LINK_ELEMENT_STYLE}>{l}</a></span>
-      </>);
-      origMsg = origMsg.slice(linkDex + l.length);
-      return next;
-    });
-
-    // handle trailing text, if any
-    origMsg = origMsg.trim();
-    if (origMsg.trim().length) {
-      messageElems.push(<><span>{origMsg}</span></>);
-    }
-  }
-
-  return messageElems;
-}
 
 const MessageBox = (props: Props) => {
   const mbRef = useRef(null);
@@ -129,7 +102,7 @@ const MessageBox = (props: Props) => {
               return (
                 <div id={`mb_line_${i}`} className={messageContainerStyle}>
                   {timestampEle}
-                  {jsxElementsFromMessage(message.raw)}
+                  {transformMessage(message.raw)}
                 </div>
               );
             }
