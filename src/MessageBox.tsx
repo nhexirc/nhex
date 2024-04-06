@@ -46,11 +46,16 @@ function jsxElementsFromMessage(message: string) {
       const next = (<>
         <span>{origMsg.slice(0, linkDex)}</span>
         <span>{linkElem}</span>
-        <span>{postChunk}</span>
       </>);
       origMsg = postChunk;
       return next;
     });
+
+    // handle trailing text, if any
+    origMsg = origMsg.trim();
+    if (origMsg.trim().length) {
+      messageElems.push(<><span>{origMsg}</span></>);
+    }
   }
 
   return messageElems;
