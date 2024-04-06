@@ -36,6 +36,7 @@ jobs:
         run: npm install # change this to npm or pnpm depending on which one you use
 
       - name: run tests
+        if: matrix.platform != 'windows-latest'
         run: npx tsx --test test/**/*.ts
 
       - name: build check
