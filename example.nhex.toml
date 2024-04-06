@@ -1,5 +1,5 @@
 # This file lives at $APPCONFIG/dev.nhdex/nhex.toml
-# where $APPCONFIG is defined per platform:
+# where $APPCONFIG is defined per platform as:
 #  * Windows: C:\Users\<username>\AppData\Roaming
 #  * Linux: ~/.config
 #  * Mac OS: /Users/<username>/Library/Application Support
@@ -10,6 +10,10 @@ port = 6697
 nick = "nhex-user"
 channels = "#nhex"
 tls = true
+connectCommands = [
+    "/msg NickServ IDENTIFY nhex is4c001C1i3nt"
+]
+expectLoggedInAfterConnectCommands = true
 
 [MessageBox]
 show = [ "action", "privmsg", "join", "part" ]

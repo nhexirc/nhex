@@ -33,7 +33,6 @@ async fn connect_impl(
     server: String,
     port: u16,
     tls: bool,
-    channels: Vec<String>,
     window: Window,
     app_handle: tauri::AppHandle,
 ) {
@@ -42,7 +41,6 @@ async fn connect_impl(
         server: Some(server.clone()),
         port: Some(port),
         use_tls: Some(tls),
-        channels: channels,
         version: Some("https://nhex.dev".to_owned()),
         ..Config::default()
     };
@@ -130,12 +128,11 @@ async fn connect(
     server: String,
     port: u16,
     tls: bool,
-    channels: Vec<String>,
     window: Window,
     app_handle: tauri::AppHandle,
 ) {
     async_runtime::spawn(
-        connect_impl(nick, server, port, tls, channels, window, app_handle)
+        connect_impl(nick, server, port, tls, window, app_handle)
     );
 }
 

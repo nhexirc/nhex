@@ -19,7 +19,12 @@ function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): Message
   }));
 }
 
-export default async function (context: Record<any, any>) {
+export interface ConnectOptions {
+  postMotdCallback?: () => Promise<void>;
+  loggedInCallback?: () => Promise<void>;
+};
+
+export default async function (context: Record<any, any>, options?: ConnectOptions) {
   const {
     nick,
     server,
@@ -53,7 +58,7 @@ export default async function (context: Record<any, any>) {
 
   const networkBuffers = BUFFERS[server].buffers;
 
-  await listen('nhex://irc_message', (event: IRCMessageEvent) => {
+  await listen('nhex://irc_message', async (event: IRCMessageEvent) => {
     if (event.payload.server !== server) {
       return;
     }
@@ -63,6 +68,10 @@ export default async function (context: Record<any, any>) {
     if (parsed.command === "376" /* RPL_ENDOFMOTD */) {
       realSetIsConnected(true);
       console.log('connected!', nick, server, port, channels, isConnected);
+      await options?.postMotdCallback();
+    }
+    else if (parsed.command === "900" /* RPL_LOGGEDIN */) {
+      await options?.loggedInCallback();
     }
 
     if (!currentBuffer) {
@@ -198,6 +207,5 @@ export default async function (context: Record<any, any>) {
     // how to properly handle rust underscore vs. JS camelcase?
     port: Number.parseInt(port),
     tls,
-    channels: channels.split(" ")
   });
 }

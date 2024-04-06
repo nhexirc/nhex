@@ -1,6 +1,7 @@
 import { emit } from "@tauri-apps/api/event";
 import { TOPIC_USER_INPUT, USER_INPUT } from "./style";
 import { completeNickname } from "./MainView";
+import { parseMBUserInputRaw } from './lib/common';
 
 const UserInput = () => {
 
@@ -22,19 +23,9 @@ const UserInput = () => {
       // reset prefix
       prefix = "";
       if (e.key === "Enter") {
-        const userInput = e.currentTarget.value.trim();
+        const userInput = parseMBUserInputRaw(e.currentTarget.value);
         e.currentTarget.value = "";
-
-        const uiSplit = userInput.split(" ");
-        const command = userInput.match(/^\s*\/(\w+)/)?.[1] ?? "";
-
-        const args = uiSplit.slice((command === "") ? 0 : 1);
-        emit("nhex://user_input/raw", {
-          raw: userInput,
-          command,
-          args,
-          argsStr: args.join(" "),
-        }).catch(console.error);
+        emit("nhex://user_input/raw", userInput).catch(console.error);
       }
     }} />
   )

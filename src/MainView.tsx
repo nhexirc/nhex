@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { listen } from '@tauri-apps/api/event';
+import { emit, listen } from '@tauri-apps/api/event';
 import { appWindow } from "@tauri-apps/api/window";
 import {
   NetworkBuffer,
   MessageBoxLines,
   SACServers,
   SACSelect,
+  UserSettingsIface,
 } from './lib/types';
 import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
@@ -14,6 +15,7 @@ import preload from "./preload";
 import UserSettings from './lib/userSettings';
 import connect from './lib/connect';
 import disconnect from './lib/disconnect';
+import { parseMBUserInputRaw } from './lib/common';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
@@ -50,7 +52,7 @@ const MainView = () => {
   const [serversAndChans, setServersAndChans] = useState<SACServers>({});
   const [channelNames, setChannelNames] = useState<Set<string>>(new Set());
   const [isConnected, setIsConnected] = useState(false);
-  const [userSettings, setUserSettings] = useState({});
+  const [userSettings, setUserSettings] = useState<UserSettingsIface>({});
   const [topic, setTopic] = useState("");
 
   const realSetIsConnected = (val) => {
@@ -150,7 +152,31 @@ const MainView = () => {
             tls={tls}
             connect={async (e: any) => {
               e.preventDefault();
-              await connect(connectContext);
+
+              const postConnectCommands = async () => {
+                await emit("nhex://user_input/raw", parseMBUserInputRaw(`/join ${channels}`));
+              };
+
+              let loggedInCallback;
+              if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
+                loggedInCallback = postConnectCommands;
+              }
+
+              const postMotdCallback = async () => {
+                await emit("nhex://servers_and_chans/select", { server, channel: "" });
+  
+                if (userSettings.Network?.connectCommands) {
+                  await Promise.all(userSettings.Network.connectCommands
+                    .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
+                }
+
+                if (!loggedInCallback) {
+                  await postConnectCommands();
+                }
+              };
+
+              await connect(connectContext, { postMotdCallback, loggedInCallback });
+
               // shows the main UI
               setIsConnected(true);
             }} />

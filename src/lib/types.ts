@@ -83,3 +83,26 @@ export interface SACSelect {
 export interface SACSelectEvent {
   payload: SACSelect
 };
+
+export interface MessageBoxUserSettings {
+    show?: string[]; // valid values are: [ "action", "privmsg", "part", "join" ]
+    dimJoinsAndParts?: boolean;
+};
+
+export interface NetworkUserSettings {
+    server?: string;
+    port?: number;
+    nick?: string;
+    channels?: string; // space-delimited (like /join)
+    tls?: boolean;
+    connectCommands?: string[];
+    // if set to 'true', connectCommands is expected to contain a command that will eventually
+    // produce the RPL_LOGGEDIN (900) protocol message: without this message receipt, no channels
+    // will be joined!
+    expectLoggedInAfterConnectCommands?: boolean;
+};
+
+export interface UserSettingsIface {
+    MessageBox?: MessageBoxUserSettings;
+    Network?: NetworkUserSettings;
+}
