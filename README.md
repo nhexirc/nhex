@@ -27,6 +27,7 @@ The menu bar is mostly non-functional, save for these exceptions:
 * "nhex" will take you to the project's homepage
 * "view" will reset the channel activity highlights
 * "settings" will reload the user settings from disk
+* the "day/night" icon will toggle the theme
 
 # Developing
 
