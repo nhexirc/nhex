@@ -1,4 +1,4 @@
-import { SERVER_CONNECT_BUTTON, SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
+import { CONNECT_STYLE, SERVER_CONNECT_BUTTON, SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
 
 const Connect = ({
   nick,
@@ -13,7 +13,7 @@ const Connect = ({
   tls,
   connect }) => {
   return (
-    <>
+    <div className={CONNECT_STYLE}>
       <p className="text-8xl italic text-center">nhex</p>
       <p className="text-center text-sm">IRC Client</p>
       <form
@@ -68,7 +68,7 @@ const Connect = ({
           >Connect</button>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 
