@@ -10,7 +10,7 @@ export const NHEX = "px-1 rounded bg-zinc-400/50"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "bg-zinc-900/30 font-mono w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-x sm:border-t sm:border-0 sm:border-b sm:border-r"
+export const MESSAGE_BOX = "bg-zinc-600/30 font-mono w-96 xl:w-[950px] lg:w-[730px] md:w-[480px] sm:w-[380px] sm:h-[600px] h-[408px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-x sm:border-t sm:border-0 sm:border-b sm:border-r"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
@@ -28,7 +28,7 @@ export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-950/50 p-1 fo
 export const SERVER_CONNECT_BUTTON = "border px-2 py-1 bg-blue-500/50 border-blue-200 font-bold"
 
 //TOPIC + USER INPUT
-export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-900/20 p-1"
+export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-500/50 p-1"
 
 //TOPIC
 export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-auto";
@@ -40,7 +40,7 @@ export const USER_INPUT = "focus:outline-none"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row mx-auto"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-800/50 w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[600px] border-x border-y sm:border-b"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-700/60 w-full sm:min-w-32 sm:w-32 px-2 overflow-x-auto overflow-y-auto scrollbar-thin h-24 sm:h-[600px] border-x border-y sm:border-b"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
