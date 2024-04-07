@@ -11,7 +11,7 @@ export const MENU_STYLE = "flex flex-row items-center justify-center py-2 sm:gap
 export const IRC_STYLE = "flex flex-col px-4"
 
 //CONNECT COMPONENT
-export const CONNECT_STYLE = "flex flex-col items-center justify-center bg-zinc-500/30 rounded-lg h-full w-full shadow-xl"
+export const CONNECT_STYLE = "flex flex-col items-center justify-center bg-zinc-500/20 h-full w-full shadow-xl"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2 w-3/4 sm:w-96"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
 export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-200/50 p-1 focus:outline-none rounded"
