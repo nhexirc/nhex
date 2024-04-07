@@ -13,11 +13,11 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 
 <img src="./public/screenshots/nh_mobile.png" width="320" />
 
-# Download
+# Downloading
 
 See the [latest release](https://github.com/nhexirc/nhex/releases/latest) to download installers for Debian-based Linux distros, Windows & Mac OS.
 
-# Usage
+# Using
 
 Currently there is no Settings UI, so all user settings are controlled via a TOML file, a full example of which is [here](example.nhex.toml). This example settings file also serves as the primary documentation for the file format.
 
