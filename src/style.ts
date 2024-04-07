@@ -1,5 +1,5 @@
 //APP
-export const ROOT_STYLE = "flex flex-col h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
+export const ROOT_STYLE = "flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
 export const NIGHT_STYLE = "bg-slate-900 text-stone-300"
 export const DAY_STYLE = "bg-orange-400/30 text-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
@@ -7,7 +7,7 @@ export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "bg-zinc-700/30 w-full font-mono h-[407px] sm:h-[600px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-y sm:border-y-0"
+export const MESSAGE_BOX = "bg-zinc-700/30 w-full font-mono h-[555px] sm:h-[650px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-y sm:border-y-0"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
@@ -15,7 +15,7 @@ export const LINK_ELEMENT_STYLE = "text-sky-600"
 
 //IRC COMPONENT
 export const IRC_STYLE = ""
-export const IRC_CONDITIONAL_STYLE = "flex flex-col"
+export const IRC_CONDITIONAL_STYLE = "flex flex-col px-4"
 
 //CONNECT COMPONENT
 export const MENU_STYLE = "flex flex-row items-center justify-center py-2 gap-4"
@@ -41,7 +41,7 @@ export const USER_INPUT = "focus:outline-none"
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col justify-between sm:flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-600/60 sm:max-w-36 w-full px-2 overflow-auto scrollbar-thin h-24 sm:h-[600px] border-x"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-600/60 sm:max-w-36 w-full px-2 overflow-auto scrollbar-thin h-24 sm:h-[650px] border-x"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
