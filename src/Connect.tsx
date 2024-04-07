@@ -1,4 +1,4 @@
-import { SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
+import { SERVER_CONNECT_BUTTON, SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
 
 const Connect = ({
   nick,
@@ -65,7 +65,7 @@ const Connect = ({
           <button
             type="submit"
             onClick={(e) => (e.currentTarget.textContent = 'Disconnect')} //needs wiring
-            className="border px-2 py-1"
+            className={SERVER_CONNECT_BUTTON}
           >Connect</button>
         </div>
       </form>

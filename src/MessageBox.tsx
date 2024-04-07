@@ -10,6 +10,7 @@ import {
   JOIN_PART_MSG_DIM,
   GLOBAL_MESSAGE_STYLE,
   TIMESTAMP_STYLE,
+  UNIFORM_BORDER_STYLE,
 } from "./style";
 import transformMessage from "./lib/transformMessage.jsx";
 
@@ -73,7 +74,7 @@ const MessageBox = (props: Props) => {
   }
 
   return (
-    <div className={MESSAGE_BOX}>
+    <div className={`${MESSAGE_BOX} ${UNIFORM_BORDER_STYLE}`}>
       <div id="message_area" ref={mbRef}>
         {props.lines
           .filter(({ message, isUs }) => {
@@ -126,7 +127,7 @@ const MessageBox = (props: Props) => {
             );
           })}
       </div>
-    </div>
+    </div >
   );
 }
 

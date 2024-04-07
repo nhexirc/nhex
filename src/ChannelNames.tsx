@@ -1,5 +1,5 @@
 import nickColor from './lib/nickColor';
-import { NAMES_PANEL_STYLE, SERVER_NAMES_PANEL_STYLE } from './style';
+import { NAMES_PANEL_STYLE, SERVER_NAMES_PANEL_STYLE, UNIFORM_BORDER_STYLE } from './style';
 
 interface Props {
   names: Set<string>;
@@ -7,7 +7,7 @@ interface Props {
 
 const ChannelNames = (props: Props) => {
   return (
-    <div className={`${SERVER_NAMES_PANEL_STYLE} ${NAMES_PANEL_STYLE}`}>
+    <div className={`${SERVER_NAMES_PANEL_STYLE} ${NAMES_PANEL_STYLE} ${UNIFORM_BORDER_STYLE}`}>
       {[...props.names]
         .reduce((a, cur) => {
           const [ops, voiced, normies] = a;
@@ -23,7 +23,7 @@ const ChannelNames = (props: Props) => {
           return a;
         }, [[], [], []])
         .map((inner) => inner.sort((a: string, b: string) =>
-            a.toLowerCase() > b.toLowerCase() ? 1 : -1
+          a.toLowerCase() > b.toLowerCase() ? 1 : -1
         ))
         .flat()
         .map((name) => {
