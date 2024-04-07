@@ -1,9 +1,10 @@
 //APP
-export const ROOT_STYLE = "flex flex-col bg-slate-950 text-zinc-300 h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
-
+export const ROOT_STYLE = "flex flex-col  h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
+export const NIGHT_STYLE = "bg-slate-950 text-zinc-300"
+export const DAY_STYLE = "bg-zinc-300 text-slate-950"
 //MENU
 export const MENU_STYLE = "flex justify-center py-2 gap-5"
-export const NHEX = "bg-zinc-300 text-zinc-800 px-1 rounded hover:bg-zinc-200"
+export const NHEX = "px-1 rounded bg-zinc-400/50"
 
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
@@ -19,10 +20,10 @@ export const IRC_STYLE = "max-w-7xl mx-auto"
 export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-2"
 
 //CONNECT COMPONENT
-export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-700 rounded-lg p-2 min-w-96"
+export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-500/50 rounded-lg p-2 min-w-96"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
-export const SERVER_INPUT_STYLE = "bg-zinc-800 placeholder-zinc-400 p-1 focus:outline-none"
+export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-400 p-1 focus:outline-none border border-zinc-300/70"
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-900 p-1"
@@ -49,6 +50,6 @@ export const NAMES_PANEL_STYLE = "border-b sm:border-l-0"
 export const FOOTER_STYLE = "pb-4 pt-2"
 
 //TLS STYLING
-export const TLS_ACTIVE_STYLE = `border-green-300 bg-green-800`
-export const TLS_INACTIVE_STYLE = `border-red-500 bg-red-800`
+export const TLS_ACTIVE_STYLE = `border-green-300 bg-green-700/70`
+export const TLS_INACTIVE_STYLE = `border-red-500 bg-red-700/70`
 export const TLS_BUTTON_STYLE = `border px-2 py-1 cursor-pointer select-none text-center`
