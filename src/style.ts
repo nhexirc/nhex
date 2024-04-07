@@ -7,7 +7,7 @@ export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "bg-zinc-800/20 w-full font-mono h-[407px] sm:h-[600px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden"
+export const MESSAGE_BOX = "bg-zinc-700/30 w-full font-mono h-[407px] sm:h-[600px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-y sm:border-y-0"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
