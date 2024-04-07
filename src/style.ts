@@ -24,7 +24,7 @@ export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-2"
 export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-500/50 rounded-lg p-2 min-w-[420px]"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
-export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-400 p-1 focus:outline-none border border-zinc-300/70"
+export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-950/50 p-1 focus:outline-none border"
 export const SERVER_CONNECT_BUTTON = "border px-2 py-1 bg-blue-500/50 border-blue-200 font-bold"
 
 //TOPIC + USER INPUT
