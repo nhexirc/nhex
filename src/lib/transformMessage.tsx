@@ -20,8 +20,7 @@ function jsxElementsFromMessage(message: string) {
     });
 
     // handle trailing text, if any
-    origMsg = origMsg.trim();
-    if (origMsg.trim().length) {
+    if (origMsg.length) {
       messageElems.push(<><span>{origMsg}</span></>);
     }
   }
