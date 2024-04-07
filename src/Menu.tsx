@@ -9,7 +9,7 @@ const Menu = ({ dayNightToggle, isNight }) => {
     <div className={MENU_STYLE}>
       <a href="https://github.com/nhexirc/client" target="_blank" className="font-bold">nhex</a>
       {items.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
-      <button onClick={dayNightToggle}><img className="w-8" src={isNight ? sun : moon} alt="day/night toggle" /></button>
+      <button onClick={dayNightToggle}><img className="min-w-8 max-w-8" src={isNight ? sun : moon} alt="day/night toggle" /></button>
     </div>
   );
 }
