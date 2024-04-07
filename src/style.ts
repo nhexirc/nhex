@@ -1,11 +1,10 @@
 //APP
 export const ROOT_STYLE = "flex flex-col  h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
-export const NIGHT_STYLE = "bg-slate-950 text-zinc-300"
-export const DAY_STYLE = "bg-zinc-300 text-slate-950"
+export const NIGHT_STYLE = "bg-slate-900 text-stone-300"
+export const DAY_STYLE = "bg-orange-300/40 text-black"
 
 //MENU
 export const MENU_STYLE = "flex items-center justify-center py-2 gap-5"
-export const NHEX = "px-1 rounded bg-zinc-400/50"
 
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
@@ -21,11 +20,14 @@ export const IRC_STYLE = "max-w-7xl mx-auto"
 export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-2"
 
 //CONNECT COMPONENT
-export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-500/50 rounded-lg p-2 min-w-[420px]"
+export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-500/30 rounded-lg p-2 min-w-[420px]"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
-export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-950/50 p-1 focus:outline-none border"
-export const SERVER_CONNECT_BUTTON = "border px-2 py-1 bg-blue-500/50 border-blue-200 font-bold"
+export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-950/50 p-1 focus:outline-none rounded"
+export const SERVER_CONNECT_BUTTON = "border px-2 py-1 bg-blue-500/50 border-blue-100/90 font-bold rounded"
+export const TLS_ACTIVE_STYLE = `border-green-300 bg-green-700/70`
+export const TLS_INACTIVE_STYLE = `border-red-500 bg-red-700/70`
+export const TLS_BUTTON_STYLE = `px-2 py-1 cursor-pointer select-none text-center rounded`
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "w-96 sm:w-full sm:max-w-[635px] md:max-w-full border bg-zinc-500/50 p-1"
@@ -53,7 +55,3 @@ export const NAMES_PANEL_STYLE = "border-b sm:border-l-0"
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
 
-//TLS STYLING
-export const TLS_ACTIVE_STYLE = `border-green-300 bg-green-700/70`
-export const TLS_INACTIVE_STYLE = `border-red-500 bg-red-700/70`
-export const TLS_BUTTON_STYLE = `border px-2 py-1 cursor-pointer select-none text-center`
