@@ -24,6 +24,10 @@ const getCurSelection = () => ({ ...CUR_SELECTION });
 const STATE = {
   connected: false
 };
+const SETTINGS = {
+  userSettings: {}
+};
+const getUserSettings = () => ({ ...SETTINGS.userSettings });
 
 // try to complete nickname
 export const completeNickname = (prefix: string, skipFrom: string): string => {
@@ -62,6 +66,7 @@ const MainView = () => {
   };
 
   const reloadUserSettings = () => UserSettings.load().then((settings) => {
+    SETTINGS.userSettings = settings;
     setUserSettings(settings);
     return settings;
   });
@@ -146,6 +151,7 @@ const MainView = () => {
     setChannelNames,
     setTopic,
     refreshServersAndChans,
+    getUserSettings,
   };
 
   // will need a disconnect function above with the bool state variable to bring us back to login after disconnecting

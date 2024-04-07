@@ -10,7 +10,6 @@ import {
   SACSelectEvent,
 } from './types';
 
-
 function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
   return buffer.buffer.map((parsed: IRCMessageParsed) => ({
     message: parsed,
@@ -40,6 +39,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
     setChannelNames,
     setTopic,
     refreshServersAndChans,
+    getUserSettings,
   } = context;
 
   console.log('connect...', nick, server, port, channels, isConnected);
@@ -88,7 +88,10 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
         emit("nhex://servers_and_chans/selected", getCurSelection());
       }
       else {
-        currentBuffer.dirty = true;
+        let relevantCmd = (parsed.command === 'quit' ? 'part' : parsed.command).toLowerCase();
+        if (getUserSettings()?.MessageBox?.show?.includes(relevantCmd) ?? true) {
+          currentBuffer.dirty = true;
+        }
       }
     }
 
