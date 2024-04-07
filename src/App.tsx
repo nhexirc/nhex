@@ -15,7 +15,7 @@ const App = () => {
     <div className={`${ROOT_STYLE} ${isNight ? NIGHT_STYLE : DAY_STYLE}`}>
       <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
       <MainView />
-      <Footer />
+      <Footer isNight={isNight} />
     </div >
   );
 }
