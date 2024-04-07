@@ -13,7 +13,7 @@ import {
 function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
   return buffer.buffer.map((parsed: IRCMessageParsed) => ({
     message: parsed,
-    isUs: currentNick === parsed.prefix || parsed.prefix.startsWith(currentNick),
+    isUs: currentNick === parsed.prefix || parsed.prefix?.startsWith(currentNick),
   }));
 }
 
