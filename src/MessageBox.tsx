@@ -120,7 +120,7 @@ const MessageBox = (props: Props) => {
                   {nick}
                 </span>{after}
                 <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
-                  {jsxElementsFromMessage($message)}
+                  {transformMessage($message)}
                 </span>
               </div>
             );

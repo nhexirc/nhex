@@ -41,6 +41,8 @@ export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-800 w-full sm:min-w-32 sm:w-32 
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
+export const SERVER_CHANNEL_DIRTY = "italic text-cyan-200"
+export const SERVER_CHANNEL_SELECTED = "underline"
 
 //NAMES
 export const NAMES_PANEL_STYLE = "border-b sm:border-l-0"
