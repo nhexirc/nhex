@@ -5,7 +5,7 @@ export const DAY_STYLE = "bg-orange-400/30 text-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
-export const MENU_STYLE = "flex flex-row items-center justify-center py-2 gap-4"
+export const MENU_STYLE = "flex flex-row items-center justify-center py-2 sm:gap-6 gap-2"
 
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col px-4"
