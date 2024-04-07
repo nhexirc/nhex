@@ -17,6 +17,17 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 
 See the [latest release](https://github.com/nhexirc/nhex/releases/latest) to download installers for Debian-based Linux distros, Windows & Mac OS.
 
+# Usage
+
+Currently there is no Settings UI, so all user settings are controlled via a TOML file, a full example of which is [here](example.nhex.toml). This example settings file also serves as the primary documentation for the file format.
+
+Place it at the location appropriate for your operating system described by the [comment at the top](https://github.com/nhexirc/nhex/blob/db1e103c287c72617de05c5624e223cac0f49f37/example.nhex.toml#L1-L5).
+
+The menu bar is mostly non-functional, save for these exceptions:
+* "nhex" will take you to the project's homepage
+* "view" will reset the channel activity highlights
+* "settings" will reload the user settings from disk
+
 # Developing
 
 ## Prerequisites
