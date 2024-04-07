@@ -8,8 +8,12 @@
 server = "irc.libera.chat"
 port = 6697
 nick = "nhex-user"
-channels = "#nhex"
+# space-separated. will *not* be auto-joined until nick login *is successful*
+# when `expectLoggedInAfterConnectCommands` is set to `true`.
+channels = "#nhex #nhexdev"
 tls = true
+# per the comment above, if `expectLoggedInAfterConnectCommands` is `true`,
+# one of these must be a nick(serv) identification command.
 connectCommands = [
     "/msg NickServ IDENTIFY nhex-user hunter2"
 ]
