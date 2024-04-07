@@ -18,6 +18,7 @@ import disconnect from './lib/disconnect';
 import { parseMBUserInputRaw } from './lib/common';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
+const getBuffers = () => ({ ...BUFFERS });
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
 const getCurSelection = () => ({ ...CUR_SELECTION });
 const STATE = {
@@ -65,6 +66,12 @@ const MainView = () => {
     return settings;
   });
 
+  const refreshServersAndChans = () => {
+    setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
+      [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
+    ))));
+  };
+
   useEffect(() => {
     preload().then((preloaded: {
       nick?: string,
@@ -106,7 +113,18 @@ const MainView = () => {
     listen("nhex://menu/settings", reloadUserSettings)
       .then((ulFunc) => (unlistenSettingsClick = ulFunc));
 
+    let unlistenViewClick;
+    listen("nhex://menu/view", () => {
+      Object.entries(BUFFERS).forEach(([, networkBufs]) =>
+        Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.dirty = false))
+      );
+      
+      refreshServersAndChans();
+    })
+      .then((ulFunc) => (unlistenViewClick = ulFunc));
+
     return () => {
+      unlistenViewClick?.();
       unlistenSettingsClick?.();
       unlistenAppClose?.();
     };
@@ -127,11 +145,7 @@ const MainView = () => {
     setMessageBoxLines,
     setChannelNames,
     setTopic,
-    refreshServersAndChans: () => {
-      setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
-        [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
-      ))));
-    }
+    refreshServersAndChans,
   };
 
   // will need a disconnect function above with the bool state variable to bring us back to login after disconnecting
@@ -164,7 +178,7 @@ const MainView = () => {
 
               const postMotdCallback = async () => {
                 await emit("nhex://servers_and_chans/select", { server, channel: "" });
-  
+
                 if (userSettings.Network?.connectCommands) {
                   await Promise.all(userSettings.Network.connectCommands
                     .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
@@ -191,7 +205,9 @@ const MainView = () => {
               userSettings,
               setUserSettings,
             }}
-            topic={topic} />
+            topic={topic}
+            getCurSelection={getCurSelection}
+            getBuffers={getBuffers} />
         </div>
       }
     </>

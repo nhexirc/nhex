@@ -161,7 +161,7 @@ export default function (
     // with #33 implemented if users connect to the same TLD twice (incl if subdomains or ports different)
     const ourTLDComps = currentServer.split(".");
     let ourTLD = ourTLDComps.length > 2 ? ourTLDComps.slice(-2).join(".") : currentServer;
-    if (parsed.prefix.endsWith(ourTLD)) {
+    if (parsed.prefix?.endsWith(ourTLD)) {
         parsed.fromServer = true;
     }
 

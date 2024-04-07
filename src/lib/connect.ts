@@ -80,11 +80,16 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       currentBuffer = BUFFERS[getCurSelection().server].buffers[getCurSelection().channel];
     }
 
-    if (currentBuffer && event.payload.server === getCurSelection().server && currentBuffer.name === getCurSelection().channel) {
-      setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
-      setChannelNames(currentBuffer.names);
-      setTopic(currentBuffer.topic);
-      emit("nhex://servers_and_chans/selected", getCurSelection());
+    if (currentBuffer) {
+      if (event.payload.server === getCurSelection().server && currentBuffer.name === getCurSelection().channel) {
+        setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
+        setChannelNames(currentBuffer.names);
+        setTopic(currentBuffer.topic);
+        emit("nhex://servers_and_chans/selected", getCurSelection());
+      }
+      else {
+        currentBuffer.dirty = true;
+      }
     }
 
     refreshServersAndChans();

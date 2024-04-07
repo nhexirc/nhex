@@ -32,6 +32,7 @@ export class Buffer {
     topic: string = "";
     buffer: IRCMessageParsed[] = [];
     names: IRCNicksSet = new IRCNicksSet();
+    dirty: boolean = false;
 
     constructor(name: string) {
         this.name = name;
