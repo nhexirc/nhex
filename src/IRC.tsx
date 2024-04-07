@@ -7,35 +7,25 @@ import UserInput from "./UserInput"
 import Topic from "./Topic";
 
 const IRC = ({ servers, names, message, settings, topic, getCurSelection, getBuffers }) => {
-
   const [isServerSelected, setIsServerSelected] = useState(true);
-
-  if (isServerSelected) {
-    return (<>
-      <div className={IRC_CONDITIONAL_STYLE}>
-        <Topic topic={topic} />
+  return (
+    <div className={IRC_CONDITIONAL_STYLE}>
+      <Topic topic={topic} />
+      {isServerSelected ?
         <div className={SERV_MSG_NAMES_PANEL_STYLE}>
           <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} getCurSelection={getCurSelection} getBuffers={getBuffers} />
           <MessageBox lines={message} settings={settings} />
         </div>
-        <UserInput />
-      </div>
-    </>);
-  }
-
-  return (
-    <>
-      <div className={IRC_CONDITIONAL_STYLE}>
-        <Topic topic={topic} />
+        :
         <div className={SERV_MSG_NAMES_PANEL_STYLE}>
           <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} getCurSelection={getCurSelection} getBuffers={getBuffers} />
           <MessageBox lines={message} settings={settings} />
           <ChannelNames names={names} />
         </div>
-        <UserInput />
-      </div>
-    </>
-  );
+      }
+      <UserInput />
+    </div>
+  )
 }
 
 export default IRC
