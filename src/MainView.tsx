@@ -60,7 +60,7 @@ const MainView = () => {
   const [userSettings, setUserSettings] = useState<UserSettingsIface>({});
   const [topic, setTopic] = useState("");
 
-  const realSetIsConnected = (val) => {
+  const realSetIsConnected = (val: any) => {
     STATE.connected = val;
     setIsConnected(val);
   };
@@ -101,8 +101,8 @@ const MainView = () => {
       });
     });
 
-    let unlistenAppClose;
-    appWindow.onCloseRequested(async (event) => {
+    let unlistenAppClose: any;
+    appWindow.onCloseRequested(async () => {
       await disconnect({
         STATE,
         realSetIsConnected,
@@ -112,18 +112,18 @@ const MainView = () => {
       appWindow.close();
     }).then((closeFn) => (unlistenAppClose = closeFn));
 
-    let unlistenSettingsClick;
+    let unlistenSettingsClick: any;
     // we could setup a file watcher for the user settings file and not need an explicit
     // "refresh" button, but for now this works in a pinch
     listen("nhex://menu/settings", reloadUserSettings)
       .then((ulFunc) => (unlistenSettingsClick = ulFunc));
 
-    let unlistenViewClick;
+    let unlistenViewClick: any;
     listen("nhex://menu/view", () => {
       Object.entries(BUFFERS).forEach(([, networkBufs]) =>
         Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.dirty = false))
       );
-      
+
       refreshServersAndChans();
     })
       .then((ulFunc) => (unlistenViewClick = ulFunc));
@@ -144,7 +144,7 @@ const MainView = () => {
     isConnected,
     realSetIsConnected,
     getCurSelection,
-    setCurSelection: (newVal) => (CUR_SELECTION = { ...newVal }),
+    setCurSelection: (newVal: any) => (CUR_SELECTION = { ...newVal }),
     BUFFERS,
     STATE,
     setMessageBoxLines,
@@ -154,7 +154,31 @@ const MainView = () => {
     getUserSettings,
   };
 
-  // will need a disconnect function above with the bool state variable to bring us back to login after disconnecting
+  const handleConnect = async (e: any) => {
+    e.preventDefault();
+    const postConnectCommands = async () => {
+      await emit("nhex://user_input/raw", parseMBUserInputRaw(`/join ${channels}`));
+    };
+    let loggedInCallback: any;
+    if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
+      loggedInCallback = postConnectCommands;
+    }
+    const postMotdCallback = async () => {
+      await emit("nhex://servers_and_chans/select", { server, channel: "" });
+
+      if (userSettings.Network?.connectCommands) {
+        await Promise.all(userSettings.Network.connectCommands
+          .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
+      }
+      if (!loggedInCallback) {
+        await postConnectCommands();
+      }
+    };
+    await connect(connectContext, { postMotdCallback, loggedInCallback });
+    // shows the main UI
+    setIsConnected(true);
+  }
+
   return (
     <>
       {!isConnected ?
@@ -170,36 +194,7 @@ const MainView = () => {
             setChannels={setChannels}
             handleTLS={() => setTLS(!tls)}
             tls={tls}
-            connect={async (e: any) => {
-              e.preventDefault();
-
-              const postConnectCommands = async () => {
-                await emit("nhex://user_input/raw", parseMBUserInputRaw(`/join ${channels}`));
-              };
-
-              let loggedInCallback;
-              if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
-                loggedInCallback = postConnectCommands;
-              }
-
-              const postMotdCallback = async () => {
-                await emit("nhex://servers_and_chans/select", { server, channel: "" });
-
-                if (userSettings.Network?.connectCommands) {
-                  await Promise.all(userSettings.Network.connectCommands
-                    .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
-                }
-
-                if (!loggedInCallback) {
-                  await postConnectCommands();
-                }
-              };
-
-              await connect(connectContext, { postMotdCallback, loggedInCallback });
-
-              // shows the main UI
-              setIsConnected(true);
-            }} />
+            connect={handleConnect} />
         </div>
         :
         <div className={IRC_STYLE}>
