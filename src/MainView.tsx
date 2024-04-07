@@ -8,7 +8,6 @@ import {
   SACSelect,
   UserSettingsIface,
 } from './lib/types';
-import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 import preload from "./preload";
@@ -16,6 +15,8 @@ import UserSettings from './lib/userSettings';
 import connect from './lib/connect';
 import disconnect from './lib/disconnect';
 import { parseMBUserInputRaw } from './lib/common';
+import Menu from "./Menu";
+import Footer from "./Footer";
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 const getBuffers = () => ({ ...BUFFERS });
@@ -47,7 +48,7 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
   return found ? `${found}: ` : prefix;
 }
 
-const MainView = () => {
+const MainView = ({ dayNightToggle, isNight }) => {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
@@ -181,36 +182,34 @@ const MainView = () => {
 
   return (
     <>
+      <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
       {!isConnected ?
-        <div className={CONNECT_STYLE} >
-          <Connect
-            nick={nick}
-            setNick={setNick}
-            server={server}
-            setServer={setServer}
-            port={port}
-            setPort={setPort}
-            channels={channels}
-            setChannels={setChannels}
-            handleTLS={() => setTLS(!tls)}
-            tls={tls}
-            connect={handleConnect} />
-        </div>
+        <Connect
+          nick={nick}
+          setNick={setNick}
+          server={server}
+          setServer={setServer}
+          port={port}
+          setPort={setPort}
+          channels={channels}
+          setChannels={setChannels}
+          handleTLS={() => setTLS(!tls)}
+          tls={tls}
+          connect={handleConnect} />
         :
-        <div className={IRC_STYLE}>
-          <IRC
-            servers={serversAndChans}
-            message={messageBoxLines}
-            names={channelNames}
-            settings={{
-              userSettings,
-              setUserSettings,
-            }}
-            topic={topic}
-            getCurSelection={getCurSelection}
-            getBuffers={getBuffers} />
-        </div>
+        <IRC
+          servers={serversAndChans}
+          message={messageBoxLines}
+          names={channelNames}
+          settings={{
+            userSettings,
+            setUserSettings,
+          }}
+          topic={topic}
+          getCurSelection={getCurSelection}
+          getBuffers={getBuffers} />
       }
+      <Footer isNight={isNight} />
     </>
   );
 }
