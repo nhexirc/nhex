@@ -65,6 +65,12 @@ const MessageBox = (props: Props) => {
     },
   };
 
+  commands["notice"] = (message: { params: [] }) => {
+    const pmed = commands.privmsg(message);
+    pmed[0] = "(notice) <";
+    return pmed;
+  }
+
   // dont show our own join/part messages etc.
   const nonReflected = ["join", "part"];
 

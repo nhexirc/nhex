@@ -40,35 +40,37 @@ const MODES_TO_HATS = {
     "-v": ""
 };
 
+function privmsgNoticeHandler (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
+    let retBuf;
+    if (parsed.prefix && networkBuffers[parsed.params[0]]?.name[0] !== "#" /* should check that this is US */) {
+        const pmPartner = nickFromPrefix(parsed.prefix);
+        if (!networkBuffers[pmPartner]) {
+            networkBuffers[pmPartner] = new Buffer(pmPartner);
+        }
+
+        retBuf = networkBuffers[pmPartner];
+    }
+    else {
+        const [, message] = parsed.params;
+        const me = message.match(/\u0001ACTION (?<me>.*)\u0001/)?.groups.me;
+        // overwrite parsed
+        if (me !== undefined) {
+            parsed.command = "action";
+            parsed.params[1] = me;
+        }
+
+        if (!networkBuffers[parsed.params[0]]) {
+            networkBuffers[parsed.params[0]] = new Buffer(parsed.params[0]);
+        }
+
+        retBuf = networkBuffers[parsed.params[0]];
+    }
+
+    return retBuf;
+}
+
 const MESSAGE_HANDLERS: MessageHandlers = {
-    privmsg: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
-        let retBuf;
-        if (parsed.prefix && networkBuffers[parsed.params[0]]?.name[0] !== "#" /* should check that this is US */) {
-            const pmPartner = nickFromPrefix(parsed.prefix);
-            if (!networkBuffers[pmPartner]) {
-                networkBuffers[pmPartner] = new Buffer(pmPartner);
-            }
-
-            retBuf = networkBuffers[pmPartner];
-        }
-        else {
-            const [, message] = parsed.params;
-            const me = message.match(/\u0001ACTION (?<me>.*)\u0001/)?.groups.me;
-            // overwrite parsed
-            if (me !== undefined) {
-                parsed.command = "action";
-                parsed.params[1] = me;
-            }
-
-            if (!networkBuffers[parsed.params[0]]) {
-                networkBuffers[parsed.params[0]] = new Buffer(parsed.params[0]);
-            }
-
-            retBuf = networkBuffers[parsed.params[0]];
-        }
-
-        return retBuf;
-    },
+    privmsg: privmsgNoticeHandler,
     join: joinOrPartHandler.bind(null, 'add'),
     part: joinOrPartHandler.bind(null, 'delete'),
 
@@ -137,7 +139,15 @@ export default function (
     currentServer: string,
     networkBuffers: Record<string, Buffer>,
     event: IRCMessageEvent,
+    routeNoticesToServerBuffer: boolean = false,
 ): MessageParserReturn {
+    if (!routeNoticesToServerBuffer) {
+        MESSAGE_HANDLERS["notice"] = privmsgNoticeHandler;
+    }
+    else {
+        delete MESSAGE_HANDLERS["notice"];
+    }
+    
     const parsed: IRCMessageParsed = parse(event.payload.message);
     parsed.timestamp = event.payload.timestamp;
 

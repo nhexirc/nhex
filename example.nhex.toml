@@ -18,9 +18,17 @@ connectCommands = [
     "/msg NickServ IDENTIFY nhex-user hunter2"
 ]
 expectLoggedInAfterConnectCommands = true
+# when set to `true`, NOTICE messages will be sent to the server buffer.
+# otherwise, they will go to the target's (nick or channel) buffer.
+# this setting requires an app restart to take effect when changed.
+routeNoticesToServerBuffer = false
 
 [MessageBox]
-show = [ "action", "privmsg", "join", "part" ]
+# you should not remove "action", "privmsg", or "notice" unless you are sure you know what you're doing.
+# this setting affects channel activity highlights: when join and/or part are included, those events 
+# will highlight the channel with "activity".
+show = [ "action", "privmsg", "notice", "join", "part" ]
 dimJoinsAndParts = false
 showTimestamps = false
+# valid sizes are any of the size modifies (no dash) specified here: https://tailwindcss.com/docs/font-size
 fontSize = "sm"

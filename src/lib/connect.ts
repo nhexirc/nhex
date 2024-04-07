@@ -62,7 +62,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       return;
     }
 
-    let { currentBuffer, parsed } = messageParser(server, networkBuffers, event);
+    let { currentBuffer, parsed } = messageParser(server, networkBuffers, event, getUserSettings()?.Network.routeNoticesToServerBuffer);
 
     if (parsed.command === "376" /* RPL_ENDOFMOTD */) {
       realSetIsConnected(true);

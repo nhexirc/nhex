@@ -27,7 +27,7 @@ const STATE = {
 const SETTINGS = {
   userSettings: {}
 };
-const getUserSettings = () => ({ ...SETTINGS.userSettings });
+const getUserSettings: () => UserSettingsIface = () => ({ ...SETTINGS.userSettings });
 
 // try to complete nickname
 export const completeNickname = (prefix: string, skipFrom: string): string => {

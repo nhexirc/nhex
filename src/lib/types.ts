@@ -113,6 +113,7 @@ export interface NetworkUserSettings {
     // produce the RPL_LOGGEDIN (900) protocol message: without this message receipt, no channels
     // will be joined!
     expectLoggedInAfterConnectCommands?: boolean;
+    routeNoticesToServerBuffer?: boolean;
 };
 
 export interface UserSettingsIface {
