@@ -8,7 +8,7 @@ export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 export const MENU_STYLE = "flex flex-row items-center justify-center py-2 sm:gap-6 gap-2"
 
 //IRC COMPONENT
-export const IRC_STYLE = "flex flex-col px-4"
+export const IRC_STYLE = "max-w-7xl flex flex-col md:mx-auto px-4"
 
 //CONNECT COMPONENT
 export const CONNECT_STYLE = "flex flex-col mx-auto items-center justify-center max-w-7xl bg-zinc-500/30 rounded-lg p-2 h-full w-full shadow-xl"
