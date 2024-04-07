@@ -3,7 +3,7 @@ export const ROOT_STYLE = "flex flex-col  h-dvh scrollbar-thumb-zinc-400 scrollb
 export const NIGHT_STYLE = "bg-slate-950 text-zinc-300"
 export const DAY_STYLE = "bg-zinc-300 text-slate-950"
 //MENU
-export const MENU_STYLE = "flex justify-center py-2 gap-5"
+export const MENU_STYLE = "flex items-center justify-center py-2 gap-5"
 export const NHEX = "px-1 rounded bg-zinc-400/50"
 
 //MESSAGEBOX
@@ -20,7 +20,7 @@ export const IRC_STYLE = "max-w-7xl mx-auto"
 export const IRC_CONDITIONAL_STYLE = "flex flex-col gap-2"
 
 //CONNECT COMPONENT
-export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-500/50 rounded-lg p-2 min-w-96"
+export const CONNECT_STYLE = "max-w-7xl mx-auto bg-zinc-500/50 rounded-lg p-2 min-w-[420px]"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
 export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-400 p-1 focus:outline-none border border-zinc-300/70"
