@@ -15,7 +15,7 @@ const Menu = ({ dayNightToggle, isNight }) => {
       <div className={ROW_STYLE}>
         {row2.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
         <button onClick={dayNightToggle}>
-          <img className="min-w-8 max-w-8" src={isNight ? sun : moon} alt="day/night toggle" />
+          <img className="min-w-6 max-w-6" src={isNight ? sun : moon} alt="day/night toggle" />
         </button>
       </div>
     </div>

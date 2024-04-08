@@ -5,7 +5,7 @@ export const DAY_STYLE = "bg-orange-400/30 text-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
-export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6"
+export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6 pt-2"
 export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap-2"
 
 //IRC COMPONENT
