@@ -2,8 +2,9 @@
 
 A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
-![](./public/screenshots/nh_irc.png)
 ![](./public/screenshots/nh_conn.png)
+
+_Jump right to [downloads](https://github.com/nhexirc/nhex/releases/latest) or [the usage notes](#using)._
 
 Pronounced "_nex_" (the "_h_" is silent).
 
@@ -11,6 +12,9 @@ Pronounced "_nex_" (the "_h_" is silent).
 
 Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex).
 
+![](./public/screenshots/nh_irc.png)
+![](./public/screenshots/nh_server.png)
+![](./public/screenshots/nh_conn_alt.png)
 <img src="./public/screenshots/nh_mobile.png" width="320" />
 
 # Downloading
