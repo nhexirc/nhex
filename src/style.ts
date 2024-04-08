@@ -24,7 +24,7 @@ export const TLS_BUTTON_STYLE = `px-2 py-1 cursor-pointer select-none text-cente
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "bg-zinc-700/30 w-full font-mono h-[490px] sm:h-[650px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border-y sm:border-y-0"
+export const MESSAGE_BOX = "bg-zinc-700/30 w-full font-mono h-[490px] sm:h-[650px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border sm:border-0"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
