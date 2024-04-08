@@ -1,4 +1,5 @@
 import { CONNECT_STYLE, SERVER_CONNECT_BUTTON, SERVER_FORM_BLOCK_STYLE, SERVER_FORM_STYLE, SERVER_INPUT_STYLE, TLS_ACTIVE_STYLE, TLS_BUTTON_STYLE, TLS_INACTIVE_STYLE } from "./style";
+import nhex from "./assets/nhex.webp"
 
 const Connect = ({
   nick,
@@ -11,10 +12,11 @@ const Connect = ({
   setChannels,
   handleTLS,
   tls,
-  connect }) => {
+  connect,
+  isNight }) => {
   return (
     <div className={CONNECT_STYLE}>
-      <p className="text-8xl italic text-center">nhex</p>
+      <img className={`${!isNight && 'invert'}  w-80`} src={nhex} alt="nhex - irc client" />
       <p className="text-center text-sm">IRC Client</p>
       <form
         className={SERVER_FORM_STYLE}

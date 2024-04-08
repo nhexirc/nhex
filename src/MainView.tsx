@@ -195,7 +195,8 @@ const MainView = ({ dayNightToggle, isNight }) => {
           setChannels={setChannels}
           handleTLS={() => setTLS(!tls)}
           tls={tls}
-          connect={handleConnect} />
+          connect={handleConnect}
+          isNight={isNight} />
         :
         <IRC
           servers={serversAndChans}
