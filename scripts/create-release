@@ -5,7 +5,7 @@ import process from 'process';
 import semver from 'semver';
 import { parse, stringify } from 'smol-toml';
 
-const allowedTypes = ['major', 'minor', 'patch', 'prerelease', 'preminor', 'premajor'];
+const allowedTypes = ['major', 'minor', 'patch', 'prerelease', 'preminor', 'premajor', 'prepatch'];
 const lastArg = process.argv.slice(-1)[0];
 const incrementType = allowedTypes.includes(lastArg) ? lastArg : 'patch';
 
