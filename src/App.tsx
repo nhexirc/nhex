@@ -1,8 +1,6 @@
 import MainView from "./MainView";
-import Menu from "./Menu";
 import { DAY_STYLE, NIGHT_STYLE, ROOT_STYLE } from "./style";
 import "./index.css";
-import Footer from "./Footer";
 import { useState } from "react";
 
 const App = () => {
@@ -13,9 +11,7 @@ const App = () => {
   }
   return (
     <div className={`${ROOT_STYLE} ${isNight ? NIGHT_STYLE : DAY_STYLE}`}>
-      <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
-      <MainView />
-      <Footer isNight={isNight} />
+      <MainView dayNightToggle={dayNightToggle} isNight={isNight} />
     </div >
   );
 }

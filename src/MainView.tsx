@@ -8,7 +8,6 @@ import {
   SACSelect,
   UserSettingsIface,
 } from './lib/types';
-import { CONNECT_STYLE, IRC_STYLE } from "./style";
 import IRC from "./IRC";
 import Connect from "./Connect";
 import preload from "./preload";
@@ -16,6 +15,8 @@ import UserSettings from './lib/userSettings';
 import connect from './lib/connect';
 import disconnect from './lib/disconnect';
 import { parseMBUserInputRaw } from './lib/common';
+import Menu from "./Menu";
+import Footer from "./Footer";
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 const getBuffers = () => ({ ...BUFFERS });
@@ -47,7 +48,7 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
   return found ? `${found}: ` : prefix;
 }
 
-const MainView = () => {
+const MainView = ({ dayNightToggle, isNight }) => {
   const [nick, setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
@@ -60,7 +61,7 @@ const MainView = () => {
   const [userSettings, setUserSettings] = useState<UserSettingsIface>({});
   const [topic, setTopic] = useState("");
 
-  const realSetIsConnected = (val) => {
+  const realSetIsConnected = (val: any) => {
     STATE.connected = val;
     setIsConnected(val);
   };
@@ -101,8 +102,8 @@ const MainView = () => {
       });
     });
 
-    let unlistenAppClose;
-    appWindow.onCloseRequested(async (event) => {
+    let unlistenAppClose: any;
+    appWindow.onCloseRequested(async () => {
       await disconnect({
         STATE,
         realSetIsConnected,
@@ -112,18 +113,18 @@ const MainView = () => {
       appWindow.close();
     }).then((closeFn) => (unlistenAppClose = closeFn));
 
-    let unlistenSettingsClick;
+    let unlistenSettingsClick: any;
     // we could setup a file watcher for the user settings file and not need an explicit
     // "refresh" button, but for now this works in a pinch
     listen("nhex://menu/settings", reloadUserSettings)
       .then((ulFunc) => (unlistenSettingsClick = ulFunc));
 
-    let unlistenViewClick;
+    let unlistenViewClick: any;
     listen("nhex://menu/view", () => {
       Object.entries(BUFFERS).forEach(([, networkBufs]) =>
         Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.dirty = false))
       );
-      
+
       refreshServersAndChans();
     })
       .then((ulFunc) => (unlistenViewClick = ulFunc));
@@ -144,7 +145,7 @@ const MainView = () => {
     isConnected,
     realSetIsConnected,
     getCurSelection,
-    setCurSelection: (newVal) => (CUR_SELECTION = { ...newVal }),
+    setCurSelection: (newVal: any) => (CUR_SELECTION = { ...newVal }),
     BUFFERS,
     STATE,
     setMessageBoxLines,
@@ -154,68 +155,61 @@ const MainView = () => {
     getUserSettings,
   };
 
-  // will need a disconnect function above with the bool state variable to bring us back to login after disconnecting
+  const handleConnect = async (e: any) => {
+    e.preventDefault();
+    const postConnectCommands = async () => {
+      await emit("nhex://user_input/raw", parseMBUserInputRaw(`/join ${channels}`));
+    };
+    let loggedInCallback: any;
+    if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
+      loggedInCallback = postConnectCommands;
+    }
+    const postMotdCallback = async () => {
+      await emit("nhex://servers_and_chans/select", { server, channel: "" });
+
+      if (userSettings.Network?.connectCommands) {
+        await Promise.all(userSettings.Network.connectCommands
+          .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
+      }
+      if (!loggedInCallback) {
+        await postConnectCommands();
+      }
+    };
+    await connect(connectContext, { postMotdCallback, loggedInCallback });
+    // shows the main UI
+    setIsConnected(true);
+  }
+
   return (
     <>
+      <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
       {!isConnected ?
-        <div className={CONNECT_STYLE} >
-          <Connect
-            nick={nick}
-            setNick={setNick}
-            server={server}
-            setServer={setServer}
-            port={port}
-            setPort={setPort}
-            channels={channels}
-            setChannels={setChannels}
-            handleTLS={() => setTLS(!tls)}
-            tls={tls}
-            connect={async (e: any) => {
-              e.preventDefault();
-
-              const postConnectCommands = async () => {
-                await emit("nhex://user_input/raw", parseMBUserInputRaw(`/join ${channels}`));
-              };
-
-              let loggedInCallback;
-              if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
-                loggedInCallback = postConnectCommands;
-              }
-
-              const postMotdCallback = async () => {
-                await emit("nhex://servers_and_chans/select", { server, channel: "" });
-
-                if (userSettings.Network?.connectCommands) {
-                  await Promise.all(userSettings.Network.connectCommands
-                    .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
-                }
-
-                if (!loggedInCallback) {
-                  await postConnectCommands();
-                }
-              };
-
-              await connect(connectContext, { postMotdCallback, loggedInCallback });
-
-              // shows the main UI
-              setIsConnected(true);
-            }} />
-        </div>
+        <Connect
+          nick={nick}
+          setNick={setNick}
+          server={server}
+          setServer={setServer}
+          port={port}
+          setPort={setPort}
+          channels={channels}
+          setChannels={setChannels}
+          handleTLS={() => setTLS(!tls)}
+          tls={tls}
+          connect={handleConnect} />
         :
-        <div className={IRC_STYLE}>
-          <IRC
-            servers={serversAndChans}
-            message={messageBoxLines}
-            names={channelNames}
-            settings={{
-              userSettings,
-              setUserSettings,
-            }}
-            topic={topic}
-            getCurSelection={getCurSelection}
-            getBuffers={getBuffers} />
-        </div>
+        <IRC
+          servers={serversAndChans}
+          message={messageBoxLines}
+          names={channelNames}
+          settings={{
+            userSettings,
+            setUserSettings,
+          }}
+          topic={topic}
+          getCurSelection={getCurSelection}
+          getBuffers={getBuffers} />
       }
+      <Footer isNight={isNight} />
     </>
   );
 }

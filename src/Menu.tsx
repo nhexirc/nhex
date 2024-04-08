@@ -1,15 +1,23 @@
 import MenuItem from "./menu/MenuItem";
-import { MENU_STYLE } from "./style";
+import { MENU_STYLE, ROW_STYLE } from "./style";
 import sun from "./assets/sun.svg"
 import moon from "./assets/moon.svg"
 const Menu = ({ dayNightToggle, isNight }) => {
-  const items = ["view", "server", "settings", "window", "help"];
+  const row1 = ["view", "server"];
+  const row2 = ["settings", "window", "help"]
 
   return (
     <div className={MENU_STYLE}>
-      <a href="https://github.com/nhexirc/client" target="_blank" className="font-bold">nhex</a>
-      {items.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
-      <button onClick={dayNightToggle}><img className="w-8" src={isNight ? sun : moon} alt="day/night toggle" /></button>
+      <div className={ROW_STYLE}>
+        <a href="https://github.com/nhexirc/client" target="_blank" className="font-bold">nhex</a>
+        {row1.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
+      </div>
+      <div className={ROW_STYLE}>
+        {row2.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
+        <button onClick={dayNightToggle}>
+          <img className="min-w-6 max-w-6" src={isNight ? sun : moon} alt="day/night toggle" />
+        </button>
+      </div>
     </div>
   );
 }
