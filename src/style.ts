@@ -5,14 +5,14 @@ export const DAY_STYLE = "bg-orange-400/30 text-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
-export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6 pt-2"
+export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6 py-2"
 export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap-2"
 
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col px-4"
 
 //CONNECT COMPONENT
-export const CONNECT_STYLE = "flex flex-col items-center justify-center bg-zinc-500/20 h-full w-full shadow-xl"
+export const CONNECT_STYLE = "flex flex-col items-center justify-center bg-zinc-500/20 h-full w-full shadow-[0_0_20px_rgba(0,0,0,0.30)]"
 export const SERVER_FORM_STYLE = "flex flex-col gap-2 p-2 w-3/4 sm:w-96"
 export const SERVER_FORM_BLOCK_STYLE = "flex flex-col gap-2"
 export const SERVER_INPUT_STYLE = "bg-zinc-500/50 placeholder-zinc-200/50 p-1 focus:outline-none rounded"
@@ -54,5 +54,5 @@ export const SERVER_CHANNEL_SELECTED = "underline"
 export const NAMES_PANEL_STYLE = ""
 
 //FOOTER
-export const FOOTER_STYLE = "pb-4 pt-2"
+export const FOOTER_STYLE = "py-2"
 
