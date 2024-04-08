@@ -1,10 +1,11 @@
 import MenuItem from "./menu/MenuItem";
 import { MENU_STYLE, ROW_STYLE } from "./style";
-import sun from "./assets/sun.svg"
-import moon from "./assets/moon.svg"
+import sun from "./assets/sun.svg";
+import moon from "./assets/moon.svg";
+
 const Menu = ({ dayNightToggle, isNight }) => {
   const row1 = ["view", "server"];
-  const row2 = ["settings", "window", "help"]
+  const row2 = ["settings", "window", "help"];
 
   return (
     <div className={MENU_STYLE}>
@@ -15,7 +16,7 @@ const Menu = ({ dayNightToggle, isNight }) => {
       <div className={ROW_STYLE}>
         {row2.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
         <button onClick={dayNightToggle}>
-          <img className="min-w-6 max-w-6" src={isNight ? sun : moon} alt="day/night toggle" />
+          <img className="min-w-5 max-w-5" src={isNight ? sun : moon} alt="day/night toggle" />
         </button>
       </div>
     </div>

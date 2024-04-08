@@ -52,7 +52,6 @@ const MessageBox = (props: Props) => {
       return ["<", message.params.slice(1).join(" "), ">", ""];
     },
     join(message: { params: string[] }) {
-      console.log('J', props.settings.userSettings.MessageBox);
       return ["", `has joined ${message.params[1]}`, "", joinPartStyling()];
     },
     part(message: { params: string[] }) {
@@ -60,7 +59,6 @@ const MessageBox = (props: Props) => {
       if (message.params[0] !== message.params[1]) {
         quitMsg = ` (${message.params[0].trim()})`;
       }
-      console.log('P', props.settings.userSettings.MessageBox);
       return ["", `has left ${message.params[1]}${quitMsg}`, "", joinPartStyling()];
     },
   };
