@@ -3,7 +3,7 @@ import { nickFromPrefix } from './common';
 import IRCNicksSet from './IRCNicksSet';
 import { parse } from 'irc-message';
 
-type MessageHandler = (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => Buffer;
+type MessageHandler = (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed, currentNick?: string) => Buffer;
 type MessageHandlers = Record<string, MessageHandler>;
 
 function joinOrPartHandler(functorName: string, networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
@@ -108,8 +108,19 @@ const MESSAGE_HANDLERS: MessageHandlers = {
         return null;
     },
 
-    mode: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
+    mode: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed, currentNick?: string) => {
         const [channel, newMode, nick] = parsed.params;
+
+        if (channel === currentNick) {
+            console.warn(`Mode change on us ("${currentNick}"): ${parsed.params.slice(1).join(" ")}`);
+            networkBuffers[""].buffer.push(parsed);
+            return null;
+        }
+
+        if (!networkBuffers[channel]) {
+            networkBuffers[channel] = new Buffer(channel);
+        }
+
         networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${nick.replace("\r\n", "")}`);
         return null;
     },
@@ -139,6 +150,7 @@ export default function (
     currentServer: string,
     networkBuffers: Record<string, Buffer>,
     event: IRCMessageEvent,
+    currentNick: string,
     routeNoticesToServerBuffer: boolean = false,
 ): MessageParserReturn {
     if (!routeNoticesToServerBuffer) {
@@ -154,15 +166,12 @@ export default function (
     let currentBuffer: Buffer = networkBuffers[""];
 
     if (MESSAGE_HANDLERS[parsed.command.toLowerCase()]) {
-        currentBuffer = MESSAGE_HANDLERS[parsed.command.toLowerCase()](networkBuffers, parsed);
+        currentBuffer = MESSAGE_HANDLERS[parsed.command.toLowerCase()](networkBuffers, parsed, currentNick);
     }
     else {
         const numeric = Number.parseInt(parsed.command);
         if (!Number.isNaN(numeric) && NUMERIC_HANDLERS[parsed.command]) {
             currentBuffer = NUMERIC_HANDLERS[parsed.command](networkBuffers, parsed);
-        }
-        else {
-            console.log('[UNHANDLED]', parsed.command, parsed);
         }
     }
 

@@ -1,13 +1,13 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::time::{SystemTime, UNIX_EPOCH};
+use chrono::prelude::*;
 use futures::prelude::*;
 use irc::client::prelude::*;
 use irc::proto::Command;
 use serde::{Deserialize, Serialize};
-use tauri::{Manager, Window, async_runtime};
-use chrono::prelude::*;
+use std::time::{SystemTime, UNIX_EPOCH};
+use tauri::{async_runtime, Manager, Window};
 
 #[derive(Clone, serde::Serialize)]
 struct IRCMessage {
@@ -41,6 +41,7 @@ async fn connect_impl(
 ) {
     let config = Config {
         nickname: Some(nick.clone()),
+        alt_nicks: vec![format!("{}_", nick), format!("{}__", nick), format!("{}___", nick)],
         server: Some(server.clone()),
         port: Some(port),
         use_tls: Some(tls),
@@ -90,10 +91,12 @@ async fn connect_impl(
     let whois_sender = cclient.sender();
     app_handle.listen_global("nhex://user_input/whois", move |event| {
         let payload: UserInput = deserde(event.payload().expect("join"));
-        whois_sender.send(Command::WHOIS(
-            Some("".to_string()),
-            payload.args[0].to_string(),
-        )).expect("whois");
+        whois_sender
+            .send(Command::WHOIS(
+                Some("".to_string()),
+                payload.args[0].to_string(),
+            ))
+            .expect("whois");
     });
 
     let quit_sender = cclient.sender();
@@ -105,7 +108,21 @@ async fn connect_impl(
             quit_msg = payload.argsStr.to_string();
         }
         quit_sender.send_quit(quit_msg).expect("quit");
-        quit_handle.emit_all("nhex://user_input/quit/sent_ack", "").expect("quit/sent");
+        quit_handle
+            .emit_all("nhex://user_input/quit/sent_ack", "")
+            .expect("quit/sent");
+    });
+
+    let nick_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/nick", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("nick"));
+        if payload.args.len() < 1 {
+            println!("Not enough /nick args!");
+            return;
+        }
+        nick_sender
+            .send(Command::NICK(payload.args[0].to_string()))
+            .expect("nick");
     });
 
     let server_clone = server.clone();
@@ -113,7 +130,12 @@ async fn connect_impl(
         let now = SystemTime::now();
         let now_since_epoch = now.duration_since(UNIX_EPOCH).expect("time");
         let now_dt: DateTime<Local> = now.into();
-        print!("[{}] <{}> {}", now_dt.format("%d/%m/%Y %T%.3f"), server_clone.clone(), message);
+        print!(
+            "[{}] <{}> {}",
+            now_dt.format("%d/%m/%Y %T%.3f"),
+            server_clone.clone(),
+            message
+        );
         window
             .emit(
                 "nhex://irc_message",
@@ -127,7 +149,6 @@ async fn connect_impl(
     }
 }
 
-
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 async fn connect(
@@ -138,9 +159,7 @@ async fn connect(
     window: Window,
     app_handle: tauri::AppHandle,
 ) {
-    async_runtime::spawn(
-        connect_impl(nick, server, port, tls, window, app_handle)
-    );
+    async_runtime::spawn(connect_impl(nick, server, port, tls, window, app_handle));
 }
 
 fn main() {

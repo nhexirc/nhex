@@ -23,7 +23,9 @@ const getBuffers = () => ({ ...BUFFERS });
 let CUR_SELECTION: SACSelect = { server: "", channel: "" };
 const getCurSelection = () => ({ ...CUR_SELECTION });
 const STATE = {
-  connected: false
+  connected: false,
+  pastMOTD: false,
+  nick: null,
 };
 const SETTINGS = {
   userSettings: {}
@@ -49,7 +51,7 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
 }
 
 const MainView = ({ dayNightToggle, isNight }) => {
-  const [nick, setNick] = useState("");
+  const [nick, _setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
   const [tls, setTLS] = useState(true);
@@ -60,6 +62,10 @@ const MainView = ({ dayNightToggle, isNight }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [userSettings, setUserSettings] = useState<UserSettingsIface>({});
   const [topic, setTopic] = useState("");
+
+  const setNick = (nick: string) => {
+    _setNick(STATE.nick = nick);
+  };
 
   const realSetIsConnected = (val: any) => {
     STATE.connected = val;
@@ -151,33 +157,39 @@ const MainView = ({ dayNightToggle, isNight }) => {
     setMessageBoxLines,
     setChannelNames,
     setTopic,
+    setNick,
     refreshServersAndChans,
     getUserSettings,
   };
 
   const handleConnect = async (e: any) => {
     e.preventDefault();
+
     const postConnectCommands = async () => {
       await emit("nhex://user_input/raw", parseMBUserInputRaw(`/join ${channels}`));
     };
-    let loggedInCallback: any;
+
+    let loggedInCallback: () => any = null;
+
     if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
       loggedInCallback = postConnectCommands;
     }
-    const postMotdCallback = async () => {
-      await emit("nhex://servers_and_chans/select", { server, channel: "" });
 
+    const postMotdCallback = async () => {
       if (userSettings.Network?.connectCommands) {
         await Promise.all(userSettings.Network.connectCommands
           .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
       }
+    
       if (!loggedInCallback) {
         await postConnectCommands();
       }
     };
+
     await connect(connectContext, { postMotdCallback, loggedInCallback });
     // shows the main UI
     setIsConnected(true);
+    await emit("nhex://servers_and_chans/select", { server, channel: "" });
   }
 
   return (
@@ -208,7 +220,8 @@ const MainView = ({ dayNightToggle, isNight }) => {
           }}
           topic={topic}
           getCurSelection={getCurSelection}
-          getBuffers={getBuffers} />
+          getBuffers={getBuffers}
+          STATE={STATE} />
       }
       <Footer isNight={isNight} />
     </>

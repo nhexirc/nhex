@@ -21,6 +21,7 @@ interface PropsSettings {
 interface Props {
   lines: MessageBoxLines;
   settings: PropsSettings;
+  STATE: Record<string, any>;
 };
 
 const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
@@ -81,7 +82,7 @@ const MessageBox = (props: Props) => {
     <div className={`${MESSAGE_BOX} ${UNIFORM_BORDER_STYLE}`}>
       <div id="message_area" ref={mbRef}>
         {props.lines
-          .filter(({ message, isUs }) => {
+          .filter(({ message }) => {
             if (message.fromServer) {
               return true;
             }
@@ -91,9 +92,9 @@ const MessageBox = (props: Props) => {
               return false;
             }
 
-            return !isUs || !nonReflected.includes(command);
+            return !message.fromUs || !nonReflected.includes(command);
           })
-          .map(({ message, isUs }, i) => {
+          .map(({ message }, i) => {
             const command = message.command.toLowerCase();
             let timestampEle = <></>;
 
@@ -112,7 +113,7 @@ const MessageBox = (props: Props) => {
               );
             }
 
-            const nick = nickFromPrefix(message.prefix);
+            const nick = message.fromUs ? props.STATE.nick : nickFromPrefix(message.prefix);
             const color = nickColor(nick);
             const [before, $message, after, msgStyleExtra] = commands[command](message);
 
@@ -120,7 +121,7 @@ const MessageBox = (props: Props) => {
               <div id={`mb_line_${i}`} className={messageContainerStyle}>
                 {timestampEle}
                 {before}<span
-                  className={`${isUs && USERNAME_STYLE}`}
+                  className={`${message.fromUs && USERNAME_STYLE}`}
                   style={{ color }}>
                   {nick}
                 </span>{after}

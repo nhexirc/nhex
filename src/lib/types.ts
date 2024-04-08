@@ -18,12 +18,14 @@ export class IRCMessageParsed {
     tags: Record<string, any> = {};
     timestamp: number = Number(new Date());
     fromServer: boolean = false;
+    fromUs: boolean = false;
 
-    constructor(command: string, params: string[], prefix: string, raw: string) {
+    constructor(command: string, params: string[], prefix: string, raw: string, fromUs: boolean = false) {
         this.command = command;
         this.params = params;
         this.prefix = prefix;
         this.raw = raw;
+        this.fromUs = fromUs;
     }
 };
 
@@ -56,9 +58,10 @@ export interface MBUserInputEvent {
     payload: MBUserInputRaw;
 };
 
+// this interface is currently just a wrapper around IRCMessageParsed,
+// but is kept separate to support (expected) future differentiation
 export interface MessageBoxLine {
     message: IRCMessageParsed;
-    isUs: boolean;
 }
 
 export type MessageBoxLines = MessageBoxLine[];

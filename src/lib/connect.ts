@@ -9,12 +9,10 @@ import {
   MessageBoxLines,
   SACSelectEvent,
 } from './types';
+import { nickFromPrefix } from './common';
 
-function messageBoxLinesFromBuffer(buffer: Buffer, currentNick: string): MessageBoxLines {
-  return buffer.buffer.map((parsed: IRCMessageParsed) => ({
-    message: parsed,
-    isUs: currentNick === parsed.prefix || parsed.prefix?.startsWith(currentNick),
-  }));
+function messageBoxLinesFromBuffer(buffer: Buffer): MessageBoxLines {
+  return buffer.buffer.map((parsed: IRCMessageParsed) => ({ message: parsed }));
 }
 
 export interface ConnectOptions {
@@ -38,6 +36,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
     setMessageBoxLines,
     setChannelNames,
     setTopic,
+    setNick,
     refreshServersAndChans,
     getUserSettings,
   } = context;
@@ -62,15 +61,45 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       return;
     }
 
-    let { currentBuffer, parsed } = messageParser(server, networkBuffers, event, getUserSettings()?.Network.routeNoticesToServerBuffer);
+    let { currentBuffer, parsed } = messageParser(
+      server,
+      networkBuffers,
+      event,
+      STATE.nick,
+      getUserSettings()?.Network.routeNoticesToServerBuffer
+    );
+    console.log("nhex://irc_message", event.payload, parsed);
 
+    /* these should _maybe_ all be moved into messageParser() ...?
+       but then messageParser will need a *lot* more context params... */
     if (parsed.command === "376" /* RPL_ENDOFMOTD */) {
       realSetIsConnected(true);
-      console.log('connected!', nick, server, port, channels, isConnected);
-      await options?.postMotdCallback();
+      console.log(`connected as "${STATE.nick}"!`, server, port, channels, isConnected);
+      STATE.pastMOTD = true;
+      await options?.postMotdCallback?.();
     }
     else if (parsed.command === "900" /* RPL_LOGGEDIN */) {
-      await options?.loggedInCallback();
+      await options?.loggedInCallback?.();
+    }
+    else if (parsed.command === "433" /* ERR_NICKNAMEINUSE */) {
+      console.warn(`Our chosen nick "${STATE.nick}" was already taken`, parsed);
+    }
+    // "001" is RPL_WELCOME, "first message sent after client registration"
+    else if ((parsed.command === "001" && !STATE.pastMOTD) || (parsed.command.toLowerCase() === "nick" && STATE.pastMOTD)) {
+      let [realNick, ...rest] = parsed.params;
+
+      if (parsed.command.toLowerCase() === "nick" && STATE.pastMOTD) {
+        if (nickFromPrefix(parsed.prefix) !== STATE.nick) {
+          return;
+        }
+
+        realNick = realNick.replace("\r\n", "");
+      }
+
+      if (realNick !== STATE.nick) {
+        console.warn(`Our nick is now: "${realNick}"`, parsed);
+        setNick(realNick);
+      }
     }
 
     if (!currentBuffer) {
@@ -82,7 +111,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
 
     if (currentBuffer) {
       if (event.payload.server === getCurSelection().server && currentBuffer.name === getCurSelection().channel) {
-        setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer, nick));
+        setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer));
         setChannelNames(currentBuffer.names);
         setTopic(currentBuffer.topic);
         emit("nhex://servers_and_chans/selected", getCurSelection());
@@ -102,7 +131,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
     const { server, channel } = event.payload;
     setCurSelection({ server, channel });
     const channelBuf = BUFFERS[server].buffers[channel];
-    setMessageBoxLines(messageBoxLinesFromBuffer(channelBuf, nick));
+    setMessageBoxLines(messageBoxLinesFromBuffer(channelBuf));
     setChannelNames(channelBuf.names);
     setTopic(channelBuf.topic);
     emit("nhex://servers_and_chans/selected", getCurSelection());
@@ -113,8 +142,9 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       BUFFERS[getCurSelection().server].buffers[getCurSelection().channel].buffer.push(new IRCMessageParsed(
         "PRIVMSG",
         [getCurSelection().channel, ...event.payload.args],
-        nick, ///TODO: this better
+        STATE.nick,
         event.payload.raw,
+        true,
       ));
 
       emit("nhex://servers_and_chans/select", getCurSelection());
@@ -132,7 +162,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       buf.buffer.push(new IRCMessageParsed(
         "PRIVMSG",
         [pmPartnerNick, ...messageParams],
-        nick, ///TODO: this better
+        STATE.nick,
         messageParams.join(" "),
       ));
 
@@ -169,7 +199,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
 
       if (channel === getCurSelection().channel) {
         getCurSelection().channel = "";
-        setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[getCurSelection().server].buffers[""], nick));
+        setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[getCurSelection().server].buffers[""]));
       }
 
       refreshServersAndChans();
@@ -189,6 +219,14 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       realSetIsConnected(false);
       return "quit";
     },
+    nick(event: MBUserInputEvent) {
+      console.log(event);
+      if (event.payload.args.length > 1) {
+        console.warn(`Too many args (${event.payload.args.length}) for /nick!`, event.payload.args);
+      }
+      // do NOT call setNick() here! that will happen by virtue of the NICK message handling path
+      return "nick";
+    }
   };
   const implementedHandlers = Object.keys(handlers);
 
