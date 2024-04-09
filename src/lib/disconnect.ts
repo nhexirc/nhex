@@ -16,13 +16,13 @@ export default async function (context: Record<any, any>) {
 
   let resolve;
   const promise = new Promise((res) => (resolve = res));
-  const unlisten = await listen("nhex://user_input/quit/sent_ack", () => {
+  const unlisten = await listen("nhex://command/ack/quit", () => {
     realSetIsConnected(false);
     unlisten();
     resolve();
   });
 
-  await emit("nhex://user_input/quit", {
+  await emit("nhex://command/do", {
     ...getCurSelection(),
     ...(new UserInput("quit"))
   });
