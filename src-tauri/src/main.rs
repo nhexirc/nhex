@@ -90,7 +90,7 @@ async fn connect_impl(
 
     let whois_sender = cclient.sender();
     app_handle.listen_global("nhex://user_input/whois", move |event| {
-        let payload: UserInput = deserde(event.payload().expect("join"));
+        let payload: UserInput = deserde(event.payload().expect("whois"));
         whois_sender
             .send(Command::WHOIS(
                 Some("".to_string()),
@@ -123,6 +123,24 @@ async fn connect_impl(
         nick_sender
             .send(Command::NICK(payload.args[0].to_string()))
             .expect("nick");
+    });
+
+    let stats_sender = cclient.sender();
+    app_handle.listen_global("nhex://user_input/stats", move |event| {
+        let payload: UserInput = deserde(event.payload().expect("stats"));
+        let mut p0 = Some("".to_string());
+        let mut p1 = Some("".to_string());
+
+        if payload.args.len() > 0 {
+            p0 = Some(payload.args[0].to_string());
+            if payload.args.len() > 1 {
+                p1 = Some(payload.args[1].to_string());
+            }
+        }
+
+        stats_sender
+            .send(Command::STATS(p0, p1))
+            .expect("stats");
     });
 
     let server_clone = server.clone();

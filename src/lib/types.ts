@@ -35,6 +35,7 @@ export class Buffer {
     buffer: IRCMessageParsed[] = [];
     names: IRCNicksSet = new IRCNicksSet();
     dirty: boolean = false;
+    modesHistory: string[][] = [];
 
     constructor(name: string) {
         this.name = name;

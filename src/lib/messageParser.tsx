@@ -121,6 +121,14 @@ const MESSAGE_HANDLERS: MessageHandlers = {
             networkBuffers[channel] = new Buffer(channel);
         }
 
+        if (nick.indexOf("-") === 0 || nick.indexOf("+") === 0) {
+            networkBuffers[""].buffer.push(parsed);
+            networkBuffers[channel].modesHistory.push(parsed.params.slice(1).map(s => s.replace("\r\n", "")));
+            console.warn(`${channel} new modes: ${networkBuffers[channel].modesHistory.slice(-1).join(" ")}`,
+                networkBuffers[channel].modesHistory);
+            return null;
+        }
+
         networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${nick.replace("\r\n", "")}`);
         return null;
     },

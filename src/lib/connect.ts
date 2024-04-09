@@ -68,7 +68,6 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       STATE.nick,
       getUserSettings()?.Network.routeNoticesToServerBuffer
     );
-    console.log("nhex://irc_message", event.payload, parsed);
 
     /* these should _maybe_ all be moved into messageParser() ...?
        but then messageParser will need a *lot* more context params... */
@@ -220,12 +219,14 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       return "quit";
     },
     nick(event: MBUserInputEvent) {
-      console.log(event);
       if (event.payload.args.length > 1) {
         console.warn(`Too many args (${event.payload.args.length}) for /nick!`, event.payload.args);
       }
       // do NOT call setNick() here! that will happen by virtue of the NICK message handling path
       return "nick";
+    },
+    stats() {
+      return "stats";
     }
   };
   const implementedHandlers = Object.keys(handlers);
