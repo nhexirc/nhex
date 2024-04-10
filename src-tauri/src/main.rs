@@ -67,7 +67,7 @@ async fn connect_impl(
     let server_name = server.clone();
     app_handle.listen_global(EVENT_PATH_INPUT, move |event| {
         let cmd = deserde(event);
-        if cmd.server != server_name {
+        if !cmd.server.is_empty() && cmd.server != server_name {
             return;
         }
         let id = cmd.id;
