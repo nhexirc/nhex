@@ -147,7 +147,8 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       ));
 
       emit("nhex://servers_and_chans/select", getCurSelection());
-      return "privmsg";
+      // Use an empty string here, as it will never collide with actual command names.
+      return "";
     },
     msg(event: MBUserInputEvent) {
       const pmPartnerNick = event.payload.args[0];
@@ -230,6 +231,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
     }
   };
   const implementedHandlers = Object.keys(handlers);
+  let id = 1; // Start at 1 because the Rust side assumes 0 means "unset".
 
   listen("nhex://user_input/raw", (event: MBUserInputEvent) => {
     const command = event.payload.command.toLowerCase();
@@ -238,8 +240,17 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       // this handles any special logic, could be a noop, and returns the name
       // of the rust event to be called
       const eventName = handlers[nrmCommand](event);
-      // inform rust
-      emit(`nhex://user_input/${eventName}`, { ...getCurSelection(), ...event.payload });
+      if (eventName !== null) {
+          // Hand off to the Rust side.
+          // See `UserInput::run` for where this dispatches to if all goes well.
+          emit(`nhex://command/do`, {
+            ...getCurSelection(),
+            ...event.payload,
+            id,
+            command: eventName
+          });
+          id += 1;
+      }
     } else {
       console.warn(`command ${nrmCommand} not supported`);
     }
