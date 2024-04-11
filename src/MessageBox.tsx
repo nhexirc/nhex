@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
-import { MessageBoxLines, UserSettingsIface } from './lib/types';
+import { MessageBoxLines, UserSettingsIface, IRCMessageParsed } from './lib/types';
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
 import {
@@ -11,6 +11,7 @@ import {
   GLOBAL_MESSAGE_STYLE,
   TIMESTAMP_STYLE,
   UNIFORM_BORDER_STYLE,
+  MESSAGE_HAS_HIGHLIGHT,
 } from "./style";
 import transformMessage from "./lib/transformMessage.jsx";
 
@@ -46,16 +47,17 @@ const MessageBox = (props: Props) => {
   ));
 
   const commands = {
-    action(message: { params: [] }) {
+    action(message: IRCMessageParsed) {
       return ["*", message.params.slice(1).join(" "), "", ""];
     },
-    privmsg(message: { params: [] }) {
-      return ["<", message.params.slice(1).join(" "), ">", ""];
+    privmsg(message: IRCMessageParsed) {
+      let extraStyle = message.highlightedUs ? MESSAGE_HAS_HIGHLIGHT : "";
+      return ["<", message.params.slice(1).join(" "), ">", extraStyle];
     },
-    join(message: { params: string[] }) {
+    join(message: IRCMessageParsed) {
       return ["", `has joined ${message.params[1]}`, "", joinPartStyling()];
     },
-    part(message: { params: string[] }) {
+    part(message: IRCMessageParsed) {
       let quitMsg = "";
       if (message.params[0] !== message.params[1]) {
         quitMsg = ` (${message.params[0].trim()})`;
@@ -64,7 +66,7 @@ const MessageBox = (props: Props) => {
     },
   };
 
-  commands["notice"] = (message: { params: [] }) => {
+  commands["notice"] = (message: IRCMessageParsed) => {
     const pmed = commands.privmsg(message);
     pmed[0] = "(notice) <";
     return pmed;

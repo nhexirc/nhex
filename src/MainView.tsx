@@ -128,7 +128,7 @@ const MainView = ({ dayNightToggle, isNight }) => {
     let unlistenViewClick: any;
     listen("nhex://menu/view", () => {
       Object.entries(BUFFERS).forEach(([, networkBufs]) =>
-        Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.dirty = false))
+        Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.cleanup()))
       );
 
       refreshServersAndChans();

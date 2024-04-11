@@ -19,6 +19,7 @@ export class IRCMessageParsed {
     timestamp: number = Number(new Date());
     fromServer: boolean = false;
     fromUs: boolean = false;
+    highlightedUs: boolean = false;
 
     constructor(command: string, params: string[], prefix: string, raw: string, fromUs: boolean = false) {
         this.command = command;
@@ -29,16 +30,29 @@ export class IRCMessageParsed {
     }
 };
 
+export class BufferMesses {
+    normal: number = 0;
+    highlight: number = 0;
+};
+
 export class Buffer {
     name: string;
     topic: string = "";
     buffer: IRCMessageParsed[] = [];
     names: IRCNicksSet = new IRCNicksSet();
-    dirty: boolean = false;
+    dirty: BufferMesses = new BufferMesses();
     modesHistory: string[][] = [];
 
     constructor(name: string) {
         this.name = name;
+    }
+
+    isDirty(): boolean {
+        return Object.values(this.dirty).some((dv) => dv > 0);
+    }
+
+    cleanup() {
+        this.dirty = new BufferMesses();
     }
 };
 

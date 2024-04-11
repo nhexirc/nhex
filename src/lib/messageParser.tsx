@@ -40,8 +40,8 @@ const MODES_TO_HATS = {
     "-v": ""
 };
 
-function privmsgNoticeHandler (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) {
-    let retBuf;
+function privmsgNoticeHandler (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed, currentNick?: string) {
+    let retBuf: Buffer;
     if (parsed.prefix && networkBuffers[parsed.params[0]]?.name[0] !== "#" /* should check that this is US */) {
         const pmPartner = nickFromPrefix(parsed.prefix);
         if (!networkBuffers[pmPartner]) {
@@ -64,6 +64,10 @@ function privmsgNoticeHandler (networkBuffers: Record<string, Buffer>, parsed: I
         }
 
         retBuf = networkBuffers[parsed.params[0]];
+
+        if (currentNick && message.indexOf(currentNick) !== -1) {
+            parsed.highlightedUs = true;
+        }
     }
 
     return retBuf;

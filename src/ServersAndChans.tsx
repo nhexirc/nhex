@@ -1,5 +1,12 @@
 import { emit } from '@tauri-apps/api/event';
-import { SERVER_NAMES_PANEL_STYLE, SERVER_PANEL_STYLE, SERVER_CHANNEL_DIRTY, SERVER_CHANNEL_SELECTED, UNIFORM_BORDER_STYLE } from './style';
+import {
+  SERVER_NAMES_PANEL_STYLE,
+  SERVER_PANEL_STYLE,
+  SERVER_CHANNEL_DIRTY,
+  SERVER_CHANNEL_SELECTED,
+  SERVER_CHANNEL_HAS_HIGHLIGHTS,
+  UNIFORM_BORDER_STYLE,
+} from './style';
 import { Dispatch, SetStateAction } from 'react';
 import { SACProps, SACSelect, NetworkBuffer } from './lib/types';
 
@@ -19,7 +26,7 @@ const ServersAndChans = ({ servers, setIsServerSelected, getCurSelection, getBuf
     <div className={`${SERVER_NAMES_PANEL_STYLE} ${SERVER_PANEL_STYLE} ${UNIFORM_BORDER_STYLE}`}>
       {Object.entries(servers).map(([serverName, chans]) => {
         const serverBuf = getBuffers()[serverName];
-        const serverDirty = cs.server === serverName && serverBuf.buffers[""].dirty;
+        const serverDirty = cs.server === serverName && serverBuf.buffers[""].isDirty();
         const serverSelected = cs.server === serverName && cs.channel === "";
         const dynServerClasses = (serverDirty ? SERVER_CHANNEL_DIRTY : '') + ' ' +
           (serverSelected ? SERVER_CHANNEL_SELECTED : '');
@@ -29,21 +36,23 @@ const ServersAndChans = ({ servers, setIsServerSelected, getCurSelection, getBuf
             <h3
               className={`font-bold ${dynServerClasses}`}
               onClick={() => {
-                serverBuf.buffers[""].dirty = false;
+                serverBuf.buffers[""].cleanup();
                 emitServer(serverName);
               }}>
               {serverName}
             </h3>
             {chans.sort().map((channel: string) => {
-              const chanDirty = cs.server === serverName && cs.channel !== channel && serverBuf.buffers[channel].dirty;
+              const chanDirty = cs.server === serverName && cs.channel !== channel && serverBuf.buffers[channel].isDirty();
+              const chanHasHighlights = chanDirty && serverBuf.buffers[channel].dirty.highlight > 0;
               const selectedChan = cs.server === serverName && cs.channel === channel;
               return (<p
                 id={`chan_${channel.replace("#", "_")}`}
                 onClick={() => {
-                  serverBuf.buffers[channel].dirty = false;
+                  serverBuf.buffers[channel].cleanup();
                   emitServer(serverName, channel);
                 }}
                 className={
+                  (chanHasHighlights ? SERVER_CHANNEL_HAS_HIGHLIGHTS : '') + ' ' +
                   (chanDirty ? SERVER_CHANNEL_DIRTY : '') + ' ' +
                   (selectedChan ? SERVER_CHANNEL_SELECTED : '')
                 }

@@ -118,7 +118,11 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       else {
         let relevantCmd = (parsed.command === 'quit' ? 'part' : parsed.command).toLowerCase();
         if (getUserSettings()?.MessageBox?.show?.includes(relevantCmd) ?? true) {
-          currentBuffer.dirty = true;
+          currentBuffer.dirty.normal++;
+
+          if (parsed.highlightedUs) {
+            currentBuffer.dirty.highlight++;
+          }
         }
       }
     }

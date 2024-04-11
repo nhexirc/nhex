@@ -29,6 +29,7 @@ export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
 export const LINK_ELEMENT_STYLE = "text-sky-600"
+export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "border bg-zinc-500/50 p-1"
@@ -49,6 +50,7 @@ export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-600/60 sm:max-w-36 w-full px-2 
 export const SERVER_PANEL_STYLE = "text-right"
 export const SERVER_CHANNEL_DIRTY = "italic text-cyan-200"
 export const SERVER_CHANNEL_SELECTED = "underline"
+export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
 
 //NAMES
 export const NAMES_PANEL_STYLE = ""
