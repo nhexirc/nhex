@@ -12,7 +12,7 @@ const UserInput = ({ nick, isNight }) => {
       }
       const completed = completeNickname(prefix, first);
       e.currentTarget.value = [completed,
-        ...rest.filter(r => r !== "")].join(" ")
+        ...rest.filter((r: string) => r !== "")].join(" ")
       e.preventDefault();
       // prevent reseting prefix, for cycling through
       return;
