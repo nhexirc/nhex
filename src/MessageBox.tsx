@@ -23,12 +23,6 @@ interface PropsSettings {
   userSettings: UserSettingsIface;
 };
 
-interface Props {
-  lines: MessageBoxLines;
-  settings: PropsSettings;
-  STATE: Record<string, any>;
-};
-
 const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
   month: "numeric",
@@ -39,7 +33,7 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, topic }) => {
+const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, topic }: { lines: MessageBoxLines, settings: PropsSettings, STATE: Record<string, any>, nick: string, isNight: any, dayNightToggle: any, topic: string }) => {
   const mbRef = useRef(null);
 
   listen("nhex://servers_and_chans/selected", () => {
