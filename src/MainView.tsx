@@ -180,7 +180,7 @@ const MainView = ({ dayNightToggle, isNight }) => {
         await Promise.all(userSettings.Network.connectCommands
           .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
       }
-    
+
       if (!loggedInCallback) {
         await postConnectCommands();
       }
@@ -214,6 +214,8 @@ const MainView = ({ dayNightToggle, isNight }) => {
           servers={serversAndChans}
           message={messageBoxLines}
           names={channelNames}
+          nick={nick}
+          isNight={isNight}
           settings={{
             userSettings,
             setUserSettings,

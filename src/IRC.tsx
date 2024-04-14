@@ -6,7 +6,7 @@ import { useState } from "react"
 import UserInput from "./UserInput"
 import Topic from "./Topic";
 
-const IRC = ({ servers, names, message, settings, topic, getCurSelection, getBuffers, STATE }) => {
+const IRC = ({ servers, names, message, nick, isNight, settings, topic, getCurSelection, getBuffers, STATE }) => {
   const [isServerSelected, setIsServerSelected] = useState(true);
   return (
     <div className={IRC_STYLE}>
@@ -24,8 +24,7 @@ const IRC = ({ servers, names, message, settings, topic, getCurSelection, getBuf
           <ChannelNames names={names} />
         </div>
       }
-
-      <UserInput />
+      <UserInput nick={nick} isNight={isNight} />
     </div>
   )
 }
