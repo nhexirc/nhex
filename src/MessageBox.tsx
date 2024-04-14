@@ -11,7 +11,7 @@ import {
   TIMESTAMP_STYLE,
   UNIFORM_BORDER_STYLE,
   MESSAGE_HAS_HIGHLIGHT,
-  MESSAGES,
+  MESSAGEBOX,
 } from "./style";
 import transformMessage from "./lib/transformMessage.jsx";
 import UserInput from "./UserInput";
@@ -83,9 +83,9 @@ const MessageBox = ({ lines, settings, STATE, nick, isNight, topic }): Props & {
   }
 
   return (
-    <div className={`${MESSAGES} ${UNIFORM_BORDER_STYLE}`}>
+    <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
       <Topic topic={topic} />
-      <div id="message_area" ref={mbRef} className="">
+      <div id="message_area" ref={mbRef} className="overflow-y-auto font-mono scrollbar-thin overflow-x-hidden border sm:border-0">
         {lines
           .filter(({ message }) => {
             if (message.fromServer) {
@@ -99,7 +99,7 @@ const MessageBox = ({ lines, settings, STATE, nick, isNight, topic }): Props & {
 
             return !message.fromUs || !nonReflected.includes(command);
           })
-          .map(({ message }, i) => {
+          .map(({ message }, i: any) => {
             const command = message.command.toLowerCase();
             let timestampEle = <></>;
 
