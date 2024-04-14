@@ -219,6 +219,7 @@ const MainView = ({ dayNightToggle, isNight }) => {
           names={channelNames}
           nick={nick}
           isNight={isNight}
+          dayNightToggle={dayNightToggle}
           settings={{
             userSettings,
             setUserSettings,

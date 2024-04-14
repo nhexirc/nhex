@@ -16,6 +16,7 @@ import {
 import transformMessage from "./lib/transformMessage.jsx";
 import UserInput from "./UserInput";
 import Topic from "./Topic";
+import Menu from "./Menu";
 
 interface PropsSettings {
   userSettings: UserSettingsIface;
@@ -37,7 +38,7 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-const MessageBox = ({ lines, settings, STATE, nick, isNight, topic }): Props & { nick: string, isNight: any } => {
+const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, topic }): Props & { nick: string, isNight: any } => {
   const mbRef = useRef(null);
 
   listen("nhex://servers_and_chans/selected", () => {
@@ -84,7 +85,10 @@ const MessageBox = ({ lines, settings, STATE, nick, isNight, topic }): Props & {
 
   return (
     <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
-      <Topic topic={topic} />
+      <div>
+        <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
+        <Topic topic={topic} isNight={isNight} />
+      </div>
       <div id="message_area" ref={mbRef} className="overflow-y-auto font-mono scrollbar-thin overflow-x-hidden border sm:border-0">
         {lines
           .filter(({ message }) => {
