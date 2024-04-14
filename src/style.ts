@@ -32,10 +32,10 @@ export const LINK_ELEMENT_STYLE = "text-sky-600"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
-export const TOPIC_USER_INPUT = "bg-zinc-400 p-1 min-h-8"
+export const TOPIC_USER_INPUT = "bg-zinc-700 border-y p-1 min-h-8"
 
 //TOPIC
-export const TOPIC_BAR = "border italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
+export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row"
