@@ -25,7 +25,7 @@ export const TLS_BUTTON_STYLE = `px-2 py-1 cursor-pointer select-none text-cente
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
 export const MESSAGES_WINDOW = "overflow-y-auto font-mono scrollbar-thin overflow-x-hidden pb-20 sm:pb-0"
-export const MESSAGEBOX = "bg-zinc-600/10 w-screen flex flex-col justify-between h-screen overflow-y-auto scrollbar-thin"
+export const MESSAGEBOX = "bg-zinc-600/10 w-screen flex flex-col justify-between h-screen"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
@@ -34,16 +34,16 @@ export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "border-y p-1 min-h-8"
-export const TOPIC_USER_THEME_NIGHT = `placeholder:text-white/70 text-white/90 bg-slate-800`
+export const TOPIC_USER_THEME_NIGHT = `placeholder:text-white/70 text-white/90 bg-slate-700`
 export const TOPIC_USER_THEME_DAY = `placeholder:text-black/70 text-black bg-orange-200`
 //TOPIC
 export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
 //SERVER + MESSAGEBOX + NAMES
-export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row"
+export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:max-w-40 w-screen px-1 overflow-auto scrollbar-thin sm:h-screen min-h-20 border-x"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:min-w-48 min-w-32 px-1 overflow-auto scrollbar-thin h-screen  border-x"
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
 export const SERVER_CHANNEL_DIRTY = "italic text-cyan-200"
@@ -51,7 +51,7 @@ export const SERVER_CHANNEL_SELECTED = "underline"
 export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "font-bold"
+export const NAMES_PANEL_STYLE = "font-bold hidden sm:block"
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
