@@ -4,7 +4,6 @@ import { MessageBoxLines, UserSettingsIface, IRCMessageParsed } from './lib/type
 import { nickFromPrefix } from './lib/common';
 import nickColor from './lib/nickColor';
 import {
-  MESSAGE_BOX,
   USERNAME_STYLE,
   JOIN_PART_MSG,
   JOIN_PART_MSG_DIM,
@@ -12,8 +11,10 @@ import {
   TIMESTAMP_STYLE,
   UNIFORM_BORDER_STYLE,
   MESSAGE_HAS_HIGHLIGHT,
+  MESSAGES_USER_INPUT,
 } from "./style";
 import transformMessage from "./lib/transformMessage.jsx";
+import UserInput from "./UserInput";
 
 interface PropsSettings {
   userSettings: UserSettingsIface;
@@ -35,7 +36,7 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-const MessageBox = (props: Props) => {
+const MessageBox = ({ lines, settings, STATE, nick, isNight }): Props & { nick: string, isNight: any } => {
   const mbRef = useRef(null);
 
   listen("nhex://servers_and_chans/selected", () => {
@@ -43,7 +44,7 @@ const MessageBox = (props: Props) => {
   });
 
   const joinPartStyling = () => (JOIN_PART_MSG + " " + (
-    props.settings.userSettings.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : ""
+    settings.userSettings.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : ""
   ));
 
   const commands = {
@@ -76,21 +77,21 @@ const MessageBox = (props: Props) => {
   const nonReflected = ["join", "part"];
 
   let messageContainerStyle = "text-base";
-  if (props.settings.userSettings.MessageBox?.fontSize) {
-    messageContainerStyle = `text-${props.settings.userSettings.MessageBox?.fontSize}`;
+  if (settings.userSettings.MessageBox?.fontSize) {
+    messageContainerStyle = `text-${settings.userSettings.MessageBox?.fontSize} pl-2`;
   }
 
   return (
-    <div className={`${MESSAGE_BOX} ${UNIFORM_BORDER_STYLE}`}>
+    <div className={`${MESSAGES_USER_INPUT} ${UNIFORM_BORDER_STYLE}`}>
       <div id="message_area" ref={mbRef}>
-        {props.lines
+        {lines
           .filter(({ message }) => {
             if (message.fromServer) {
               return true;
             }
             const command = message.command.toLowerCase();
 
-            if (!props.settings.userSettings.MessageBox.show.includes(command)) {
+            if (!settings.userSettings.MessageBox.show.includes(command)) {
               return false;
             }
 
@@ -100,7 +101,7 @@ const MessageBox = (props: Props) => {
             const command = message.command.toLowerCase();
             let timestampEle = <></>;
 
-            if (props.settings.userSettings.MessageBox?.showTimestamps === true) {
+            if (settings.userSettings.MessageBox?.showTimestamps === true) {
               timestampEle = <span className={TIMESTAMP_STYLE}>[{
                 Intl.DateTimeFormat(undefined, MessageTimestampFormatOptions).format(new Date(message.timestamp))
               }]</span>;
@@ -115,7 +116,7 @@ const MessageBox = (props: Props) => {
               );
             }
 
-            const nick = message.fromUs ? props.STATE.nick : nickFromPrefix(message.prefix);
+            const nick = message.fromUs ? STATE.nick : nickFromPrefix(message.prefix);
             const color = nickColor(nick);
             const [before, $message, after, msgStyleExtra] = commands[command](message);
 
@@ -134,6 +135,7 @@ const MessageBox = (props: Props) => {
             );
           })}
       </div>
+      <UserInput nick={nick} isNight={isNight} />
     </div >
   );
 }
