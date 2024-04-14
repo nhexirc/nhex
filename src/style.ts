@@ -37,9 +37,6 @@ export const TOPIC_USER_INPUT = "border bg-zinc-400/40 p-1"
 //TOPIC
 export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
-//USER INPUT COMPONENT
-export const USER_INPUT = "focus:outline-none"
-
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col justify-between sm:flex-row"
 
