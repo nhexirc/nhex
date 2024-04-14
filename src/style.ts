@@ -42,7 +42,7 @@ export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin over
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col sm:flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:max-w-36 w-full px-1 overflow-auto scrollbar-thin sm:h-screen min-h-20 border-x"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:max-w-40 w-screen px-1 overflow-auto scrollbar-thin sm:h-screen min-h-20 border-x"
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
 export const SERVER_CHANNEL_DIRTY = "italic text-cyan-200"
