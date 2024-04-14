@@ -80,7 +80,7 @@ const TopicMessagesInput = ({ lines, settings, STATE, nick, isNight, dayNightTog
 
   return (
     <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
-      <div className="overflow-y-auto">
+      <div>
         <div className="sticky top-0">
           <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
           <Topic topic={topic} isNight={isNight} />
