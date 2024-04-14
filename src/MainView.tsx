@@ -194,21 +194,24 @@ const MainView = ({ dayNightToggle, isNight }) => {
 
   return (
     <>
-      <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
       {!isConnected ?
-        <Connect
-          nick={nick}
-          setNick={setNick}
-          server={server}
-          setServer={setServer}
-          port={port}
-          setPort={setPort}
-          channels={channels}
-          setChannels={setChannels}
-          handleTLS={() => setTLS(!tls)}
-          tls={tls}
-          connect={handleConnect}
-          isNight={isNight} />
+        <>
+          <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
+          <Connect
+            nick={nick}
+            setNick={setNick}
+            server={server}
+            setServer={setServer}
+            port={port}
+            setPort={setPort}
+            channels={channels}
+            setChannels={setChannels}
+            handleTLS={() => setTLS(!tls)}
+            tls={tls}
+            connect={handleConnect}
+            isNight={isNight} />
+          <Footer isNight={isNight} />
+        </>
         :
         <IRC
           servers={serversAndChans}
@@ -225,7 +228,6 @@ const MainView = ({ dayNightToggle, isNight }) => {
           getBuffers={getBuffers}
           STATE={STATE} />
       }
-      <Footer isNight={isNight} />
     </>
   );
 }
