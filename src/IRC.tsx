@@ -3,7 +3,6 @@ import MessageBox from "./MessageBox"
 import ChannelNames from "./ChannelNames"
 import { IRC_STYLE, SERV_MSG_NAMES_PANEL_STYLE } from "./style"
 import { useState } from "react"
-import UserInput from "./UserInput"
 import Topic from "./Topic";
 
 const IRC = ({ servers, names, message, nick, isNight, settings, topic, getCurSelection, getBuffers, STATE }) => {
@@ -15,16 +14,16 @@ const IRC = ({ servers, names, message, nick, isNight, settings, topic, getCurSe
       {isServerSelected ?
         <div className={SERV_MSG_NAMES_PANEL_STYLE}>
           <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} getCurSelection={getCurSelection} getBuffers={getBuffers} />
-          <MessageBox lines={message} settings={settings} STATE={STATE} />
+          <MessageBox lines={message} settings={settings} STATE={STATE} nick={nick} isNight={isNight} />
         </div>
         :
         <div className={SERV_MSG_NAMES_PANEL_STYLE}>
           <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} getCurSelection={getCurSelection} getBuffers={getBuffers} />
-          <MessageBox lines={message} settings={settings} STATE={STATE} />
+          <MessageBox lines={message} settings={settings} STATE={STATE} nick={nick} isNight={isNight} />
           <ChannelNames names={names} />
         </div>
       }
-      <UserInput nick={nick} isNight={isNight} />
+
     </div>
   )
 }
