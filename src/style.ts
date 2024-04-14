@@ -1,7 +1,7 @@
 //APP
-export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
+export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700 overflow-hidden"
 export const NIGHT_STYLE = "bg-slate-900 text-stone-300"
-export const DAY_STYLE = "bg-orange-400/30 text-black"
+export const DAY_STYLE = "bg-orange-200 text-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
@@ -24,6 +24,7 @@ export const TLS_BUTTON_STYLE = `px-2 py-1 cursor-pointer select-none text-cente
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
+export const MESSAGES_WINDOW = "overflow-y-auto font-mono scrollbar-thin overflow-x-hidden pb-20 sm:pb-0"
 export const MESSAGEBOX = "bg-zinc-600/30 w-screen flex flex-col justify-between h-screen"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
@@ -33,8 +34,8 @@ export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "border-y p-1 min-h-8"
-export const TOPIC_USER_THEME_NIGHT = `placeholder:text-white/70 text-white/90 bg-slate-700`
-export const TOPIC_USER_THEME_DAY = `placeholder:text-black/70 text-black bg-orange-100`
+export const TOPIC_USER_THEME_NIGHT = `placeholder:text-white/70 text-white/90 bg-slate-800`
+export const TOPIC_USER_THEME_DAY = `placeholder:text-black/70 text-black bg-orange-200`
 //TOPIC
 export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
