@@ -27,7 +27,7 @@ const UserInput = ({ nick, isNight }) => {
   }
   let prefix = "";
   return (
-    <input type="text" className={`${TOPIC_USER_INPUT} ${UNIFORM_BORDER_STYLE} ${isNight ? `placeholder:text-white/70 text-white/90` : `placeholder:text-black/70 text-black`} focus:outline-none`} autoFocus placeholder={nick} onKeyDown={inputFunctionality} />
+    <input type="text" className={`${TOPIC_USER_INPUT} ${UNIFORM_BORDER_STYLE} ${isNight ? `placeholder:text-white/70 text-white/90` : `placeholder:text-black/70 text-black`}  sticky bottom-0 w-full focus:outline-none`} autoFocus placeholder={nick} onKeyDown={inputFunctionality} />
   )
 }
 
