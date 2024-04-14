@@ -38,7 +38,7 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, topic }): Props & { nick: string, isNight: any } => {
+const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, topic }) => {
   const mbRef = useRef(null);
 
   listen("nhex://servers_and_chans/selected", () => {
@@ -85,11 +85,11 @@ const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, top
 
   return (
     <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
-      <div>
+      <div className="">
         <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
         <Topic topic={topic} isNight={isNight} />
       </div>
-      <div id="message_area" ref={mbRef} className="overflow-y-auto font-mono scrollbar-thin overflow-x-hidden border sm:border-0">
+      <div id="message_area" ref={mbRef} className="overflow-y-auto font-mono scrollbar-thin overflow-x-hidden sm:mb-0">
         {lines
           .filter(({ message }) => {
             if (message.fromServer) {
