@@ -32,8 +32,9 @@ export const LINK_ELEMENT_STYLE = "text-sky-600"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
-export const TOPIC_USER_INPUT = "bg-zinc-700 border-y p-1 min-h-8"
-
+export const TOPIC_USER_INPUT = "border-y p-1 min-h-8"
+export const TOPIC_USER_THEME_NIGHT = `placeholder:text-white/70 text-white/90 bg-zinc-700/50`
+export const TOPIC_USER_THEME_DAY = `placeholder:text-black/70 text-black bg-zinc-200/40`
 //TOPIC
 export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
