@@ -12,6 +12,7 @@ import {
   UNIFORM_BORDER_STYLE,
   MESSAGE_HAS_HIGHLIGHT,
   MESSAGEBOX,
+  MESSAGES_WINDOW,
 } from "./style";
 import transformMessage from "./lib/transformMessage.jsx";
 import UserInput from "./UserInput";
@@ -85,61 +86,63 @@ const MessageBox = ({ lines, settings, STATE, nick, isNight, dayNightToggle, top
 
   return (
     <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
-      <div className="">
-        <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
-        <Topic topic={topic} isNight={isNight} />
-      </div>
-      <div id="message_area" ref={mbRef} className="overflow-y-auto font-mono scrollbar-thin overflow-x-hidden sm:mb-0">
-        {lines
-          .filter(({ message }) => {
-            if (message.fromServer) {
-              return true;
-            }
-            const command = message.command.toLowerCase();
+      <div className="overflow-y-auto">
+        <div className="sticky top-0">
+          <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
+          <Topic topic={topic} isNight={isNight} />
+        </div>
+        <div ref={mbRef} className={MESSAGES_WINDOW}>
+          {lines
+            .filter(({ message }) => {
+              if (message.fromServer) {
+                return true;
+              }
+              const command = message.command.toLowerCase();
 
-            if (!settings.userSettings.MessageBox.show.includes(command)) {
-              return false;
-            }
+              if (!settings.userSettings.MessageBox.show.includes(command)) {
+                return false;
+              }
 
-            return !message.fromUs || !nonReflected.includes(command);
-          })
-          .map(({ message }, i: any) => {
-            const command = message.command.toLowerCase();
-            let timestampEle = <></>;
+              return !message.fromUs || !nonReflected.includes(command);
+            })
+            .map(({ message }, i: any) => {
+              const command = message.command.toLowerCase();
+              let timestampEle = <></>;
 
-            if (settings.userSettings.MessageBox?.showTimestamps === true) {
-              timestampEle = <span className={TIMESTAMP_STYLE}>[{
-                Intl.DateTimeFormat(undefined, MessageTimestampFormatOptions).format(new Date(message.timestamp))
-              }]</span>;
-            }
+              if (settings.userSettings.MessageBox?.showTimestamps === true) {
+                timestampEle = <span className={TIMESTAMP_STYLE}>[{
+                  Intl.DateTimeFormat(undefined, MessageTimestampFormatOptions).format(new Date(message.timestamp))
+                }]</span>;
+              }
 
-            if (!Object.keys(commands).includes(command)) {
+              if (!Object.keys(commands).includes(command)) {
+                return (
+                  <div id={`mb_line_${i}`} className={messageContainerStyle}>
+                    {timestampEle}
+                    {transformMessage(message.raw)}
+                  </div>
+                );
+              }
+
+              const nick = message.fromUs ? STATE.nick : nickFromPrefix(message.prefix);
+              const color = nickColor(nick);
+              const [before, $message, after, msgStyleExtra] = commands[command](message);
+
               return (
                 <div id={`mb_line_${i}`} className={messageContainerStyle}>
                   {timestampEle}
-                  {transformMessage(message.raw)}
+                  {before}<span
+                    className={`${message.fromUs && USERNAME_STYLE}`}
+                    style={{ color }}>
+                    {nick}
+                  </span>{after}
+                  <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
+                    {transformMessage($message)}
+                  </span>
                 </div>
               );
-            }
-
-            const nick = message.fromUs ? STATE.nick : nickFromPrefix(message.prefix);
-            const color = nickColor(nick);
-            const [before, $message, after, msgStyleExtra] = commands[command](message);
-
-            return (
-              <div id={`mb_line_${i}`} className={messageContainerStyle}>
-                {timestampEle}
-                {before}<span
-                  className={`${message.fromUs && USERNAME_STYLE}`}
-                  style={{ color }}>
-                  {nick}
-                </span>{after}
-                <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
-                  {transformMessage($message)}
-                </span>
-              </div>
-            );
-          })}
+            })}
+        </div>
       </div>
       <UserInput nick={nick} isNight={isNight} />
     </div >
