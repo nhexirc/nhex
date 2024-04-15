@@ -33,7 +33,7 @@ export const LINK_ELEMENT_STYLE = "text-sky-600"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
-export const TOPIC_USER_INPUT = "border-y p-1 min-h-8"
+export const TOPIC_USER_INPUT = "border-t p-1 min-h-8"
 export const USER_INPUT_THEME_NIGHT = `placeholder:text-white/70 text-white/90`
 export const USER_INPUT_THEME_DAY = `placeholder:text-black/70 text-black`
 
