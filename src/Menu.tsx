@@ -8,7 +8,7 @@ const Menu = ({ dayNightToggle, isNight }) => {
   const row2 = ["settings", "window", "help"];
 
   return (
-    <div className={`${MENU_STYLE} ${isNight ? `bg-slate-800` : DAY_STYLE}`}>
+    <div className={MENU_STYLE}>
       <div className={ROW_STYLE}>
         <a href="https://github.com/nhexirc/client" target="_blank" className="font-bold">nhex</a>
         {row1.map((item, i) => <MenuItem key={i}>{item}</MenuItem>)}
