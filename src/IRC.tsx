@@ -1,30 +1,27 @@
 import ServersAndChans from "./ServersAndChans"
-import MessageBox from "./MessageBox"
 import ChannelNames from "./ChannelNames"
 import { IRC_STYLE, SERV_MSG_NAMES_PANEL_STYLE } from "./style"
 import { useState } from "react"
-import UserInput from "./UserInput"
-import Topic from "./Topic";
+import TopicMessagesInput from "./TopicMessagesInput"
 
-const IRC = ({ servers, names, message, nick, isNight, settings, topic, getCurSelection, getBuffers, STATE }) => {
+const IRC = ({ servers, names, message, nick, isNight, dayNightToggle, settings, topic, getCurSelection, getBuffers, STATE }) => {
   const [isServerSelected, setIsServerSelected] = useState(true);
   return (
     <div className={IRC_STYLE}>
-      <Topic topic={topic} />
 
       {isServerSelected ?
         <div className={SERV_MSG_NAMES_PANEL_STYLE}>
           <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} getCurSelection={getCurSelection} getBuffers={getBuffers} />
-          <MessageBox lines={message} settings={settings} STATE={STATE} />
+          <TopicMessagesInput lines={message} settings={settings} STATE={STATE} nick={nick} isNight={isNight} topic={topic} dayNightToggle={dayNightToggle} />
         </div>
         :
         <div className={SERV_MSG_NAMES_PANEL_STYLE}>
           <ServersAndChans setIsServerSelected={setIsServerSelected} servers={servers} getCurSelection={getCurSelection} getBuffers={getBuffers} />
-          <MessageBox lines={message} settings={settings} STATE={STATE} />
+          <TopicMessagesInput lines={message} settings={settings} STATE={STATE} nick={nick} isNight={isNight} topic={topic} dayNightToggle={dayNightToggle} />
           <ChannelNames names={names} />
         </div>
       }
-      <UserInput nick={nick} isNight={isNight} />
+
     </div>
   )
 }

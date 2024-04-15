@@ -1,7 +1,7 @@
 //APP
-export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700"
+export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700 overflow-hidden"
 export const NIGHT_STYLE = "bg-slate-900 text-stone-300"
-export const DAY_STYLE = "bg-orange-400/30 text-black"
+export const DAY_STYLE = "bg-orange-200 text-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
@@ -9,7 +9,7 @@ export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6 py-
 export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap-2"
 
 //IRC COMPONENT
-export const IRC_STYLE = "flex flex-col px-4"
+export const IRC_STYLE = "flex flex-col h-dvh"
 
 //CONNECT COMPONENT
 export const CONNECT_STYLE = "flex flex-col items-center justify-center bg-zinc-500/20 h-full w-full shadow-[0_0_20px_rgba(0,0,0,0.30)]"
@@ -24,7 +24,8 @@ export const TLS_BUTTON_STYLE = `px-2 py-1 cursor-pointer select-none text-cente
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
-export const MESSAGE_BOX = "bg-zinc-600/30 w-full font-mono h-[467px] sm:h-[650px] overflow-y-auto px-2 scrollbar-thin overflow-x-hidden border sm:border-0"
+export const MESSAGES_WINDOW = "overflow-y-auto font-mono scrollbar-thin overflow-x-hidden"
+export const MESSAGEBOX = "overflow-y-auto scrollbar-thin bg-zinc-600/10 w-screen flex flex-col justify-between h-screen"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
@@ -32,16 +33,21 @@ export const LINK_ELEMENT_STYLE = "text-sky-600"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
-export const TOPIC_USER_INPUT = "border bg-zinc-400/40 p-1"
+export const TOPIC_USER_INPUT = "border-t p-1 min-h-8"
+export const USER_INPUT_THEME_NIGHT = `placeholder:text-white/70 text-white/90`
+export const USER_INPUT_THEME_DAY = `placeholder:text-black/70 text-black`
 
 //TOPIC
-export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
+export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
+
+//USER INPUT
+export const USER_INPUT = "backdrop-blur-lg bg-transparent sticky bottom-0 w-full focus:outline-none"
 
 //SERVER + MESSAGEBOX + NAMES
-export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-col justify-between sm:flex-row"
+export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:max-w-36 w-full px-2 overflow-auto scrollbar-thin h-20 sm:h-[650px] border-x"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:min-w-48 min-w-32 px-1 overflow-auto scrollbar-thin h-screen  border-x"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
@@ -50,8 +56,8 @@ export const SERVER_CHANNEL_SELECTED = "underline"
 export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "font-bold"
+export const NAMES_PANEL_STYLE = "font-bold hidden sm:block"
 
 //FOOTER
-export const FOOTER_STYLE = "py-2"
+export const FOOTER_STYLE = "pb-4 pt-2"
 
