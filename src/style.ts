@@ -33,17 +33,22 @@ export const LINK_ELEMENT_STYLE = "text-sky-600"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
-export const TOPIC_USER_INPUT = "border-y p-1 min-h-8"
-export const TOPIC_USER_THEME_NIGHT = `placeholder:text-white/70 text-white/90 bg-slate-700`
-export const TOPIC_USER_THEME_DAY = `placeholder:text-black/70 text-black bg-orange-200`
+export const TOPIC_USER_INPUT = "border-t p-1 min-h-8"
+export const USER_INPUT_THEME_NIGHT = `placeholder:text-white/70 text-white/90`
+export const USER_INPUT_THEME_DAY = `placeholder:text-black/70 text-black`
+
 //TOPIC
-export const TOPIC_BAR = "italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
+export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
+
+//USER INPUT
+export const USER_INPUT = "backdrop-blur-lg bg-transparent sticky bottom-0 w-full focus:outline-none"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
 export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:min-w-48 min-w-32 px-1 overflow-auto scrollbar-thin h-screen  border-x"
+
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
 export const SERVER_CHANNEL_DIRTY = "italic text-cyan-200"
