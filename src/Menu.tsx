@@ -1,5 +1,5 @@
 import MenuItem from "./menu/MenuItem";
-import { DAY_STYLE, MENU_STYLE, ROW_STYLE } from "./style";
+import { MENU_STYLE, ROW_STYLE } from "./style";
 import sun from "./assets/sun.svg";
 import moon from "./assets/moon.svg";
 
