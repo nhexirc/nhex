@@ -81,9 +81,9 @@ const TopicMessagesInput = ({ lines, settings, STATE, nick, isNight, dayNightTog
   return (
     <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
       <div>
-        <div className="sticky top-0">
+        <div className="sticky top-0 backdrop-blur-lg">
           <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
-          <Topic topic={topic} isNight={isNight} />
+          <Topic topic={topic} />
         </div>
         <div ref={mbRef} className={MESSAGES_WINDOW}>
           {lines
