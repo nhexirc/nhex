@@ -24,8 +24,8 @@ export const TLS_BUTTON_STYLE = `px-2 py-1 cursor-pointer select-none text-cente
 //MESSAGEBOX
 export const USERNAME_STYLE = "italic font-bold"
 export const GLOBAL_MESSAGE_STYLE = "pl-2"
-export const MESSAGES_WINDOW = "pb-10 font-mono scrollbar-thin overflow-x-hidden"
-export const MESSAGEBOX = "overflow-y-auto scrollbar-thin bg-zinc-600/10 w-screen flex flex-col justify-between h-screen"
+export const MESSAGES_WINDOW = "pb-8 font-mono scrollbar-thin overflow-x-hidden"
+export const MESSAGEBOX = "border-x overflow-y-auto scrollbar-thin bg-zinc-600/10 w-screen flex flex-col justify-between h-screen"
 export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
@@ -47,7 +47,7 @@ export const USER_INPUT = "backdrop-blur-xl bg-transparent sticky bottom-0 w-ful
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:min-w-48 min-w-32 px-1 overflow-auto scrollbar-thin h-screen  border-x"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 sm:min-w-48 min-w-32 px-1 overflow-auto scrollbar-thin h-screen"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
