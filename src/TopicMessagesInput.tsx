@@ -14,7 +14,7 @@ import {
   MESSAGEBOX,
   MESSAGES_WINDOW,
 } from "./style";
-import transformMessage from "./lib/transformMessage.jsx";
+import transformMessage from "./lib/message-transformer/exports.js";
 import UserInput from "./UserInput";
 import Topic from "./Topic";
 import Menu from "./Menu";

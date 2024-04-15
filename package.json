@@ -14,7 +14,6 @@
     "@tauri-apps/api": "^1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "extract-urls": "^1.4.1",
     "irc-message": "^3.0.2",
     "lucide-react": "^0.363.0",
     "react": "^18.2.0",
