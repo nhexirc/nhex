@@ -43,11 +43,9 @@ test(`${base}: n italics`, function () {
 
 test(`${base}: unterminated italic`, function () {
     ["*", "_"].forEach(m => {
-        const [before, start, text, end] = parse(`before ${m}italized text`);
-        assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " })
-        assert.equal(start, TOKEN.START_ITALIC);
+        const [before, text] = parse(`before ${m}italized text`);
+        assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
         assert.deepEqual(text, { type: TOKEN.TEXT, payload: "italized text" });
-        assert.equal(end, TOKEN.END_ITALIC);
     });
 });
 
@@ -92,11 +90,9 @@ test(`${base}: n bolds`, function () {
 
 test(`${base}: unterminated bold`, function () {
     ["**", "__"].forEach(m => {
-        const [before, start, text, end] = parse(`before ${m}bold text`);
+        const [before, text] = parse(`before ${m}bold text`);
         assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
-        assert.equal(start, TOKEN.START_BOLD);
         assert.deepEqual(text, { type: TOKEN.TEXT, payload: "bold text" });
-        assert.equal(end, TOKEN.END_BOLD);
     });
 });
 
@@ -213,7 +209,9 @@ test(`${base}: all mixed`, function () {
         stext2,
         istart,
         itext,
-        iend] = parse(`before **bold** http://nhex.dev _italic` /* unterminated italic */);
+        iend,
+        space,
+        utital] = parse(`before **bold** http://nhex.dev *real italic* _ut italic` /* unterminated italic */);
     assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
     assert.equal(bstart, TOKEN.START_BOLD);
     assert.deepEqual(btext, { type: TOKEN.TEXT, payload: "bold" });
@@ -224,7 +222,9 @@ test(`${base}: all mixed`, function () {
     assert.equal(lend, TOKEN.END_LINK);
     assert.deepEqual(stext2, { type: TOKEN.TEXT, payload: " " });
     assert.equal(istart, TOKEN.START_ITALIC);
-    assert.deepEqual(itext, { type: TOKEN.TEXT, payload: "italic" });
+    assert.deepEqual(itext, { type: TOKEN.TEXT, payload: "real italic" });
     assert.equal(iend, TOKEN.END_ITALIC);
+    assert.deepEqual(space, { type: TOKEN.TEXT, payload: " " });
+    assert.deepEqual(utital, { type: TOKEN.TEXT, payload: "ut italic" });
 });
 

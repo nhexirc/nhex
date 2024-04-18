@@ -193,10 +193,17 @@ const Parser = class Parser {
         const { current } = this;
 
         switch (current) {
-            // early bailout, commit & close for user
+            // early bailout: the tag hasn't been closed, so backtrack in #tokens
+            // and remove the StartItalic token
             case EOF:
+               if (this.#tokens.length < 1 || this.#tokens.slice(-1)[0] !== TOKEN.START_ITALIC) {
+                  console.error('Parse error: unterminated italic; missing start token!',
+                     current, this.#state, this.#tokens, this.#buffer);
+                  return;
+               }
+
+               this.#tokens = this.#tokens.slice(0, -1);
                this.#commit();
-               this.#yield(TOKEN.END_ITALIC);
                return;
             case ASTERISK: case UNDERSCORE:
                 if (current === this.#stateData.marker) {
@@ -289,8 +296,14 @@ const Parser = class Parser {
         switch (current) {
             // early bailout, commit & close for user
             case EOF:
+               if (this.#tokens.length < 1 || this.#tokens.slice(-1)[0] !== TOKEN.START_BOLD) {
+                  console.error('Parse error: unterminated bold; missing start token!',
+                     current, this.#state, this.#tokens, this.#buffer);
+                  return;
+               }
+
+               this.#tokens = this.#tokens.slice(0, -1);
                this.#commit();
-               this.#yield(TOKEN.END_BOLD);
                return;
             case ASTERISK: case UNDERSCORE:
                 if (current === this.#stateData.marker && current === this.next(1)) {
