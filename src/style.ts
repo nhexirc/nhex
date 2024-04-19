@@ -58,7 +58,7 @@ export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
 
 //NAMES
 export const NAMES_PANEL_STYLE = "font-bold hidden sm:block"
-export const CHANNEL_NUMBERS_STYLE = "hidden sm:block py-2.5 text-sm text-center"
+export const CHANNEL_NUMBERS_STYLE = "bg-zinc-500/10 hidden sm:block py-2.5 text-sm text-center"
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
