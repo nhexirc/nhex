@@ -30,6 +30,7 @@ export const JOIN_PART_MSG = "italic"
 export const JOIN_PART_MSG_DIM = "text-zinc-500"
 export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
 export const LINK_ELEMENT_STYLE = "text-sky-600"
+export const CODE_ELEMENT_STYLE = "bg-slate-700"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT

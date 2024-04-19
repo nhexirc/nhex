@@ -43,8 +43,9 @@ test(`${base}: n italics`, function () {
 
 test(`${base}: unterminated italic`, function () {
     ["*", "_"].forEach(m => {
-        const [before, text] = parse(`before ${m}italized text`);
+        const [before, marker, text] = parse(`before ${m}italized text`);
         assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
+        assert.deepEqual(marker, { type: TOKEN.TEXT, payload: m });
         assert.deepEqual(text, { type: TOKEN.TEXT, payload: "italized text" });
     });
 });
@@ -90,8 +91,9 @@ test(`${base}: n bolds`, function () {
 
 test(`${base}: unterminated bold`, function () {
     ["**", "__"].forEach(m => {
-        const [before, text] = parse(`before ${m}bold text`);
+        const [before, marker, text] = parse(`before ${m}bold text`);
         assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
+        assert.deepEqual(marker, { type: TOKEN.TEXT, payload: m });
         assert.deepEqual(text, { type: TOKEN.TEXT, payload: "bold text" });
     });
 });
@@ -197,6 +199,22 @@ test(`${base}: unterminated link in bold`, function () {
     });
 });
 
+test(`${base}: code`, function () {
+    const [before, start, code_block, end, after] = parse("before `code block https://not.linked` after");
+    assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
+    assert.equal(start, TOKEN.START_CODE);
+    assert.deepEqual(code_block, { type: TOKEN.TEXT, payload: "code block https://not.linked" });
+    assert.equal(end, TOKEN.END_CODE);
+    assert.deepEqual(after, { type: TOKEN.TEXT, payload: " after" });
+});
+
+test(`${base}: unterminated code`, function () {
+    const [before, marker, rest] = parse("before `code block https://not.linked after");
+    assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
+    assert.deepEqual(marker, { type: TOKEN.TEXT, payload: "`" });
+    assert.deepEqual(rest, { type: TOKEN.TEXT, payload: "code block https://not.linked after" });
+});
+
 test(`${base}: all mixed`, function () {
     const [before,
         bstart,
@@ -210,8 +228,13 @@ test(`${base}: all mixed`, function () {
         istart,
         itext,
         iend,
-        space,
-        utital] = parse(`before **bold** http://nhex.dev *real italic* _ut italic` /* unterminated italic */);
+        cspace,
+        cstart,
+        code,
+        cend,
+        utspace,
+        utmarker,
+        utital] = parse('before **bold** http://nhex.dev *real italic* `code block` _ut italic' /* unterminated italic */);
     assert.deepEqual(before, { type: TOKEN.TEXT, payload: "before " });
     assert.equal(bstart, TOKEN.START_BOLD);
     assert.deepEqual(btext, { type: TOKEN.TEXT, payload: "bold" });
@@ -224,7 +247,12 @@ test(`${base}: all mixed`, function () {
     assert.equal(istart, TOKEN.START_ITALIC);
     assert.deepEqual(itext, { type: TOKEN.TEXT, payload: "real italic" });
     assert.equal(iend, TOKEN.END_ITALIC);
-    assert.deepEqual(space, { type: TOKEN.TEXT, payload: " " });
+    assert.deepEqual(cspace, { type: TOKEN.TEXT, payload: " " });
+    assert.equal(cstart, TOKEN.START_CODE);
+    assert.deepEqual(code, { type: TOKEN.TEXT, payload: "code block" });
+    assert.equal(cend, TOKEN.END_CODE);
+    assert.deepEqual(utspace, { type: TOKEN.TEXT, payload: " " });
+    assert.deepEqual(utmarker, { type: TOKEN.TEXT, payload: "_" });
     assert.deepEqual(utital, { type: TOKEN.TEXT, payload: "ut italic" });
 });
 

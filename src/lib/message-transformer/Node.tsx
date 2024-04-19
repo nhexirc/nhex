@@ -1,4 +1,4 @@
-import { LINK_ELEMENT_STYLE } from '../../style';
+import { CODE_ELEMENT_STYLE, LINK_ELEMENT_STYLE } from '../../style';
 import { TOKEN } from "./parse";
 
 export default class Node {
@@ -28,6 +28,9 @@ export default class Node {
         }
         if (this.token === TOKEN.START_ITALIC) {
             return <i>{...children}</i>;
+        }
+        if (this.token === TOKEN.START_CODE) {
+            return <code className={CODE_ELEMENT_STYLE}>{...children}</code>;
         }
         return [...children];
     }
