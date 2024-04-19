@@ -30,7 +30,7 @@ const ChannelNames = (props: Props) => {
     <div>
       <div className={`${CHANNEL_NUMBERS_STYLE} ${UNIFORM_BORDER_STYLE}`}>
         {ops.length ? <>{ops.length} op{ops.length > 1 ? 's' : ''}, </> : <></>}
-        {ops.length + voiced.length + normies.length} total
+        {ops.length + voiced.length + normies.length} users
       </div>
       <div className={`${SERVER_NAMES_PANEL_STYLE} ${NAMES_PANEL_STYLE} ${UNIFORM_BORDER_STYLE}`}>
         {[ops, voiced, normies]
