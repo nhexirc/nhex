@@ -125,6 +125,7 @@ const MESSAGE_HANDLERS: MessageHandlers = {
             networkBuffers[channel] = new Buffer(channel);
         }
 
+        // handle channel mode(s) change
         if (nick.indexOf("-") === 0 || nick.indexOf("+") === 0) {
             networkBuffers[""].buffer.push(parsed);
             networkBuffers[channel].modesHistory.push(parsed.params.slice(1).map(s => s.replace("\r\n", "")));
@@ -133,8 +134,22 @@ const MESSAGE_HANDLERS: MessageHandlers = {
             return null;
         }
 
-        networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${nick.replace("\r\n", "")}`);
-        return null;
+        const fixedNick = nick.replace("\r\n", "");
+
+        if (newMode === "+b") {
+            networkBuffers[channel].names.delete(fixedNick);
+            networkBuffers[channel].buffer.push(parsed);
+            return networkBuffers[channel];
+        }
+
+        if (MODES_TO_HATS[newMode]) {
+            networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${fixedNick}`);
+            return null;
+        }
+
+        console.error(`Unhandled mode "${newMode}" for ${nick} on ${channel}!`);
+        networkBuffers[channel].buffer.push(parsed);
+        return networkBuffers[channel];
     },
 
     topic: topicHandler,
