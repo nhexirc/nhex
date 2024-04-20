@@ -19,7 +19,7 @@ chrono = "0.4"
 
 [dependencies.tauri]
 version = "1"
-features = [ "window-all", "path-all", "fs-all", "dialog-all", "shell-open" ]
+features = [ "global-shortcut-all", "window-all", "path-all", "fs-all", "dialog-all", "shell-open" ]
 
 [dependencies.serde]
 version = "1"

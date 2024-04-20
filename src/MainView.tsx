@@ -17,6 +17,7 @@ import disconnect from './lib/disconnect';
 import { parseMBUserInputRaw } from './lib/common';
 import Menu from "./Menu";
 import Footer from "./Footer";
+import QuickLookup from "./QuickLookup";
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 const getBuffers = () => ({ ...BUFFERS });
@@ -26,6 +27,7 @@ const STATE = {
   connected: false,
   pastMOTD: false,
   nick: null,
+  quickLookupVisible: false,
 };
 const SETTINGS = {
   userSettings: {}
@@ -62,9 +64,14 @@ const MainView = ({ dayNightToggle, isNight }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [userSettings, setUserSettings] = useState<UserSettingsIface>({});
   const [topic, setTopic] = useState("");
+  const [quickLookupVisible, _setQuickLookupVisible] = useState(false);
 
   const setNick = (nick: string) => {
     _setNick(STATE.nick = nick);
+  };
+
+  const toggleQuickLookupVisible = () => {
+    _setQuickLookupVisible(STATE.quickLookupVisible = !STATE.quickLookupVisible);
   };
 
   const realSetIsConnected = (val: any) => {
@@ -184,6 +191,8 @@ const MainView = ({ dayNightToggle, isNight }) => {
       if (!loggedInCallback) {
         await postConnectCommands();
       }
+
+      listen("nhex://global_shortcut/C-K", toggleQuickLookupVisible);
     };
 
     await connect(connectContext, { postMotdCallback, loggedInCallback });
@@ -194,6 +203,8 @@ const MainView = ({ dayNightToggle, isNight }) => {
 
   return (
     <>
+      <QuickLookup quickLookupVisible={quickLookupVisible} channels={channels}></QuickLookup>
+
       {!isConnected ?
         <>
           <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
