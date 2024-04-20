@@ -33,7 +33,7 @@ const ChannelNames = (props: Props) => {
           ops.length > 0 &&
           <>
             <span className='font-bold'>{ops.length}</span>
-            <span> op{ops.length > 1 && 's & '}</span>
+            <span> op{ops.length >= 2 ? 's & ' : ' & '}</span>
           </>
         }
         <span className='font-bold'>
