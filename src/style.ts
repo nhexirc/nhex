@@ -48,7 +48,7 @@ export const USER_INPUT = "backdrop-blur-xl bg-transparent sticky bottom-0 w-ful
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
 
 //CHANNEL NAMES + SERVER WINDOW
-export const SERVER_NAMES_PANEL_STYLE = "border-t bg-zinc-500/30 min-w-40 px-1 overflow-auto scrollbar-thin h-screen"
+export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 min-w-40 px-1 overflow-auto scrollbar-thin h-screen"
 
 //SERVER
 export const SERVER_PANEL_STYLE = "text-right"
@@ -57,7 +57,7 @@ export const SERVER_CHANNEL_SELECTED = "underline"
 export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "font-bold hidden sm:block"
+export const NAMES_PANEL_STYLE = "font-bold hidden sm:block border-t"
 export const CHANNEL_NUMBERS_STYLE = "bg-zinc-500/10 hidden sm:block py-2.5 text-sm text-center"
 
 //FOOTER
