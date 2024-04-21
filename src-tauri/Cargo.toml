@@ -1,6 +1,6 @@
 [package]
 name = "nhex"
-version = "0.3.3"
+version = "0.3.4"
 description = "nhex"
 authors = [ "you" ]
 edition = "2021"
