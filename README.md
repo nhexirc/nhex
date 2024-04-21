@@ -4,7 +4,7 @@ A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
 ![](./public/screenshots/nh_conn.png)
 
-_Jump right to [downloads](https://github.com/nhexirc/nhex/releases/latest) or [the usage notes](#using)._
+_Jump right to [the downloads](https://github.com/nhexirc/nhex/releases/latest) or [the documentation](https://nhex.dev/docs/)._
 
 Pronounced "_nex_" (the "_h_" is silent).
 
@@ -23,15 +23,7 @@ See the [latest release](https://github.com/nhexirc/nhex/releases/latest) to dow
 
 # Using
 
-Currently there is no Settings UI, so all user settings are controlled via a TOML file, a full example of which is [here](example.nhex.toml). This example settings file also serves as the primary documentation for the file format.
-
-Place it at the location appropriate for your operating system described by the [comment at the top](https://github.com/nhexirc/nhex/blob/db1e103c287c72617de05c5624e223cac0f49f37/example.nhex.toml#L1-L5).
-
-The menu bar is mostly non-functional, save for these exceptions:
-* "nhex" will take you to the project's homepage
-* "view" will reset the channel activity highlights
-* "settings" will reload the user settings from disk
-* the "day/night" icon will toggle the theme
+See [the documentation](https://nhex.dev/docs/) for full usage details.
 
 # Developing
 
