@@ -2,6 +2,7 @@ import { createDir, exists, readTextFile, writeTextFile, BaseDirectory } from '@
 import { appConfigDir } from '@tauri-apps/api/path';
 import { parse, stringify, TomlPrimitive } from 'smol-toml';
 import defaultSettings from "./user-settings.default.json" assert { "type": "json" };
+import { UserSettingsIface } from './types';
 
 // borrowed from https://github.com/rcompat/rcompat/blob/master/object/extend.js
 const extend = (base = {}, extension = {}) => {
@@ -28,7 +29,7 @@ async function ensureOurAppConfigPath() {
     }
 }
 
-export async function load(): Promise<Record<string, TomlPrimitive>> {
+export async function load(): Promise<UserSettingsIface> {
     let settings = {};
     try {
         await ensureOurAppConfigPath();
@@ -40,9 +41,10 @@ export async function load(): Promise<Record<string, TomlPrimitive>> {
     return extend(defaultSettings, settings);
 }
 
-export async function save(obj: Record<string, any>) {
+export async function save(obj: UserSettingsIface) {
     await ensureOurAppConfigPath();
-    return writeTextFile(FILE_NAME, stringify(obj), { dir: BaseDirectory.AppConfig });
+    await writeTextFile(FILE_NAME, stringify(obj), { dir: BaseDirectory.AppConfig });
+    return obj;
 }
 
 export default { load, save };

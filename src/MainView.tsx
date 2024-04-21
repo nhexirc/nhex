@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { emit, listen } from '@tauri-apps/api/event';
+import { emit } from '@tauri-apps/api/event';
 import { appWindow } from "@tauri-apps/api/window";
 import {
   NetworkBuffer,
@@ -17,6 +17,7 @@ import disconnect from './lib/disconnect';
 import { parseMBUserInputRaw } from './lib/common';
 import Menu from "./Menu";
 import Footer from "./Footer";
+import Settings from "./Settings";
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 const getBuffers = () => ({ ...BUFFERS });
@@ -50,7 +51,7 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
   return found ? `${found}: ` : prefix;
 }
 
-const MainView = ({ dayNightToggle, isNight }) => {
+const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState }) => {
   const [nick, _setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
@@ -78,11 +79,19 @@ const MainView = ({ dayNightToggle, isNight }) => {
     return settings;
   });
 
-  const refreshServersAndChans = () => {
+  function refreshServersAndChans() {
     setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
       [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
     ))));
   };
+
+  function cleanupDirtyBuffers() {
+    Object.entries(BUFFERS).forEach(([, networkBufs]) =>
+      Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.cleanup()))
+    );
+
+    refreshServersAndChans();
+  }
 
   useEffect(() => {
     preload().then((preloaded: {
@@ -102,7 +111,7 @@ const MainView = ({ dayNightToggle, isNight }) => {
         // preloads override user settings
         !preloaded.nick && Network["nick"] && setNick(Network["nick"]);
         !preloaded.server && Network["server"] && setServer(Network["server"]);
-        !preloaded.port && Network["port"] && setPort(Network["port"]);
+        !preloaded.port && Network["port"] && setPort(String(Network["port"]));
         !preloaded.channels && Network["channels"] && setChannels(Network["channels"]);
         preloaded.tls === undefined && Network["tls"] !== undefined && setTLS(Network["tls"]);
       });
@@ -119,25 +128,12 @@ const MainView = ({ dayNightToggle, isNight }) => {
       appWindow.close();
     }).then((closeFn) => (unlistenAppClose = closeFn));
 
-    let unlistenSettingsClick: any;
-    // we could setup a file watcher for the user settings file and not need an explicit
-    // "refresh" button, but for now this works in a pinch
-    listen("nhex://menu/settings", reloadUserSettings)
-      .then((ulFunc) => (unlistenSettingsClick = ulFunc));
-
-    let unlistenViewClick: any;
-    listen("nhex://menu/view", () => {
-      Object.entries(BUFFERS).forEach(([, networkBufs]) =>
-        Object.entries(networkBufs.buffers).forEach(([, buffer]) => (buffer.cleanup()))
-      );
-
-      refreshServersAndChans();
-    })
-      .then((ulFunc) => (unlistenViewClick = ulFunc));
+    menuTriggers.addHandler("settings", reloadUserSettings);
+    menuTriggers.addHandler("view", cleanupDirtyBuffers);
 
     return () => {
-      unlistenViewClick?.();
-      unlistenSettingsClick?.();
+      menuTriggers.removeHandler("view", cleanupDirtyBuffers);
+      menuTriggers.removeHandler("settings", reloadUserSettings);
       unlistenAppClose?.();
     };
   }, []);
@@ -192,11 +188,18 @@ const MainView = ({ dayNightToggle, isNight }) => {
     await emit("nhex://servers_and_chans/select", { server, channel: "" });
   }
 
+  if (menuState.settings) {
+    return (<>
+      <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
+      <Settings isNight={isNight}></Settings>
+    </>);
+  }
+
   return (
     <>
       {!isConnected ?
         <>
-          <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
+          <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
           <Connect
             nick={nick}
             setNick={setNick}
@@ -220,14 +223,13 @@ const MainView = ({ dayNightToggle, isNight }) => {
           nick={nick}
           isNight={isNight}
           dayNightToggle={dayNightToggle}
-          settings={{
-            userSettings,
-            setUserSettings,
-          }}
           topic={topic}
           getCurSelection={getCurSelection}
           getBuffers={getBuffers}
-          STATE={STATE} />
+          STATE={STATE}
+          menuTriggers={menuTriggers}
+          menuState={menuState}
+        />
       }
     </>
   );

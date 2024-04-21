@@ -113,11 +113,14 @@ export interface SACSelectEvent {
   payload: SACSelect
 };
 
+export const MessageBoxValidFontSizes = ["sm", "base", "lg", "xl"];
+
 export interface MessageBoxUserSettings {
     show?: string[]; // valid values are: [ "action", "privmsg", "part", "join" ]
     dimJoinsAndParts?: boolean;
     showTimestamps?: boolean;
-    fontSize?: string; // valid values are just the size specifiers from https://tailwindcss.com/docs/font-size (without hyphen!), e.g. "sm"
+    // valid values are just the size specifiers from https://tailwindcss.com/docs/font-size (without hyphen!), e.g. "sm"
+    fontSize?: string;
 };
 
 export interface NetworkUserSettings {

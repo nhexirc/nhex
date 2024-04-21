@@ -43,6 +43,7 @@ export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scro
 
 //USER INPUT
 export const USER_INPUT = "backdrop-blur-xl bg-transparent sticky bottom-0 w-full focus:outline-none"
+export const USER_INPUT_CB = "backdrop-blur-xl bg-transparent sticky bottom-0 focus:outline-none"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"

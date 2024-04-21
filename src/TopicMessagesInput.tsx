@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { listen } from '@tauri-apps/api/event';
 import { MessageBoxLines, UserSettingsIface, IRCMessageParsed } from './lib/types';
 import { nickFromPrefix } from './lib/common';
@@ -18,10 +18,8 @@ import transformMessage from "./lib/message-transformer/exports.js";
 import UserInput from "./UserInput";
 import Topic from "./Topic";
 import Menu from "./Menu";
-
-interface PropsSettings {
-  userSettings: UserSettingsIface;
-};
+import MenuTriggers from './menu/triggers';
+import UserSettings from './lib/userSettings';
 
 const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -33,15 +31,35 @@ const MessageTimestampFormatOptions: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-const TopicMessagesInput = ({ lines, settings, STATE, nick, isNight, dayNightToggle, topic }: { lines: MessageBoxLines, settings: PropsSettings, STATE: Record<string, any>, nick: string, isNight: any, dayNightToggle: any, topic: string }) => {
+const TopicMessagesInput = ({ lines, STATE, nick, isNight, dayNightToggle, topic, menuTriggers, menuState }: {
+  lines: MessageBoxLines,
+  STATE: Record<string, any>,
+  nick: string,
+  isNight: any,
+  dayNightToggle: any,
+  topic: string,
+  menuTriggers: MenuTriggers,
+  menuState: Record<string, boolean>
+}) => {
   const mbRef = useRef(null);
+  const [settings, setSettings] = useState<UserSettingsIface>(null);
+
+  useEffect(() => {
+    async function getSettings() {
+      setSettings(await UserSettings.load());
+    }
+
+    if (!settings) {
+      getSettings();
+    }
+  });
 
   listen("nhex://servers_and_chans/selected", () => {
     mbRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   });
 
   const joinPartStyling = () => (JOIN_PART_MSG + " " + (
-    settings.userSettings.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : ""
+    settings?.MessageBox.dimJoinsAndParts ? JOIN_PART_MSG_DIM : ""
   ));
 
   const commands = {
@@ -74,15 +92,15 @@ const TopicMessagesInput = ({ lines, settings, STATE, nick, isNight, dayNightTog
   const nonReflected = ["join", "part"];
 
   let messageContainerStyle = "text-base";
-  if (settings.userSettings.MessageBox?.fontSize) {
-    messageContainerStyle = `text-${settings.userSettings.MessageBox?.fontSize} pl-2`;
+  if (settings?.MessageBox?.fontSize) {
+    messageContainerStyle = `text-${settings?.MessageBox?.fontSize} pl-2`;
   }
 
   return (
     <div className={`${MESSAGEBOX} ${UNIFORM_BORDER_STYLE}`}>
       <div>
         <div className="sticky top-0 backdrop-blur-lg">
-          <Menu dayNightToggle={dayNightToggle} isNight={isNight} />
+          <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
           <Topic topic={topic} />
         </div>
         <div ref={mbRef} className={MESSAGES_WINDOW}>
@@ -93,7 +111,7 @@ const TopicMessagesInput = ({ lines, settings, STATE, nick, isNight, dayNightTog
               }
               const command = message.command.toLowerCase();
 
-              if (!settings.userSettings.MessageBox.show.includes(command)) {
+              if (!settings?.MessageBox.show.includes(command)) {
                 return false;
               }
 
@@ -103,7 +121,7 @@ const TopicMessagesInput = ({ lines, settings, STATE, nick, isNight, dayNightTog
               const command = message.command.toLowerCase();
               let timestampEle = <></>;
 
-              if (settings.userSettings.MessageBox?.showTimestamps === true) {
+              if (settings?.MessageBox?.showTimestamps === true) {
                 timestampEle = <span className={TIMESTAMP_STYLE}>[{
                   Intl.DateTimeFormat(undefined, MessageTimestampFormatOptions).format(new Date(message.timestamp))
                 }]</span>;

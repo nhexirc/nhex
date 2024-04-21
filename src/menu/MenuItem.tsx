@@ -1,9 +1,9 @@
 import { emit } from '@tauri-apps/api/event';
 
-const MenuItem = ({ children }) => {
+const MenuItem = ({ children, triggerFunc, state }) => {
   return (
-    <button>
-      <a href="#" onClick={() => emit(`nhex://menu/${children}`, {})}>
+    <button className={(state?.[children] ? "underline" : "")}>
+      <a href="#" onClick={triggerFunc}>
         {children}
       </a>
     </button>
