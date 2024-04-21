@@ -86,10 +86,12 @@ Any tag beginning with `v` will trigger the release pipeline, and this script su
 
 The resulting [release](https://github.com/nhexirc/nhex/releases) will be a draft - not yet visible to the public - until you publish it. When you do, please include a short high-level description of the release and use GitHub's "Create Release Notes" functionality to generate a changelog.
 
-
-
 ## Contributors
 
-In addition to our amazing team (which is growing fast!) the list of incredible folks who have contributed ideas, advice, suggestions, etc. on irc.libera.chat has already grown too numerous to easily keep track of here (and the project is less than a week old)!
+In addition to our amazing team (which is growing fast!) the list of incredible folks who have contributed ideas, advice, suggestions, etc. on irc.libera.chat has already grown too numerous to easily keep track of here!
 
 The response has been overwhelming, so a huge thanks to all of those who did contribute. Y'all rock! 🤘❤️
+
+### Special Mention
+
+Logo design by `hmw[at]`, with additional ideation from `InPhase` & `systemfault` (all of [libera](https://libera.chat/)).
