@@ -61,12 +61,14 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       return;
     }
 
+    const userSettings = getUserSettings();
+
     let { currentBuffer, parsed } = messageParser(
       server,
       networkBuffers,
       event,
       STATE.nick,
-      getUserSettings()?.Network.routeNoticesToServerBuffer
+      userSettings
     );
 
     /* these should _maybe_ all be moved into messageParser() ...?
@@ -117,7 +119,7 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       }
       else {
         let relevantCmd = (parsed.command === 'quit' ? 'part' : parsed.command).toLowerCase();
-        if (getUserSettings()?.MessageBox?.show?.includes(relevantCmd) ?? true) {
+        if (userSettings?.MessageBox?.show?.includes(relevantCmd) ?? true) {
           currentBuffer.dirty.normal++;
 
           if (parsed.highlightedUs) {

@@ -32,3 +32,4 @@ dimJoinsAndParts = false
 showTimestamps = false
 # valid sizes are any of the size modifies (no dash) specified here: https://tailwindcss.com/docs/font-size
 fontSize = "sm"
+scrollbackLimitLines = 10000

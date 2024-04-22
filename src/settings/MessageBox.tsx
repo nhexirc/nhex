@@ -3,13 +3,14 @@ import { MessageBoxValidFontSizes } from '../lib/types';
 import { USER_INPUT_THEME_DAY, USER_INPUT_THEME_NIGHT, USER_INPUT } from "../style";
 import ShowJoinPartSetting from './ShowJoinPartSetting';
 import BoolSetting from './BoolSetting';
+import TextSetting from './TextSetting';
 
 export default function ({ isNight, settings, setSettings }) {
   return (
     <>
       <div className="text-2xl mb-4">Message Display</div>
       <div>
-        <table className="w-80">
+        <table className="w-full">
           <tbody>
             <BoolSetting
               displayName="Show timestamps"
@@ -56,6 +57,17 @@ export default function ({ isNight, settings, setSettings }) {
                 </select>
               </td>
             </tr>
+
+            <TextSetting
+              displayName="Channel scrollback line limit"
+              sectionName="MessageBox"
+              fieldName="scrollbackLimitLines"
+              isNight={isNight}
+              settings={settings}
+              setSettings={setSettings}
+              valueXform={Number}
+            >
+            </TextSetting>
           </tbody>
         </table>
       </div>

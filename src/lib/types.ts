@@ -121,6 +121,7 @@ export interface MessageBoxUserSettings {
     showTimestamps?: boolean;
     // valid values are just the size specifiers from https://tailwindcss.com/docs/font-size (without hyphen!), e.g. "sm"
     fontSize?: string;
+    scrollbackLimitLines?: number;
 };
 
 export interface NetworkUserSettings {

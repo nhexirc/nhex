@@ -1,7 +1,10 @@
 import UserSettings from '../lib/userSettings';
 import { USER_INPUT_THEME_DAY, USER_INPUT_THEME_NIGHT, USER_INPUT } from "../style";
 
-export default function ({ displayName, sectionName, fieldName, isNight, settings, setSettings }) {
+export default function (props) {
+  const { displayName, sectionName, fieldName, isNight, settings, setSettings } = props;
+  const valueXform = props?.valueXform ?? ((x) => x);
+
   return (
     <>
       <tr>
@@ -16,12 +19,13 @@ export default function ({ displayName, sectionName, fieldName, isNight, setting
                 ...settings,
                 [sectionName]: {
                   ...settings?.[sectionName],
-                  [fieldName]: e.target.value,
+                  [fieldName]: valueXform(e.target.value),
                 }
               }).then((newSettings) => {
                 setSettings(newSettings);
               })
-            }} />
+            }}
+            />
         </td>
       </tr>
     </>

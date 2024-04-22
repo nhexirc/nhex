@@ -23,7 +23,7 @@ export default function ({ isNight }) {
     <div className="align-top mx-auto mt-1 mb-auto w-1/2">
       <div className="text-4xl my-8 p-4">Settings</div>
 
-      <div className={sectionStyle + " w-fit"}>
+      <div className={sectionStyle}>
         <MessageBoxSettings isNight={isNight} settings={settings} setSettings={setSettings}>
         </MessageBoxSettings>
       </div>

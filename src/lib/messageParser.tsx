@@ -1,4 +1,4 @@
-import { Buffer, IRCMessageEvent, IRCMessageParsed, MessageParserReturn } from './types';
+import { Buffer, IRCMessageEvent, IRCMessageParsed, MessageParserReturn, UserSettingsIface } from './types';
 import { nickFromPrefix } from './common';
 import IRCNicksSet from './IRCNicksSet';
 import { parse } from 'irc-message';
@@ -178,13 +178,13 @@ export default function (
     networkBuffers: Record<string, Buffer>,
     event: IRCMessageEvent,
     currentNick: string,
-    routeNoticesToServerBuffer: boolean = false,
+    userSettings: UserSettingsIface,
 ): MessageParserReturn {
-    if (!routeNoticesToServerBuffer) {
-        MESSAGE_HANDLERS["notice"] = privmsgNoticeHandler;
+    if (userSettings?.Network?.routeNoticesToServerBuffer) {
+        delete MESSAGE_HANDLERS["notice"];
     }
     else {
-        delete MESSAGE_HANDLERS["notice"];
+        MESSAGE_HANDLERS["notice"] = privmsgNoticeHandler;
     }
     
     const parsed: IRCMessageParsed = parse(event.payload.message);
@@ -213,6 +213,11 @@ export default function (
 
     if (currentBuffer) {
         currentBuffer.buffer.push(parsed);
+
+        if (currentBuffer.buffer.length > userSettings?.MessageBox?.scrollbackLimitLines) {
+            const sliceStart = currentBuffer.buffer.length - userSettings?.MessageBox?.scrollbackLimitLines;
+            currentBuffer.buffer = currentBuffer.buffer.slice(sliceStart);
+        }
     }
 
     return { parsed, currentBuffer };
