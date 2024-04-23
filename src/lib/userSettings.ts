@@ -1,8 +1,8 @@
-import { createDir, exists, readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
-import { appConfigDir } from '@tauri-apps/api/path';
-import { parse, stringify, TomlPrimitive } from 'smol-toml';
+import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
+import { parse, stringify } from 'smol-toml';
 import defaultSettings from "./user-settings.default.json" assert { "type": "json" };
 import { UserSettingsIface } from './types';
+import { ensureOurAppConfigPath } from './common';
 
 // borrowed from https://github.com/rcompat/rcompat/blob/master/object/extend.js
 const extend = (base = {}, extension = {}) => {
@@ -22,29 +22,22 @@ const extend = (base = {}, extension = {}) => {
 
 const FILE_NAME = 'nhex.toml';
 
-async function ensureOurAppConfigPath() {
-    const cfgDir = await appConfigDir();
-    if (!await exists(cfgDir)) {
-        await createDir(cfgDir);
-    }
-}
-
 export async function load(): Promise<UserSettingsIface> {
-    let settings = {};
-    try {
-        await ensureOurAppConfigPath();
-        const raw = await readTextFile(FILE_NAME, { dir: BaseDirectory.AppConfig });
-        settings = parse(raw);
-    } catch (_) {
-        return defaultSettings;
-    }
-    return extend(defaultSettings, settings);
+  let settings = {};
+  try {
+    await ensureOurAppConfigPath();
+    const raw = await readTextFile(FILE_NAME, { dir: BaseDirectory.AppConfig });
+    settings = parse(raw);
+  } catch (_) {
+    return defaultSettings;
+  }
+  return extend(defaultSettings, settings);
 }
 
 export async function save(obj: UserSettingsIface) {
-    await ensureOurAppConfigPath();
-    await writeTextFile(FILE_NAME, stringify(obj), { dir: BaseDirectory.AppConfig });
-    return obj;
+  await ensureOurAppConfigPath();
+  await writeTextFile(FILE_NAME, stringify(obj), { dir: BaseDirectory.AppConfig });
+  return obj;
 }
 
 export default { load, save };

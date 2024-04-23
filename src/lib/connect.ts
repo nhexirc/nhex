@@ -10,6 +10,7 @@ import {
   SACSelectEvent,
 } from './types';
 import { nickFromPrefix } from './common';
+import UserDB from './userDB';
 
 function messageBoxLinesFromBuffer(buffer: Buffer): MessageBoxLines {
   return buffer.buffer.map((parsed: IRCMessageParsed) => ({ message: parsed }));
@@ -20,7 +21,7 @@ export interface ConnectOptions {
   loggedInCallback?: () => Promise<void>;
 };
 
-export default async function (context: Record<any, any>, options?: ConnectOptions) {
+export default async function (context: Record<any, any>, db: UserDB, options?: ConnectOptions) {
   const {
     nick,
     server,
@@ -70,6 +71,8 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
       STATE.nick,
       userSettings
     );
+
+    db.log_message(server, parsed);
 
     /* these should _maybe_ all be moved into messageParser() ...?
        but then messageParser will need a *lot* more context params... */
@@ -260,6 +263,8 @@ export default async function (context: Record<any, any>, options?: ConnectOptio
     } else {
       console.warn(`command ${nrmCommand} not supported`);
     }
+
+    db.log_message(server, new IRCMessageParsed(nrmCommand, event.payload.args, nick, event.payload.raw, true));
   });
 
   return invoke("connect", {

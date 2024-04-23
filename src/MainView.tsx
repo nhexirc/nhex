@@ -51,7 +51,7 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
   return found ? `${found}: ` : prefix;
 }
 
-const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState }) => {
+const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
   const [nick, _setNick] = useState("");
   const [server, setServer] = useState("");
   const [port, setPort] = useState("");
@@ -182,7 +182,7 @@ const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState }) => {
       }
     };
 
-    await connect(connectContext, { postMotdCallback, loggedInCallback });
+    await connect(connectContext, db, { postMotdCallback, loggedInCallback });
     // shows the main UI
     setIsConnected(true);
     await emit("nhex://servers_and_chans/select", { server, channel: "" });

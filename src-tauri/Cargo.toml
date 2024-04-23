@@ -16,6 +16,7 @@ irc = "1.0.0"
 futures = "0.3.30"
 failure = "0.1.8"
 chrono = "0.4"
+rusqlite = { version = "0.31.0", features = ["bundled"] }
 
 [dependencies.tauri]
 version = "1"

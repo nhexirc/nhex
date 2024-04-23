@@ -4,11 +4,15 @@ import "./index.css";
 import { useState, useEffect } from "react";
 import { setCurrentTheme } from './lib/nickColor';
 import MenuTriggers from './menu/triggers';
+import UserDB from './lib/userDB';
 
 const menuTriggers = new MenuTriggers([
   ["view", "server"],
   ["settings", "window"],
 ]);
+
+const db = new UserDB();
+db.init().then(() => console.log('User DB initialized'));
 
 const App = () => {
   const [isNight, setIsNight] = useState(true);
@@ -41,6 +45,7 @@ const App = () => {
         isNight={isNight}
         menuTriggers={menuTriggers}
         menuState={menuState}
+        db={db}
       />
     </div >
   );

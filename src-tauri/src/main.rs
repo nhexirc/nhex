@@ -1,8 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod userdb;
 mod userinput;
 
+use userdb::*;
 use userinput::*;
 
 use chrono::prelude::*;
@@ -137,9 +139,25 @@ async fn connect(
     });
 }
 
+// could/should the user_db methods that don't require returning to the caller be invoke-able via an event too/instead?
+
+#[tauri::command]
+async fn user_db_init(path: String) {
+    init_db(path).expect("init_db");
+}
+
+#[tauri::command]
+async fn user_db_log_message(path: String, log: Logging) {
+    add_logging(path, log).expect("add_logging");
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![connect])
+        .invoke_handler(tauri::generate_handler![
+            connect,
+            user_db_init,
+            user_db_log_message,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
