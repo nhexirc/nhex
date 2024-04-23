@@ -50,7 +50,7 @@ pub fn init_db(path: String) -> Result<()> {
     )?;
     conn.execute(
         "CREATE UNIQUE INDEX IF NOT EXISTS u_idx_logging_message ON logging (
-            network, target, command, message, nick, ident, hostname time_unix_ms
+            network, target, command, message, nickname, ident, hostname, time_unix_ms
         )",
         (),
     )?;

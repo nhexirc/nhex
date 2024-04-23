@@ -1,5 +1,3 @@
-import UserSettings from '../lib/userSettings';
-import { USER_INPUT_THEME_DAY, USER_INPUT_THEME_NIGHT, USER_INPUT } from "../style";
 import TextSetting from './TextSetting';
 import BoolSetting from './BoolSetting';
 

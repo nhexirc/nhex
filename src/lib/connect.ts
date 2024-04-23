@@ -72,7 +72,9 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
       userSettings
     );
 
-    db.log_message(server, parsed);
+    if (getUserSettings()?.App?.enableLogging) {
+      db.log_message(server, parsed);
+    }
 
     /* these should _maybe_ all be moved into messageParser() ...?
        but then messageParser will need a *lot* more context params... */
@@ -250,21 +252,29 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
       // of the rust event to be called
       const eventName = handlers[nrmCommand](event);
       if (eventName !== null) {
-          // Hand off to the Rust side.
-          // See `UserInput::run` for where this dispatches to if all goes well.
-          emit(`nhex://command/do`, {
-            ...getCurSelection(),
-            ...event.payload,
-            id,
-            command: eventName
-          });
-          id += 1;
+        // Hand off to the Rust side.
+        // See `UserInput::run` for where this dispatches to if all goes well.
+        emit(`nhex://command/do`, {
+          ...getCurSelection(),
+          ...event.payload,
+          id,
+          command: eventName
+        });
+        id += 1;
+      }
+
+      if (getUserSettings()?.App?.enableLogging) {
+        db.log_message(server, new IRCMessageParsed(
+          nrmCommand,
+          [getCurSelection().channel, ...event.payload.args],
+          STATE.nick,
+          event.payload.raw,
+          true
+        ));
       }
     } else {
       console.warn(`command ${nrmCommand} not supported`);
     }
-
-    db.log_message(server, new IRCMessageParsed(nrmCommand, event.payload.args, nick, event.payload.raw, true));
   });
 
   return invoke("connect", {

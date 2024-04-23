@@ -113,6 +113,10 @@ export interface SACSelectEvent {
   payload: SACSelect
 };
 
+export interface AppSettings {
+    enableLogging?: boolean;
+}
+
 export const MessageBoxValidFontSizes = ["sm", "base", "lg", "xl"];
 
 export interface MessageBoxUserSettings {
@@ -139,6 +143,7 @@ export interface NetworkUserSettings {
 };
 
 export interface UserSettingsIface {
+    App?: AppSettings;
     MessageBox?: MessageBoxUserSettings;
     Network?: NetworkUserSettings;
 }

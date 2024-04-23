@@ -4,6 +4,9 @@
 #  * Linux: ~/.config
 #  * Mac OS: /Users/<username>/Library/Application Support
 
+[App]
+enableLogging = true
+
 [Network]
 server = "irc.libera.chat"
 port = 6697
