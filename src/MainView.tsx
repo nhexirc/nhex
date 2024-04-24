@@ -167,12 +167,12 @@ const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
 
     let loggedInCallback: () => any = null;
 
-    if (userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
+    if (userSettings.Network?.server === server && userSettings.Network?.expectLoggedInAfterConnectCommands === true) {
       loggedInCallback = postConnectCommands;
     }
 
     const postMotdCallback = async () => {
-      if (userSettings.Network?.connectCommands) {
+      if (userSettings.Network?.server === server && userSettings.Network?.connectCommands) {
         await Promise.all(userSettings.Network.connectCommands
           .map((raw) => emit("nhex://user_input/raw", parseMBUserInputRaw(raw))));
       }
