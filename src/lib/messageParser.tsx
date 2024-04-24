@@ -142,7 +142,7 @@ const MESSAGE_HANDLERS: MessageHandlers = {
             return networkBuffers[channel];
         }
 
-        if (MODES_TO_HATS[newMode]) {
+        if (MODES_TO_HATS[newMode] !== undefined) {
             networkBuffers[channel].names.add(`${MODES_TO_HATS[newMode]}${fixedNick}`);
             return null;
         }
