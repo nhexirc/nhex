@@ -16,6 +16,7 @@ irc = "1.0.0"
 futures = "0.3.30"
 failure = "0.1.8"
 chrono = "0.4"
+bitflags = "2.5.0"
 
 [dependencies.rusqlite]
 version = "0.31.0"

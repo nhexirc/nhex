@@ -24,12 +24,11 @@ export default class {
         nickname,
         ident,
         hostname,
-        message: message.params.join(" "),
-        raw: message.raw.replace(/\r\n$/, ""),
+        message: message.params.join(" ").replace(/\r\n$/, ""),
         time_unix_ms: message.timestamp,
-        from_server: message.fromServer,
-        from_us: message.fromUs,
-        highlighted_us: message.highlightedUs,
+        from_server: message?.fromServer || false,
+        from_us: message?.fromUs || false,
+        highlighted_us: message?.highlightedUs || false,
       }
     };
 

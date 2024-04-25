@@ -1,5 +1,16 @@
+use bitflags::bitflags;
 use rusqlite::{Connection, Result};
 use serde::*;
+
+bitflags! {
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    pub struct LoggingFlags: u32 {
+        const none = 0x0;
+        const from_server = 0x1;
+        const from_us = 0x2;
+        const highlighted_us = 0x4;
+    }
+}
 
 #[derive(Debug, Deserialize)]
 pub struct Logging {
@@ -10,11 +21,10 @@ pub struct Logging {
     ident: String,
     hostname: String,
     message: String,
-    raw: Option<String>,
     time_unix_ms: i64,
-    from_server: Option<bool>,
-    from_us: Option<bool>,
-    highlighted_us: Option<bool>,
+    from_server: bool,
+    from_us: bool,
+    highlighted_us: bool,
 }
 
 // ideally this should return `conn` which all the other functions will take as a param
@@ -31,11 +41,8 @@ pub fn init_db(path: String) -> Result<()> {
             ident TEXT NOT NULL,
             hostname TEXT NOT NULL,
             message TEXT NOT NULL,
-            raw TEXT,
             time_unix_ms INTEGER NOT NULL,
-            from_server INTEGER,
-            from_us INTEGER,
-            highlighted_us INTEGER
+            nhex_flags INTEGER NOT NULL
         )",
         (),
     )?;
@@ -58,11 +65,29 @@ pub fn init_db(path: String) -> Result<()> {
     Ok(())
 }
 
+pub fn logging_to_flags(log: &Logging) -> LoggingFlags {
+    let mut ret: LoggingFlags = LoggingFlags::none;
+
+    if log.from_us == true {
+        ret = ret | LoggingFlags::from_us;
+    }
+
+    if log.from_server == true {
+        ret = ret | LoggingFlags::from_server;
+    }
+
+    if log.highlighted_us == true {
+        ret = ret | LoggingFlags::highlighted_us;
+    }
+
+    return ret;
+}
+
 pub fn add_logging(path: String, log: Logging) -> Result<()> {
     let conn = Connection::open(path)?;
 
     conn.execute(
-        "INSERT INTO logging VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+        "INSERT INTO logging VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
         (
             &log.network,
             &log.target,
@@ -71,11 +96,8 @@ pub fn add_logging(path: String, log: Logging) -> Result<()> {
             &log.ident,
             &log.hostname,
             &log.message,
-            &log.raw,
             &log.time_unix_ms,
-            &log.from_server,
-            &log.from_us,
-            &log.highlighted_us,
+            logging_to_flags(&log).bits(),
         ),
     )?;
 
