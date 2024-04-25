@@ -95,3 +95,9 @@ The response has been overwhelming, so a huge thanks to all of those who did con
 ### Special Mention
 
 Logo design by `hmw[at]`, with additional ideation from `InPhase` & `systemfault` (all of [libera](https://libera.chat/)).
+
+## License
+
+`nhex` is multi-licensed, the details of which can be found in the [DEP5](https://reuse.software/spec/#dep5) file [.reuse/dep5](./.reuse/dep5).
+
+License text can be found in [LICENSES](./LICENSES/).

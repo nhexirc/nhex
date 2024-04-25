@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: nhex
+Upstream-Contact: The nhex Contributors <team@nhex.dev>
+Source: https://github.com/nhexirc/nhex
+
+Files: public/* src/* scripts/* test/* .editorconfig example.nhex.toml index.html README.md
+Copyright: 2024 The nhex Contributors
+License: MIT
+
+Files: src-tauri/*
+Copyright: 2024 The nhex Contributors
+License: MPL-2.0
