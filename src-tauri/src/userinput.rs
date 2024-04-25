@@ -84,6 +84,9 @@ impl UserInput {
                 let (target, rest) = self.args.split_first().ok_or(UserInputError::MissingArg)?;
                 sender.send(Command::WHOIS(rest.first().cloned(), target.clone()))?;
             }
+            "list" => {
+                sender.send(Command::LIST(None, None))?;
+            }
             c => panic!("unknown command {c}",), // TODO: Gracefully error on this.
         }
         Ok(())

@@ -239,7 +239,13 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
     },
     stats() {
       return "stats";
-    }
+    },
+    /* DO NOT uncomment this to expose it to users until /list is rate-limited per the comment below!!
+    list() {
+      // TODO: only allow refresh every so often! (based on updated_time_unix_ms)
+      return "list";
+    },
+    */
   };
   const implementedHandlers = Object.keys(handlers);
   let id = 1; // Start at 1 because the Rust side assumes 0 means "unset".

@@ -11,6 +11,7 @@ use chrono::prelude::*;
 use futures::prelude::*;
 use irc::client::prelude::*;
 use serde::Serialize;
+use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{async_runtime, Manager, Window};
 
@@ -35,6 +36,12 @@ static VERSION_STRING: &str = "https://nhex.dev";
 static EVENT_PATH_INPUT: &str = "nhex://command/do";
 static EVENT_PATH_OUTPUT: &str = "nhex://command/ack";
 static EVENT_PATH_ERROR: &str = "nhex://command/error";
+
+fn user_db_path(app_handle: tauri::AppHandle) -> PathBuf {
+    let mut path_buf = app_handle.path_resolver().app_config_dir().unwrap();
+    path_buf.push("nhex.sqlite3");
+    return path_buf.to_owned();
+}
 
 async fn connect_impl(
     nick: String,
@@ -95,11 +102,15 @@ async fn connect_impl(
 
     // TODO: Emit on success here.
 
+    let mut channel_list_count: i128 = -1;
+    let path_bind = user_db_path(app_handle);
+    let db_path = path_bind.to_str().expect("path");
     while let Some(message) = stream.next().await {
         let message = message?;
         let now = SystemTime::now();
         let now_since_epoch = now.duration_since(UNIX_EPOCH).expect("time before 1970");
         let now_dt: DateTime<Local> = now.into();
+
         print!(
             "[{}] <{}> {}",
             // TODO: Let this be configurable! Otherwise, use yyyy-mm-dd!
@@ -107,6 +118,45 @@ async fn connect_impl(
             server,
             message
         );
+
+        // do a very quick "parse", just enough to find the command ID, in order to determine
+        // if these are LIST related commands (321-323) which are not to be emitted to the frontend at all.
+        // XXX: should we just do the full message parse here instead of in the frontend?
+        let mclone = message.clone().to_string();
+        let parts = mclone.split(" ");
+        let parts_vec: Vec<&str> = parts.collect::<Vec<&str>>();
+        assert!(parts_vec.len() > 1);
+
+        match parts_vec[1] {
+            "321" => {
+                assert!(channel_list_count == -1);
+                channel_list_count = 0;
+                continue;
+            }
+            "322" => {
+                assert!(channel_list_count > -1);
+                assert!(parts_vec.len() > 5);
+                channel_list_count += 1;
+                add_channel_list_entry(
+                    db_path,
+                    server.as_str(),
+                    parts_vec[3],
+                    parts_vec[4].parse::<u64>().expect("parse"),
+                    parts_vec[5..].join(" ").as_str(),
+                )
+                .expect("add_channel_list_entry");
+                continue;
+            }
+            "323" => {
+                assert!(channel_list_count > -1);
+                update_channel_list_meta(db_path, server.as_str(), channel_list_count as u64)
+                    .expect("update_channel_list_meta");
+                channel_list_count = -1;
+                continue;
+            }
+            _ => {}
+        }
+
         window
             .emit(
                 "nhex://irc_message",
@@ -142,13 +192,13 @@ async fn connect(
 // could/should the user_db methods that don't require returning to the caller be invoke-able via an event too/instead?
 
 #[tauri::command]
-async fn user_db_init(path: String) {
-    init_db(path).expect("init_db");
+async fn user_db_init(app_handle: tauri::AppHandle) {
+    init_db(user_db_path(app_handle).to_str().expect("path")).expect("init_db");
 }
 
 #[tauri::command]
-async fn user_db_log_message(path: String, log: Logging) {
-    add_logging(path, log).expect("add_logging");
+async fn user_db_log_message(log: Logging, app_handle: tauri::AppHandle) {
+    add_logging(user_db_path(app_handle).to_str().expect("path"), log).expect("add_logging");
 }
 
 fn main() {
