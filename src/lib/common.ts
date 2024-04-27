@@ -10,7 +10,8 @@ export async function ensureOurAppConfigPath() {
     return cfgDir;
 }
 
-export function nickFromPrefix(prefix: string): string {
+export function nickFromPrefix(prefix: string | undefined | null): string {
+    prefix = prefix || "SERVER";
     const bangdex = prefix.indexOf("!");
 
     if (bangdex > 0) {
@@ -20,7 +21,8 @@ export function nickFromPrefix(prefix: string): string {
     return prefix;
 }
 
-export function explodePrefix(prefix: string): Record<string, string> {
+export function explodePrefix(prefix: string | undefined | null): Record<string, string> {
+    prefix = prefix || "SERVER";
     const bangdex = prefix.indexOf("!");
 
     if (bangdex > 0) {

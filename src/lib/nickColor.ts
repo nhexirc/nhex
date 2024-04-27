@@ -17,8 +17,8 @@ export function setCurrentTheme(themeName: string) {
   GLOBAL_NICK_COLORS = {};
 }
 
-export default function(nick: string): string {
-  nick = IRCNicksSetStatusChars.reduce((a, n) => a.replace(n, ""), nick);
+export default function(nick: string | undefined | null): string {
+  nick = IRCNicksSetStatusChars.reduce((a, n) => a.replace(n, ""), nick || "SERVER");
 
   if (!GLOBAL_NICK_COLORS[nick]) {
     GLOBAL_NICK_COLORS[nick] = generateColor(nick, PALLETTES[CURRENT_THEME_STATE.name]);
