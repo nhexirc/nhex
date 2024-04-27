@@ -28,9 +28,9 @@ pub struct Logging {
     highlighted_us: bool,
 }
 
-// ideally this should return `conn` which all the other functions will take as a param
+// ideally these init_db_* functions should return `conn` which all the other functions will take as a param
 // because re-opening the DB each time is not great. but it works for now...
-pub fn init_db(path: &str) -> Result<()> {
+pub fn init_logging_db(path: &str) -> Result<()> {
     let conn = Connection::open(path)?;
 
     conn.execute(
@@ -62,6 +62,12 @@ pub fn init_db(path: &str) -> Result<()> {
         )",
         (),
     )?;
+
+    Ok(())
+}
+
+pub fn init_user_db(path: &str) -> Result<()> {
+    let conn = Connection::open(path)?;
 
     conn.execute(
         "CREATE TABLE IF NOT EXISTS channel_list_meta (

@@ -37,9 +37,9 @@ static EVENT_PATH_INPUT: &str = "nhex://command/do";
 static EVENT_PATH_OUTPUT: &str = "nhex://command/ack";
 static EVENT_PATH_ERROR: &str = "nhex://command/error";
 
-fn user_db_path(app_handle: tauri::AppHandle) -> PathBuf {
+fn user_db_path(app_handle: tauri::AppHandle, file_name: &str) -> PathBuf {
     let mut path_buf = app_handle.path_resolver().app_config_dir().unwrap();
-    path_buf.push("nhex.sqlite3");
+    path_buf.push(format!("{}.sqlite3", file_name));
     return path_buf.to_owned();
 }
 
@@ -103,8 +103,8 @@ async fn connect_impl(
     // TODO: Emit on success here.
 
     let mut channel_list_count: i128 = -1;
-    let path_bind = user_db_path(app_handle);
-    let db_path = path_bind.to_str().expect("path");
+    let user_path_bind = user_db_path(app_handle, "nhex");
+    let user_db_path = user_path_bind.to_str().expect("path");
     while let Some(message) = stream.next().await {
         let message = message?;
         let now = SystemTime::now();
@@ -138,7 +138,7 @@ async fn connect_impl(
                 assert!(parts_vec.len() > 5);
                 channel_list_count += 1;
                 add_channel_list_entry(
-                    db_path,
+                    user_db_path,
                     server.as_str(),
                     parts_vec[3],
                     parts_vec[4].parse::<u64>().expect("parse"),
@@ -149,7 +149,7 @@ async fn connect_impl(
             }
             "323" => {
                 assert!(channel_list_count > -1);
-                update_channel_list_meta(db_path, server.as_str(), channel_list_count as u64)
+                update_channel_list_meta(user_db_path, server.as_str(), channel_list_count as u64)
                     .expect("update_channel_list_meta");
                 channel_list_count = -1;
                 continue;
@@ -193,12 +193,27 @@ async fn connect(
 
 #[tauri::command]
 async fn user_db_init(app_handle: tauri::AppHandle) {
-    init_db(user_db_path(app_handle).to_str().expect("path")).expect("init_db");
+    init_logging_db(
+        user_db_path(app_handle.app_handle(), "logging")
+            .to_str()
+            .expect("path"),
+    )
+    .expect("init_logging_db");
+    init_user_db(
+        user_db_path(app_handle.app_handle(), "nhex")
+            .to_str()
+            .expect("path"),
+    )
+    .expect("init_user_db");
 }
 
 #[tauri::command]
 async fn user_db_log_message(log: Logging, app_handle: tauri::AppHandle) {
-    add_logging(user_db_path(app_handle).to_str().expect("path"), log).expect("add_logging");
+    add_logging(
+        user_db_path(app_handle, "logging").to_str().expect("path"),
+        log,
+    )
+    .expect("add_logging");
 }
 
 fn main() {

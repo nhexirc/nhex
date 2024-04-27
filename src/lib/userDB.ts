@@ -1,9 +1,11 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { explodePrefix } from './common';
 import { IRCMessageParsed } from './types';
+import { ensureOurAppConfigPath } from './common';
 
 export default class {
   async init() {
+    await ensureOurAppConfigPath();
     return invoke("user_db_init", {});
   }
 
