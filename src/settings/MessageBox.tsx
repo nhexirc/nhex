@@ -1,11 +1,11 @@
 import UserSettings from '../lib/userSettings';
 import { MessageBoxValidFontSizes } from '../lib/types';
-import { USER_INPUT_THEME_DAY, USER_INPUT_THEME_NIGHT, USER_INPUT } from "../style";
+import { DAY_STYLE, NIGHT_STYLE, USER_INPUT } from "../style";
 import ShowJoinPartSetting from './ShowJoinPartSetting';
 import BoolSetting from './BoolSetting';
 import TextSetting from './TextSetting';
 
-export default function ({ isNight, settings, setSettings }) {
+export default function({ isNight, settings, setSettings }) {
   return (
     <>
       <div className="text-2xl mb-4">Message Display</div>
@@ -39,7 +39,7 @@ export default function ({ isNight, settings, setSettings }) {
             <tr>
               <td>Font size:</td>
               <td>
-                <select className={`${isNight ? USER_INPUT_THEME_NIGHT : USER_INPUT_THEME_DAY} ${USER_INPUT}`}
+                <select className={`${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT}`}
                   onChange={(e) => {
                     UserSettings.save({
                       ...settings,

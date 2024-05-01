@@ -1,5 +1,5 @@
 import { emit } from "@tauri-apps/api/event";
-import { TOPIC_USER_INPUT, USER_INPUT_THEME_DAY, USER_INPUT_THEME_NIGHT, UNIFORM_BORDER_STYLE, USER_INPUT } from "./style";
+import { TOPIC_USER_INPUT, UNIFORM_BORDER_STYLE, USER_INPUT, NIGHT_STYLE, DAY_STYLE } from "./style";
 import { completeNickname } from "./MainView";
 import { parseMBUserInputRaw } from './lib/common';
 
@@ -27,7 +27,7 @@ const UserInput = ({ nick, isNight }) => {
   }
   let prefix = "";
   return (
-    <input type="text" className={`${TOPIC_USER_INPUT} ${UNIFORM_BORDER_STYLE} ${isNight ? USER_INPUT_THEME_NIGHT : USER_INPUT_THEME_DAY} ${USER_INPUT}`} autoFocus placeholder={nick} onKeyDown={inputFunctionality} />
+    <input type="text" className={`${TOPIC_USER_INPUT} ${UNIFORM_BORDER_STYLE} ${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT}`} autoFocus placeholder={nick} onKeyDown={inputFunctionality} />
   )
 }
 

@@ -1,7 +1,7 @@
 import UserSettings from '../lib/userSettings';
-import { USER_INPUT_THEME_DAY, USER_INPUT_THEME_NIGHT, USER_INPUT } from "../style";
+import { DAY_STYLE, NIGHT_STYLE, USER_INPUT } from "../style";
 
-export default function (props) {
+export default function(props) {
   const { displayName, sectionName, fieldName, isNight, settings, setSettings } = props;
   const valueXform = props?.valueXform ?? ((x) => x);
 
@@ -11,7 +11,7 @@ export default function (props) {
         <td>{displayName}:</td>
         <td>
           <input
-            className={`${isNight ? USER_INPUT_THEME_NIGHT : USER_INPUT_THEME_DAY} ${USER_INPUT}`}
+            className={`${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT}`}
             type="text"
             defaultValue={settings?.[sectionName]?.[fieldName]}
             onBlur={(e) => {
@@ -25,7 +25,7 @@ export default function (props) {
                 setSettings(newSettings);
               })
             }}
-            />
+          />
         </td>
       </tr>
     </>
