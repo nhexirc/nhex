@@ -1,9 +1,9 @@
 import UserSettings from '../lib/userSettings';
-import { DAY_STYLE, NIGHT_STYLE, USER_INPUT } from "../style";
+import { DAY_STYLE, NIGHT_STYLE } from "../style";
 
-export default function(props) {
+export default function(props: any) {
   const { displayName, sectionName, fieldName, isNight, settings, setSettings } = props;
-  const valueXform = props?.valueXform ?? ((x) => x);
+  const valueXform = props?.valueXform ?? ((x: any) => x);
 
   return (
     <>
@@ -11,7 +11,7 @@ export default function(props) {
         <td>{displayName}:</td>
         <td>
           <input
-            className={`${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT}`}
+            className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
             type="text"
             defaultValue={settings?.[sectionName]?.[fieldName]}
             onBlur={(e) => {

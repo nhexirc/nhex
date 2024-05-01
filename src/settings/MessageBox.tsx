@@ -1,6 +1,6 @@
 import UserSettings from '../lib/userSettings';
 import { MessageBoxValidFontSizes } from '../lib/types';
-import { DAY_STYLE, NIGHT_STYLE, USER_INPUT } from "../style";
+import { DAY_STYLE, NIGHT_STYLE } from "../style";
 import ShowJoinPartSetting from './ShowJoinPartSetting';
 import BoolSetting from './BoolSetting';
 import TextSetting from './TextSetting';
@@ -39,7 +39,7 @@ export default function({ isNight, settings, setSettings }) {
             <tr>
               <td>Font size:</td>
               <td>
-                <select className={`${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT}`}
+                <select className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
                   onChange={(e) => {
                     UserSettings.save({
                       ...settings,
