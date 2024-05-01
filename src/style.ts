@@ -42,8 +42,8 @@ export const USER_INPUT_THEME_DAY = `placeholder:text-black/70 text-black`
 export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
 //USER INPUT
-export const USER_INPUT = "backdrop-blur-xl bg-transparent sticky bottom-0 w-full focus:outline-none"
-export const USER_INPUT_CB = "backdrop-blur-xl bg-transparent sticky bottom-0 focus:outline-none"
+export const USER_INPUT = "backdrop-blur-xl bg-transparent fixed bottom-0 w-full focus:outline-none"
+export const USER_INPUT_CB = "bg-transparent focus:outline-none"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
