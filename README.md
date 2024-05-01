@@ -19,8 +19,8 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 ![](./public/screenshots/nh_conn_alt.png)
 
 ## Mobile views (Medium and Small)
-<img src="./public/screenshots/nh_mobile_med.png" width="320" />
-<img src="./public/screenshots/nh_mobile_small.png" width="320" />
+![](./public/screenshots/nh_mobile_med.png)
+![](./public/screenshots/nh_mobile_small.png)
 
 # Downloading
 
