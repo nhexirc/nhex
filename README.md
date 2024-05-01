@@ -11,11 +11,16 @@ Pronounced "_nex_" (the "_h_" is silent).
 **[Contributors](#contributing) needed & wanted!** Apply... by submitting a PR! [The 1.0 milestone](https://github.com/nhexirc/client/milestone/1) is a great place to start looking for tasks with immediate impact.
 
 Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhex).
+# Screenshots
 
+## Normal views (Day/Night theme)
 ![](./public/screenshots/nh_irc.png)
 ![](./public/screenshots/nh_server.png)
 ![](./public/screenshots/nh_conn_alt.png)
-<img src="./public/screenshots/nh_mobile.png" width="320" />
+
+## Mobile views (Medium and Small)
+<img src="./public/screenshots/nh_mobile_med.png" width="320" />
+<img src="./public/screenshots/nh_mobile_small.png" width="320" />
 
 # Downloading
 
