@@ -2,7 +2,7 @@
 
 A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
-![](./public/screenshots/nh_conn.png)
+![](./package/client/public/screenshots/nh_conn.png)
 
 _Jump right to [the downloads](https://github.com/nhexirc/nhex/releases/latest) or [the documentation](https://nhex.dev/docs/)._
 
@@ -14,13 +14,13 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 # Screenshots
 
 ## Normal views (Day/Night theme)
-![](./public/screenshots/nh_irc.png)
-![](./public/screenshots/nh_server.png)
-![](./public/screenshots/nh_conn_alt.png)
+![](./package/client/public/screenshots/nh_irc.png)
+![](./package/client/public/screenshots/nh_server.png)
+![](./package/client/public/screenshots/nh_conn_alt.png)
 
 ## Mobile views (Medium and Small)
-![](./public/screenshots/nh_mobile_med.png)
-![](./public/screenshots/nh_mobile_small.png)
+![](./package/client/public/screenshots/nh_mobile_med.png)
+![](./package/client/public/screenshots/nh_mobile_small.png)
 
 # Downloading
 
@@ -77,7 +77,7 @@ The development pipeline will create a draft pre[release](https://github.com/nhe
 
 ### Creating a release
 
-Use the included [`create-release` script](./scripts/create-release) to prepare the release:
+Use the included [`create-release` script](./package/client/scripts/create-release) to prepare the release:
 
 ```shell
 $ ./scripts/create-release major
@@ -105,8 +105,8 @@ Logo design by `hmw[at]`, with additional ideation from `InPhase` & `systemfault
 
 `nhex` is multi-licensed, the details of which can be found in the [DEP5](https://reuse.software/spec/#dep5) file [.reuse/dep5](./.reuse/dep5).
 
-At a high level, the React-based frontend is licensed under the [MIT]([./LICENSES/MIT.txt) license & the Rust-based backend under the [Mozilla Public License, version 2.0](./LICENSES/MPL-2.0.txt).
+At a high level, the React-based frontend is licensed under the [MIT]([./package/client/LICENSES/MIT.txt) license & the Rust-based backend under the [Mozilla Public License, version 2.0](./package/client/LICENSES/MPL-2.0.txt).
 
 You agree for any contributions submitted by you for inclusion into nhex to be redistributed under these licenses.
 
-License text can be found in [LICENSES](./LICENSES/).
+License text can be found in [LICENSES](./package/client/LICENSES/).
