@@ -103,7 +103,7 @@ Logo design by `hmw[at]`, with additional ideation from `InPhase` & `systemfault
 
 ## License
 
-`nhex` is multi-licensed, the details of which can be found in the [DEP5](https://reuse.software/spec/#dep5) file [.reuse/dep5](./.reuse/dep5).
+`nhex` is multi-licensed, the details of which can be found in the [DEP5](https://reuse.software/spec/#dep5) file [.reuse/dep5](./packages/client/.reuse/dep5).
 
 At a high level, the React-based frontend is licensed under the [MIT]([./packages/client/LICENSES/MIT.txt) license & the Rust-based backend under the [Mozilla Public License, version 2.0](./packages/client/LICENSES/MPL-2.0.txt).
 
