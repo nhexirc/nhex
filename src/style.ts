@@ -1,7 +1,7 @@
 //APP
 export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700 overflow-hidden"
-export const NIGHT_STYLE = "bg-slate-900 text-stone-300"
-export const DAY_STYLE = "bg-orange-200 text-black"
+export const NIGHT_STYLE = "bg-slate-900 text-stone-300 placeholder-stone-300"
+export const DAY_STYLE = "bg-orange-200 text-black placeholder-black"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
@@ -35,14 +35,12 @@ export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "border-t p-1 min-h-8"
-export const USER_INPUT_THEME_NIGHT = `placeholder:text-white/70 text-white/90`
-export const USER_INPUT_THEME_DAY = `placeholder:text-black/70 text-black`
 
 //TOPIC
 export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scrollbar-thin overflow-y-auto overflow-x-hidden";
 
 //USER INPUT
-export const USER_INPUT = "backdrop-blur-xl bg-transparent fixed bottom-0 w-full focus:outline-none"
+export const USER_INPUT = "fixed bottom-0 w-full focus:outline-none"
 export const USER_INPUT_CB = "bg-transparent focus:outline-none"
 
 //SERVER + MESSAGEBOX + NAMES
@@ -58,8 +56,8 @@ export const SERVER_CHANNEL_SELECTED = "underline"
 export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
 
 //NAMES
-export const NAMES_PANEL_STYLE = "font-bold hidden sm:block border-t"
-export const CHANNEL_NUMBERS_STYLE = "bg-zinc-500/10 hidden sm:block py-2.5 text-sm text-center"
+export const NAMES_PANEL_STYLE = "font-bold hidden md:block border-t pb-16"
+export const CHANNEL_NUMBERS_STYLE = "bg-zinc-500/10 hidden md:block py-2.5 text-sm text-center"
 
 //FOOTER
 export const FOOTER_STYLE = "pb-4 pt-2"
