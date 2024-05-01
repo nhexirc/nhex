@@ -50,7 +50,7 @@ export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
 export const SERVER_NAMES_PANEL_STYLE = "bg-zinc-500/30 min-w-40 px-1 overflow-auto scrollbar-thin h-screen"
 
 //SERVER
-export const SERVER_PANEL_STYLE = "text-right"
+export const SERVER_PANEL_STYLE = "text-right hidden sm:block"
 export const SERVER_CHANNEL_DIRTY = "italic text-cyan-200"
 export const SERVER_CHANNEL_SELECTED = "underline"
 export const SERVER_CHANNEL_HAS_HIGHLIGHTS = "text-lime-400 font-bold"
