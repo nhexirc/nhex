@@ -2,7 +2,7 @@
 
 A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
 
-![](./package/client/public/screenshots/nh_conn.png)
+![](./packages/client/public/screenshots/nh_conn.png)
 
 _Jump right to [the downloads](https://github.com/nhexirc/nhex/releases/latest) or [the documentation](https://nhex.dev/docs/)._
 
@@ -14,13 +14,13 @@ Chat with us at [#nhex on irc.libera.chat](https://web.libera.chat/?channel=#nhe
 # Screenshots
 
 ## Normal views (Day/Night theme)
-![](./package/client/public/screenshots/nh_irc.png)
-![](./package/client/public/screenshots/nh_server.png)
-![](./package/client/public/screenshots/nh_conn_alt.png)
+![](./packages/client/public/screenshots/nh_irc.png)
+![](./packages/client/public/screenshots/nh_server.png)
+![](./packages/client/public/screenshots/nh_conn_alt.png)
 
 ## Mobile views (Medium and Small)
-![](./package/client/public/screenshots/nh_mobile_med.png)
-![](./package/client/public/screenshots/nh_mobile_small.png)
+![](./packages/client/public/screenshots/nh_mobile_med.png)
+![](./packages/client/public/screenshots/nh_mobile_small.png)
 
 # Downloading
 
@@ -77,13 +77,13 @@ The development pipeline will create a draft pre[release](https://github.com/nhe
 
 ### Creating a release
 
-Use the included [`create-release` script](./package/client/scripts/create-release) to prepare the release:
+Use the included [`create-release` script](/packages/client/scripts/create-release) to prepare the release:
 
 ```shell
 $ ./scripts/create-release major
 ```
 
-Where `major` is the release type as supported by [`semver.inc()`](https://www.npmjs.com/package/semver). If not provided, the default value for this argument is `patch`.
+Where `major` is the release type as supported by [`semver.inc()`](https://www.npmjs.com/packages/semver). If not provided, the default value for this argument is `patch`.
 
 The script will increment the appropriate `version` field in all necessary metadata files and provide a set of `git` CLI invocations to commit, tag & push the release.
 
@@ -105,8 +105,8 @@ Logo design by `hmw[at]`, with additional ideation from `InPhase` & `systemfault
 
 `nhex` is multi-licensed, the details of which can be found in the [DEP5](https://reuse.software/spec/#dep5) file [.reuse/dep5](./.reuse/dep5).
 
-At a high level, the React-based frontend is licensed under the [MIT]([./package/client/LICENSES/MIT.txt) license & the Rust-based backend under the [Mozilla Public License, version 2.0](./package/client/LICENSES/MPL-2.0.txt).
+At a high level, the React-based frontend is licensed under the [MIT]([./packages/client/LICENSES/MIT.txt) license & the Rust-based backend under the [Mozilla Public License, version 2.0](./packages/client/LICENSES/MPL-2.0.txt).
 
 You agree for any contributions submitted by you for inclusion into nhex to be redistributed under these licenses.
 
-License text can be found in [LICENSES](./package/client/LICENSES/).
+License text can be found in [LICENSES](./packages/client/LICENSES/).
