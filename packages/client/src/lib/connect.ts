@@ -72,7 +72,7 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
       userSettings
     );
 
-    if (getUserSettings()?.App?.enableLogging) {
+    if (getUserSettings()?.Logging?.enable) {
       db.log_message(server, parsed);
     }
 
@@ -269,7 +269,7 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
         id += 1;
       }
 
-      if (getUserSettings()?.App?.enableLogging) {
+      if (getUserSettings()?.Logging?.enable) {
         db.log_message(server, new IRCMessageParsed(
           nrmCommand,
           [getCurSelection().channel, ...event.payload.args],

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import UserSettings from './lib/userSettings';
 import { UserSettingsIface } from './lib/types';
-import AppSettings from './settings/App';
+import LoggingSettings from './settings/Logging';
 import MessageBoxSettings from './settings/MessageBox';
 import NetworkSettings from './settings/Network';
+import DNDSettings from './settings/DragAndDrop';
 
 export default function ({ isNight }) {
   const [settings, setSettings] = useState<UserSettingsIface>(null);
@@ -25,8 +26,13 @@ export default function ({ isNight }) {
       <div className="text-4xl my-8 p-4">Settings</div>
 
       <div className={sectionStyle}>
-        <AppSettings isNight={isNight} settings={settings} setSettings={setSettings}>
-        </AppSettings>
+        <DNDSettings isNight={isNight} settings={settings} setSettings={setSettings}>
+        </DNDSettings>
+      </div>
+
+      <div className={sectionStyle}>
+        <LoggingSettings isNight={isNight} settings={settings} setSettings={setSettings}>
+        </LoggingSettings>
       </div>
 
       <div className={sectionStyle}>

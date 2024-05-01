@@ -3,14 +3,14 @@ import BoolSetting from './BoolSetting';
 export default function ({ isNight, settings, setSettings }) {
   return (
     <>
-      <div className="text-2xl mb-4">App</div>
+      <div className="text-2xl mb-4">Logging</div>
       <div>
         <table className="w-full">
           <tbody>
             <BoolSetting
-              displayName="Enable Logging"
-              sectionName="App"
-              fieldName="enableLogging"
+              displayName="Enabled"
+              sectionName="Logging"
+              fieldName="enable"
               isNight={isNight}
               settings={settings}
               setSettings={setSettings}>

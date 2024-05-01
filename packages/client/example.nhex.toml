@@ -4,8 +4,25 @@
 #  * Linux: ~/.config
 #  * Mac OS: /Users/<username>/Library/Application Support
 
-[App]
-enableLogging = true
+[DragAndDrop]
+enable = true
+textFileExtensions = [ "txt", "md", "js", "ts", "tsx", "c", "cpp", "py", "rs", "pl" ]
+# currently supported host options: termbin.com
+textUploadHost = "termbin.com"
+
+[Logging]
+enable = true
+
+[MessageBox]
+# you should not remove "action", "privmsg", "notice" or "mode" unless you are sure you know what you're doing.
+# this setting affects channel activity highlights: when join and/or part are included, those events 
+# will highlight the channel with "activity".
+show = [ "action", "privmsg", "notice", "mode", "join", "part" ]
+dimJoinsAndParts = false
+showTimestamps = false
+# valid sizes are any of the size modifies (no dash) specified here: https://tailwindcss.com/docs/font-size
+fontSize = "sm"
+scrollbackLimitLines = 10000
 
 [Network]
 server = "irc.libera.chat"
@@ -25,14 +42,3 @@ expectLoggedInAfterConnectCommands = true
 # otherwise, they will go to the target's (nick or channel) buffer.
 # this setting requires an app restart to take effect when changed.
 routeNoticesToServerBuffer = false
-
-[MessageBox]
-# you should not remove "action", "privmsg", "notice" or "mode" unless you are sure you know what you're doing.
-# this setting affects channel activity highlights: when join and/or part are included, those events 
-# will highlight the channel with "activity".
-show = [ "action", "privmsg", "notice", "mode", "join", "part" ]
-dimJoinsAndParts = false
-showTimestamps = false
-# valid sizes are any of the size modifies (no dash) specified here: https://tailwindcss.com/docs/font-size
-fontSize = "sm"
-scrollbackLimitLines = 10000

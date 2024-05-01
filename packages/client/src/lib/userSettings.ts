@@ -28,7 +28,8 @@ export async function load(): Promise<UserSettingsIface> {
     await ensureOurAppConfigPath();
     const raw = await readTextFile(FILE_NAME, { dir: BaseDirectory.AppConfig });
     settings = parse(raw);
-  } catch (_) {
+  } catch (e) {
+    console.error(e);
     return defaultSettings;
   }
   return extend(defaultSettings, settings);

@@ -1,18 +1,19 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod dnduploaders;
 mod userdb;
 mod userinput;
 
-use userdb::*;
+use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
+
 use userinput::*;
 
 use chrono::prelude::*;
 use futures::prelude::*;
 use irc::client::prelude::*;
 use serde::Serialize;
-use std::path::PathBuf;
-use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{async_runtime, Manager, Window};
 
 // Structs that will be serialized back to the TS side.
@@ -137,7 +138,7 @@ async fn connect_impl(
                 assert!(channel_list_count > -1);
                 assert!(parts_vec.len() > 5);
                 channel_list_count += 1;
-                add_channel_list_entry(
+                userdb::add_channel_list_entry(
                     user_db_path,
                     server.as_str(),
                     parts_vec[3],
@@ -149,7 +150,7 @@ async fn connect_impl(
             }
             "323" => {
                 assert!(channel_list_count > -1);
-                update_channel_list_meta(user_db_path, server.as_str(), channel_list_count as u64)
+                userdb::update_channel_list_meta(user_db_path, server.as_str(), channel_list_count as u64)
                     .expect("update_channel_list_meta");
                 channel_list_count = -1;
                 continue;
@@ -193,13 +194,13 @@ async fn connect(
 
 #[tauri::command]
 async fn user_db_init(app_handle: tauri::AppHandle) {
-    init_logging_db(
+    userdb::init_logging_db(
         user_db_path(app_handle.app_handle(), "logging")
             .to_str()
             .expect("path"),
     )
     .expect("init_logging_db");
-    init_user_db(
+    userdb::init_user_db(
         user_db_path(app_handle.app_handle(), "nhex")
             .to_str()
             .expect("path"),
@@ -208,12 +209,17 @@ async fn user_db_init(app_handle: tauri::AppHandle) {
 }
 
 #[tauri::command]
-async fn user_db_log_message(log: Logging, app_handle: tauri::AppHandle) {
-    add_logging(
+async fn user_db_log_message(log: userdb::Logging, app_handle: tauri::AppHandle) {
+    userdb::add_logging(
         user_db_path(app_handle, "logging").to_str().expect("path"),
         log,
     )
     .expect("add_logging");
+}
+
+#[tauri::command]
+async fn dnduploader_termbin(filepath: String) -> Vec<u8> {
+    return dnduploaders::termbin(filepath).await;
 }
 
 fn main() {
@@ -222,6 +228,7 @@ fn main() {
             connect,
             user_db_init,
             user_db_log_message,
+            dnduploader_termbin,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

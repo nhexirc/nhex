@@ -4,6 +4,7 @@ import { DAY_STYLE, NIGHT_STYLE } from "../style";
 export default function(props: any) {
   const { displayName, sectionName, fieldName, isNight, settings, setSettings } = props;
   const valueXform = props?.valueXform ?? ((x: any) => x);
+  const displayXform = props?.displayXform ?? ((x: any) => x);
 
   return (
     <>
@@ -13,7 +14,7 @@ export default function(props: any) {
           <input
             className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
             type="text"
-            defaultValue={settings?.[sectionName]?.[fieldName]}
+            defaultValue={displayXform(settings?.[sectionName]?.[fieldName])}
             onBlur={(e) => {
               UserSettings.save({
                 ...settings,

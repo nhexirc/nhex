@@ -113,9 +113,17 @@ export interface SACSelectEvent {
   payload: SACSelect
 };
 
-export interface AppSettings {
-    enableLogging?: boolean;
-}
+export interface AppLoggingSettings {
+    enable?: boolean;
+};
+
+export interface DragAndDropSettings {
+    enable?: boolean;
+    textFileExtensions?: string[];
+    textUploadHost?: string;
+    imageImageExtensions?: string[];
+    imageUploadHost?: string;
+};
 
 export const MessageBoxValidFontSizes = ["sm", "base", "lg", "xl"];
 
@@ -143,7 +151,8 @@ export interface NetworkUserSettings {
 };
 
 export interface UserSettingsIface {
-    App?: AppSettings;
+    DragAndDrop?: DragAndDropSettings;
+    Logging?: AppLoggingSettings;
     MessageBox?: MessageBoxUserSettings;
     Network?: NetworkUserSettings;
 }

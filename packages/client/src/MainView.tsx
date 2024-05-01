@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { emit } from '@tauri-apps/api/event';
+import { emit, listen } from '@tauri-apps/api/event';
 import { appWindow } from "@tauri-apps/api/window";
 import {
   NetworkBuffer,
@@ -18,6 +18,8 @@ import { parseMBUserInputRaw } from './lib/common';
 import Menu from "./Menu";
 import Footer from "./Footer";
 import Settings from "./Settings";
+import DNDUploaders from './lib/dndUploaders';
+import { extname } from '@tauri-apps/api/path';
 
 const BUFFERS: Record<string, NetworkBuffer> = {};
 const getBuffers = () => ({ ...BUFFERS });
@@ -50,6 +52,39 @@ export const completeNickname = (prefix: string, skipFrom: string): string => {
 
   return found ? `${found}: ` : prefix;
 }
+
+listen('tauri://file-drop', async (event) => {
+  const { channel } = CUR_SELECTION;
+
+  // don't allow DnD in the server query window (not much of a point)
+  if (channel === "") {
+    return;
+  }
+
+  const [file] = event.payload as string[];
+  const ext = await extname(file);
+  const emitObj = { file, host: null };
+
+  UserSettings.load().then(async (settings) => {
+    if (settings?.DragAndDrop?.enable) {
+      if (settings?.DragAndDrop?.textUploadHost && (settings?.DragAndDrop?.textFileExtensions ?? []).includes(ext)) {
+        emitObj.host = settings?.DragAndDrop?.textUploadHost;
+      }
+
+      if (settings?.DragAndDrop?.imageUploadHost && (settings?.DragAndDrop?.imageImageExtensions ?? []).includes(ext)) {
+        emitObj.host = settings?.DragAndDrop?.imageUploadHost;
+      }
+    }
+
+    if (emitObj.host && DNDUploaders[emitObj.host]) {
+      emit("nhex://file-drop/processing", emitObj);
+      emit("nhex://file-drop/confirmed", {
+        ...emitObj,
+        url: await DNDUploaders[emitObj.host](emitObj.file)
+      });
+    }
+  });
+})
 
 const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
   const [nick, _setNick] = useState("");
