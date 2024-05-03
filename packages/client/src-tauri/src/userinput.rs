@@ -23,10 +23,32 @@ pub struct UserInput {
 #[derive(Clone, serde::Serialize)]
 #[serde(tag = "type")]
 pub enum UserInputError {
-    UnknownCmd,
-    MissingArg,
-    Io { info: String },
-    Other { info: String },
+    UnknownCmd { name: String },
+    MissingArg { name: &'static str },
+    InvalidArg { name: &'static str, info: String },
+}
+
+#[inline]
+pub fn make_line(value: String) -> Line<'static> {
+    Line::from_bytes(value).unwrap()
+}
+/// Unwraps an optional value into a variable `name`, or returns an error.
+macro_rules! let_some {
+    ($name:ident = $xp:expr) => {
+        let $name = ($xp).ok_or(UserInputError::MissingArg {
+            name: stringify!($name),
+        })?;
+    };
+}
+/// Tries to convert the variable named `name` into the vinezombie string type `string`,
+/// and returns an error on failure.
+macro_rules! check {
+    ($name:ident: $string:ty) => {
+        <$string>::from_bytes($name).map_err(|e| UserInputError::InvalidArg {
+            name: stringify!($name),
+            info: e.to_string(),
+        })?
+    };
 }
 
 /// Commands to run on the vinezombie Client.
@@ -84,22 +106,17 @@ impl Command {
     }
 }
 
-impl From<vinezombie::error::InvalidString> for UserInputError {
-    fn from(value: vinezombie::error::InvalidString) -> Self {
-        UserInputError::Other {
-            info: value.to_string(),
-        }
-    }
-}
-
 impl UserInput {
+    /// Sends a user-provided command to the provided channel.
+    ///
+    /// # Panics
+    /// This function assumes that the frontend will never allow the user to attempt to send
+    /// containing `'\r'`, `'\n'`, or `'\0'`, and will panic otherwise.
     pub fn send_to(mut self, sender: &UnboundedSender<Command>) -> Result<bool, UserInputError> {
         // TODO: Limits, throughout. Message length, target limits.
-        let channel = Arg::from_bytes(self.channel).expect("client requested invalid channel");
-        Ok(match self.command.as_str() {
-            "" => sender
-                .send(Command::Msg(channel, Line::from_bytes(self.argsStr)?))
-                .is_ok(),
+        let channel = Arg::from_bytes(self.channel).expect("frontend requested invalid channel");
+        let to_send = match self.command.as_str() {
+            "" => Command::Msg(channel, make_line(self.argsStr)),
             "join" => {
                 // Quietly discard invalid channel names for now.
                 // Going loud is also an option.
@@ -108,36 +125,34 @@ impl UserInput {
                     .into_iter()
                     .filter_map(|v| Arg::from_bytes(v).ok())
                     .collect();
-                sender.send(Command::Join(target)).is_ok()
+                Command::Join(target)
             }
             "msg" => {
-                let target = self.args.pop_front().ok_or(UserInputError::MissingArg)?;
-                let msg = Line::from_bytes(self.args.make_contiguous().join(" "))?;
-                sender
-                    .send(Command::Msg(Arg::from_bytes(target)?, msg))
-                    .is_ok()
+                let_some!(target = self.args.pop_front());
+                let msg = make_line(self.args.make_contiguous().join(" "));
+                Command::Msg(check!(target: Arg), msg)
             }
             "nick" => {
-                let new_nick = self.args.pop_front().ok_or(UserInputError::MissingArg)?;
+                let_some!(nick = self.args.pop_front());
                 let mut msg = ClientMsg::new(vinezombie::names::cmd::NICK);
-                msg.args.edit().add_word(Nick::from_bytes(new_nick)?);
-                sender.send(Command::Send(msg)).is_ok()
+                msg.args.edit().add_word(check!(nick: Nick));
+                Command::Send(msg)
             }
             "part" => {
-                let target = self.args.pop_front().ok_or(UserInputError::MissingArg)?;
-                let part_msg = Line::from_bytes(self.args.make_contiguous().join(" "))?;
+                let_some!(channel = self.args.pop_front());
+                let part_msg = make_line(self.args.make_contiguous().join(" "));
                 let mut msg = ClientMsg::new(vinezombie::names::cmd::PART);
                 let mut args = msg.args.edit();
-                args.add_word(Arg::from_bytes(target)?);
+                args.add_word(check!(channel: Arg));
                 if part_msg.is_empty() {
                     args.add(Line::from_str(super::VERSION_STRING));
                 } else {
                     args.add(part_msg);
                 }
-                sender.send(Command::Send(msg)).is_ok()
+                Command::Send(msg)
             }
             "quit" => {
-                let quit_msg = Line::from_bytes(self.args.make_contiguous().join(" "))?;
+                let quit_msg = make_line(self.args.make_contiguous().join(" "));
                 let mut msg = ClientMsg::new(vinezombie::names::cmd::PART);
                 let mut args = msg.args.edit();
                 if quit_msg.is_empty() {
@@ -145,28 +160,26 @@ impl UserInput {
                 } else {
                     args.add(quit_msg);
                 }
-                sender.send(Command::Send(msg)).is_ok()
+                Command::Send(msg)
             }
             "stats" => {
-                let query = self.args.pop_front().ok_or(UserInputError::MissingArg)?;
+                let_some!(query = self.args.pop_front());
                 let server = self.args.pop_front();
                 let mut msg = ClientMsg::new(vinezombie::names::cmd::STATS);
                 let mut args = msg.args.edit();
-                args.add_word(Arg::from_bytes(query)?);
+                args.add_word(check!(query: Arg));
                 if let Some(server) = server {
-                    args.add_word(Arg::from_bytes(server)?);
+                    args.add_word(check!(server: Arg));
                 }
-                sender.send(Command::Send(msg)).is_ok()
+                Command::Send(msg)
             }
             "whois" => {
                 let p0 = self.args.pop_front();
                 let p1 = self.args.pop_front();
                 let (server, nick) = match (p0, p1) {
-                    (Some(server), Some(nick)) => {
-                        (Some(Arg::from_bytes(server)?), Arg::from_bytes(nick)?)
-                    }
-                    (Some(nick), _) => (None, Arg::from_bytes(nick)?),
-                    _ => return Err(UserInputError::MissingArg),
+                    (Some(server), Some(nick)) => (Some(check!(server: Arg)), check!(nick: Nick)),
+                    (Some(nick), _) => (None, check!(nick: Nick)),
+                    _ => return Err(UserInputError::MissingArg { name: "nick" }),
                 };
                 let mut msg = ClientMsg::new(vinezombie::names::cmd::STATS);
                 let mut args = msg.args.edit();
@@ -174,7 +187,7 @@ impl UserInput {
                     args.add_word(server);
                 }
                 args.add_word(nick);
-                sender.send(Command::Send(msg)).is_ok()
+                Command::Send(msg)
             }
             "list" => {
                 let msg = ClientMsg::new(vinezombie::names::cmd::LIST);
@@ -188,13 +201,11 @@ impl UserInput {
                     args.add_word(Arg::from_bytes(p1)?);
                 }
                 */
-                sender.send(Command::Send(msg)).is_ok()
+                Command::Send(msg)
             }
-            _c => {
-                // TODO: Report user error.
-                true
-            }
-        })
+            _ => return Err(UserInputError::UnknownCmd { name: self.command }),
+        };
+        Ok(sender.send(to_send).is_ok())
     }
 }
 
