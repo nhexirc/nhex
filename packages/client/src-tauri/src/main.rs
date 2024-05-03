@@ -8,8 +8,8 @@ mod userinput;
 
 use userinput::*;
 
-use std::path::PathBuf;
 use serde::Serialize;
+use std::path::PathBuf;
 use tauri::{async_runtime, Manager, Window};
 
 use vinezombie::{client as vzc, string::*};
@@ -192,8 +192,9 @@ async fn user_db_latest_channel_lines(
         user_db_path(app_handle, "logging").to_str().expect("path"),
         network,
         channel,
-        num_lines
-    ).expect("get_latest_channel_lines");
+        num_lines,
+    )
+    .expect("get_latest_channel_lines");
 
     let mut ret_vec: Vec<String> = Vec::new();
     for line in lines.iter() {

@@ -1,7 +1,7 @@
 use std::fs;
+use std::io::Read;
 use std::io::Write;
 use std::net::TcpStream;
-use std::io::Read;
 
 pub async fn termbin(filepath: String) -> Vec<u8> {
     let file_buf = fs::read(filepath).expect("read_to_string");
