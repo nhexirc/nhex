@@ -150,8 +150,12 @@ async fn connect_impl(
             }
             "323" => {
                 assert!(channel_list_count > -1);
-                userdb::update_channel_list_meta(user_db_path, server.as_str(), channel_list_count as u64)
-                    .expect("update_channel_list_meta");
+                userdb::update_channel_list_meta(
+                    user_db_path,
+                    server.as_str(),
+                    channel_list_count as u64,
+                )
+                .expect("update_channel_list_meta");
                 channel_list_count = -1;
                 continue;
             }
@@ -218,6 +222,27 @@ async fn user_db_log_message(log: userdb::Logging, app_handle: tauri::AppHandle)
 }
 
 #[tauri::command]
+async fn user_db_latest_channel_lines(
+    network: String,
+    channel: String,
+    num_lines: u64,
+    app_handle: tauri::AppHandle,
+) -> Vec<String> {
+    let lines: Vec<userdb::IRCMessageParsed> = userdb::get_latest_channel_lines(
+        user_db_path(app_handle, "logging").to_str().expect("path"),
+        network,
+        channel,
+        num_lines
+    ).expect("get_latest_channel_lines");
+
+    let mut ret_vec: Vec<String> = Vec::new();
+    for line in lines.iter() {
+        ret_vec.push(serde_json::to_string(line).expect("to_string"));
+    }
+    return ret_vec;
+}
+
+#[tauri::command]
 async fn dnduploader_termbin(filepath: String) -> Vec<u8> {
     return dnduploaders::termbin(filepath).await;
 }
@@ -228,6 +253,7 @@ fn main() {
             connect,
             user_db_init,
             user_db_log_message,
+            user_db_latest_channel_lines,
             dnduploader_termbin,
         ])
         .run(tauri::generate_context!())

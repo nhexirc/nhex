@@ -32,6 +32,7 @@ export const TIMESTAMP_STYLE = "pr-2 text-zinc-500"
 export const LINK_ELEMENT_STYLE = "text-sky-600"
 export const CODE_ELEMENT_STYLE = "bg-slate-700"
 export const MESSAGE_HAS_HIGHLIGHT = "italic font-bold"
+export const HISTORICAL_MESSAGE = "italic text-zinc-400"
 
 //TOPIC + USER INPUT
 export const TOPIC_USER_INPUT = "border-t p-1 min-h-8"

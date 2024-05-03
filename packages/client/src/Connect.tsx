@@ -65,7 +65,7 @@ const Connect = ({
           <div className={`${TLS_BUTTON_STYLE} ${tls ? TLS_ACTIVE_STYLE : TLS_INACTIVE_STYLE}`} onClick={handleTLS}>TLS</div>
           <button
             type="submit"
-            onClick={(e) => (e.currentTarget.textContent = 'Disconnect')} //needs wiring
+            onClick={(e) => (e.currentTarget.textContent = 'Connecting...')} //needs wiring
             className={SERVER_CONNECT_BUTTON}
           >Connect</button>
         </div>

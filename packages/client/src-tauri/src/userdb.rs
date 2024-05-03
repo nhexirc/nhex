@@ -13,6 +13,12 @@ bitflags! {
     }
 }
 
+struct LoggingBools {
+    from_server: bool,
+    from_us: bool,
+    highlighted_us: bool,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Logging {
     network: String,
@@ -26,6 +32,21 @@ pub struct Logging {
     from_server: bool,
     from_us: bool,
     highlighted_us: bool,
+}
+
+// matches IRCMessageParsed in src/lib/types.ts
+// but without "tags"
+#[derive(Debug, Deserialize, Serialize)]
+#[allow(non_snake_case)]
+pub struct IRCMessageParsed {
+    command: String,
+    params: Vec<String>,
+    prefix: String,
+    raw: String,
+    timestamp: i64,
+    fromServer: bool,
+    fromUs: bool,
+    highlightedUs: bool,
 }
 
 // ideally these init_db_* functions should return `conn` which all the other functions will take as a param
@@ -120,6 +141,14 @@ pub fn logging_to_flags(log: &Logging) -> LoggingFlags {
     return ret;
 }
 
+fn logging_bools(raw_flags: u32) -> LoggingBools {
+    LoggingBools {
+        from_us: raw_flags & LoggingFlags::from_us.bits() != 0,
+        from_server: raw_flags & LoggingFlags::from_server.bits() != 0,
+        highlighted_us: raw_flags & LoggingFlags::highlighted_us.bits() != 0,
+    }
+}
+
 pub fn add_logging(path: &str, log: Logging) -> Result<()> {
     let conn = Connection::open(path)?;
 
@@ -139,6 +168,51 @@ pub fn add_logging(path: &str, log: Logging) -> Result<()> {
     )?;
 
     Ok(())
+}
+
+pub fn get_latest_channel_lines(
+    path: &str,
+    network: String,
+    channel: String,
+    num_lines: u64,
+) -> Result<Vec<IRCMessageParsed>> {
+    let conn = Connection::open(path)?;
+    let mut statement = conn.prepare_cached(
+        "SELECT command, nickname, ident, hostname, message, time_unix_ms, nhex_flags
+        FROM logging WHERE network = ?1 AND target = ?2 AND
+        (command = 'PRIVMSG' OR command = 'ACTION')
+        ORDER BY time_unix_ms DESC LIMIT ?3",
+    )?;
+
+    let parsed_rows = statement.query_map((network, channel.to_string(), num_lines), |row| {
+        let msg_raw = row.get_unwrap::<usize, String>(4);
+        let msg_vec = msg_raw.split_ascii_whitespace().collect::<Vec<&str>>();
+        let msg = msg_vec[1..].join(" ");
+        let bools = logging_bools(row.get_unwrap::<usize, u32>(6));
+        Ok(IRCMessageParsed {
+            command: row.get_unwrap(0),
+            params: vec![channel.to_string(), msg],
+            prefix: format!(
+                "{}!{}@{}",
+                row.get_unwrap::<usize, String>(1),
+                row.get_unwrap::<usize, String>(2),
+                row.get_unwrap::<usize, String>(3)
+            ),
+            raw: "".to_string(), // TODO: fix? not really necessary...
+            timestamp: row.get_unwrap(5),
+            fromUs: bools.from_us,
+            fromServer: bools.from_server,
+            highlightedUs: bools.highlighted_us,
+        })
+    })?;
+
+    let mut ret_vec = Vec::new();
+    for parsed in parsed_rows {
+        ret_vec.push(parsed?);
+    }
+    ret_vec.reverse();
+
+    Ok(ret_vec)
 }
 
 pub fn update_channel_list_meta(path: &str, network: &str, count: u64) -> Result<()> {

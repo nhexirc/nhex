@@ -9,6 +9,7 @@ import {
   JOIN_PART_MSG,
   JOIN_PART_MSG_DIM,
   MESSAGE_HAS_HIGHLIGHT,
+  HISTORICAL_MESSAGE,
 } from './style'
 
 const IRCChat = ({ lines, STATE, settings, messageContainerStyle }) => {
@@ -105,7 +106,7 @@ const IRCChat = ({ lines, STATE, settings, messageContainerStyle }) => {
                   style={{ color }}>
                   {nick}
                 </span>{after}
-                <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra}`}>
+                <span className={`${GLOBAL_MESSAGE_STYLE} ${msgStyleExtra} ${message.historical && HISTORICAL_MESSAGE}`}>
                   {transformMessage($message)}
                 </span>
               </div>

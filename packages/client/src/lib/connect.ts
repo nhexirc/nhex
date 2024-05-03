@@ -45,15 +45,40 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
   console.log('connect...', nick, server, port, channels, isConnected);
   getCurSelection().server = server;
 
+  const getHistoricalBuffer = async (channel: string) => {
+    const settings = getUserSettings();
+    const buffer = new Buffer(channel);
+
+    if (!settings?.Logging?.enable) {
+      return buffer;
+    }
+
+    ((await invoke("user_db_latest_channel_lines", {
+      network: server,
+      channel,
+      numLines: Math.max(32, Number.parseInt(Number((settings?.MessageBox?.scrollbackLimitLines ?? 1024) / 2).toFixed()))
+    })) as string[])
+      .map((msgJson) => {
+        const msg: IRCMessageParsed = JSON.parse(msgJson);
+        msg.historical = true;
+        return msg;
+      })
+      .forEach((parsed: IRCMessageParsed) => buffer.buffer.push(parsed));
+    // TODO: add a "history line" special message to the buffer, to render the cutoff?
+
+    return buffer;
+  };
+
   BUFFERS[server] = {
-    server, buffers: {
-      "": new Buffer(""),
-      ...channels.split(" ").reduce((a, chan) => ({
-        [chan]: new Buffer(chan),
-        ...a
-      }), {})
+    server,
+    buffers: {
+      "": new Buffer("") // the server query window
     }
   };
+
+  for (const channel of channels.split(" ")) {
+    BUFFERS[server].buffers[channel] = await getHistoricalBuffer(channel);
+  }
 
   const networkBuffers = BUFFERS[server].buffers;
 

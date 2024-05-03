@@ -20,6 +20,7 @@ export class IRCMessageParsed {
     fromServer: boolean = false;
     fromUs: boolean = false;
     highlightedUs: boolean = false;
+    historical: boolean = false;
 
     constructor(command: string, params: string[], prefix: string, raw: string, fromUs: boolean = false) {
         this.command = command;
