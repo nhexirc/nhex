@@ -190,17 +190,14 @@ impl UserInput {
                 Command::Send(msg)
             }
             "list" => {
-                let msg = ClientMsg::new(vinezombie::names::cmd::LIST);
-                // TODO: How badly would supporting the LIST arguments break client assumptions?
-                /*
+                let mut msg = ClientMsg::new(vinezombie::names::cmd::LIST);
                 let mut args = msg.args.edit();
                 if let Some(p0) = self.args.pop_front() {
-                    args.add_word(Arg::from_bytes(p0)?);
+                    args.add_word(check!(p0: Arg));
                 }
                 if let Some(p1) = self.args.pop_front() {
-                    args.add_word(Arg::from_bytes(p1)?);
+                    args.add_word(check!(p1: Arg));
                 }
-                */
                 Command::Send(msg)
             }
             _ => return Err(UserInputError::UnknownCmd { name: self.command }),
