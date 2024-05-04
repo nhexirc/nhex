@@ -20,11 +20,10 @@ export default function({ isNight }) {
     }
   });
 
-  const sectionStyle = (isNight ? "bg-slate-800" : "bg-orange-300") + " p-4 m-4 rounded";
+  const sectionStyle = (isNight ? "bg-slate-800" : "bg-orange-800/40") + " p-4 m-4 rounded";
 
   return (
     <div className={SETTINGS_STYLE}>
-      <div className="text-4xl my-8 p-4">Settings</div>
 
       <div className={sectionStyle}>
         <DNDSettings isNight={isNight} settings={settings} setSettings={setSettings}>
