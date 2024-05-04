@@ -8,6 +8,9 @@ export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6 py-2"
 export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap-2"
 
+//SETTINGS
+export const SETTINGS_STYLE = "align-top mx-auto mt-1 mb-auto w-1/2 overflow-y-auto scrollbar-thin"
+
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col h-dvh"
 

@@ -5,8 +5,9 @@ import LoggingSettings from './settings/Logging';
 import MessageBoxSettings from './settings/MessageBox';
 import NetworkSettings from './settings/Network';
 import DNDSettings from './settings/DragAndDrop';
+import { SETTINGS_STYLE } from "./style";
 
-export default function ({ isNight }) {
+export default function({ isNight }) {
   const [settings, setSettings] = useState<UserSettingsIface>(null);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function ({ isNight }) {
   const sectionStyle = (isNight ? "bg-slate-800" : "bg-orange-300") + " p-4 m-4 rounded";
 
   return (
-    <div className="align-top mx-auto mt-1 mb-auto w-1/2">
+    <div className={SETTINGS_STYLE}>
       <div className="text-4xl my-8 p-4">Settings</div>
 
       <div className={sectionStyle}>
