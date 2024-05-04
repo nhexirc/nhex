@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import UserSettings from './lib/userSettings';
 import { UserSettingsIface } from './lib/types';
-import LoggingSettings from './settings/Logging';
-import MessageBoxSettings from './settings/MessageBox';
-import NetworkSettings from './settings/Network';
-import DNDSettings from './settings/DragAndDrop';
+import LoggingSettings from './settings/LoggingSettings.tsx';
+import MessageBoxSettings from './settings/MessageBoxSettings.tsx';
+import NetworkSettings from './settings/NetworkSettings.tsx';
+import DNDSettings from './settings/DNDSettings.tsx';
 import { SETTINGS_STYLE } from "./style";
 
-export default function({ isNight }) {
+const Settings = ({ isNight }) => {
   const [settings, setSettings] = useState<UserSettingsIface>(null);
 
   useEffect(() => {
@@ -47,3 +47,4 @@ export default function({ isNight }) {
     </div>
   );
 }
+export default Settings

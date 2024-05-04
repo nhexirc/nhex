@@ -1,6 +1,6 @@
 import BoolSetting from './BoolSetting';
 
-export default function ({ isNight, settings, setSettings }) {
+const LoginSettings = ({ isNight, settings, setSettings }) => {
   return (
     <>
       <div className="text-2xl mb-4">Logging</div>
@@ -21,3 +21,4 @@ export default function ({ isNight, settings, setSettings }) {
     </>
   );
 }
+export default LoginSettings

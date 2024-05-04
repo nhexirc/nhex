@@ -1,7 +1,7 @@
 import TextSetting from './TextSetting';
 import BoolSetting from './BoolSetting';
 
-export default function ({ isNight, settings, setSettings }) {
+const NetworkSettings = ({ isNight, settings, setSettings }) => {
   return (
     <>
       <div className="text-2xl mb-4">Network</div>
@@ -16,7 +16,7 @@ export default function ({ isNight, settings, setSettings }) {
               settings={settings}
               setSettings={setSettings}>
             </TextSetting>
-            
+
             <TextSetting
               displayName="Port"
               sectionName="Network"
@@ -25,7 +25,7 @@ export default function ({ isNight, settings, setSettings }) {
               settings={settings}
               setSettings={setSettings}>
             </TextSetting>
-            
+
             <TextSetting
               displayName="Nickname"
               sectionName="Network"
@@ -34,7 +34,7 @@ export default function ({ isNight, settings, setSettings }) {
               settings={settings}
               setSettings={setSettings}>
             </TextSetting>
-            
+
             <TextSetting
               displayName="Channels"
               sectionName="Network"
@@ -58,3 +58,4 @@ export default function ({ isNight, settings, setSettings }) {
     </>
   );
 }
+export default NetworkSettings
