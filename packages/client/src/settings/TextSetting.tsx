@@ -1,5 +1,5 @@
 import UserSettings from '../lib/userSettings';
-import { DAY_STYLE, NIGHT_STYLE } from "../style";
+import { DAY_STYLE, NIGHT_STYLE, SETTINGS_INPUT_DAY, SETTINGS_INPUT_NIGHT } from "../style";
 
 export default function(props: any) {
   const { displayName, sectionName, fieldName, isNight, settings, setSettings } = props;
@@ -9,7 +9,7 @@ export default function(props: any) {
   return (
     <>
       <input
-        className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
+        className={`${isNight ? NIGHT_STYLE + SETTINGS_INPUT_NIGHT : DAY_STYLE + SETTINGS_INPUT_DAY} border p-1`}
         type="text"
         defaultValue={displayXform(settings?.[sectionName]?.[fieldName])}
         placeholder={displayName}
