@@ -29,17 +29,10 @@ const Settings = ({ isNight }) => {
         <DNDSettings isNight={isNight} settings={settings} setSettings={setSettings}>
         </DNDSettings>
       </div>
-
-      <div className={sectionStyle}>
-        <LoggingSettings isNight={isNight} settings={settings} setSettings={setSettings}>
-        </LoggingSettings>
-      </div>
-
       <div className={sectionStyle}>
         <MessageBoxSettings isNight={isNight} settings={settings} setSettings={setSettings}>
         </MessageBoxSettings>
       </div>
-
       <div className={sectionStyle}>
         <NetworkSettings isNight={isNight} settings={settings} setSettings={setSettings}>
         </NetworkSettings>
