@@ -8,27 +8,23 @@ export default function(props: any) {
 
   return (
     <>
-      <tr>
-        <td>{displayName}:</td>
-        <td>
-          <input
-            className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
-            type="text"
-            defaultValue={displayXform(settings?.[sectionName]?.[fieldName])}
-            onBlur={(e) => {
-              UserSettings.save({
-                ...settings,
-                [sectionName]: {
-                  ...settings?.[sectionName],
-                  [fieldName]: valueXform(e.target.value),
-                }
-              }).then((newSettings) => {
-                setSettings(newSettings);
-              })
-            }}
-          />
-        </td>
-      </tr>
+      <input
+        className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
+        type="text"
+        defaultValue={displayXform(settings?.[sectionName]?.[fieldName])}
+        placeholder={displayName}
+        onBlur={(e) => {
+          UserSettings.save({
+            ...settings,
+            [sectionName]: {
+              ...settings?.[sectionName],
+              [fieldName]: valueXform(e.target.value),
+            }
+          }).then((newSettings) => {
+            setSettings(newSettings);
+          })
+        }}
+      />
     </>
   );
 }
