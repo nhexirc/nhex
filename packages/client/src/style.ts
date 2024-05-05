@@ -1,7 +1,7 @@
 //APP
 export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700 overflow-hidden"
-export const NIGHT_STYLE = "bg-slate-900 text-stone-300 placeholder-stone-300"
-export const DAY_STYLE = "bg-orange-200 text-black placeholder-black"
+export const NIGHT_STYLE = "bg-slate-900 text-stone-300 placeholder-stone-300/70 checked:bg-red-200"
+export const DAY_STYLE = "bg-orange-200 text-black placeholder-black/70 checked:bg-sky-200"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
@@ -10,7 +10,8 @@ export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap
 
 //SETTINGS
 export const SETTINGS_STYLE = "align-top mx-auto mt-1 mb-auto w-1/2 overflow-y-auto scrollbar-thin"
-
+export const SETTINGS_HEADER = "text-2xl"
+export const SETTINGS_ALIGNMENT = "flex items-center gap-2"
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col h-dvh"
 
@@ -45,7 +46,7 @@ export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scro
 
 //USER INPUT
 export const USER_INPUT = "fixed bottom-0 w-full focus:outline-none"
-export const USER_INPUT_CB = "bg-transparent focus:outline-none"
+export const USER_INPUT_CHECKBOX = "cursor-pointer appearance-none w-5 h-5 focus:outline-none border bg-zinc-500"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
