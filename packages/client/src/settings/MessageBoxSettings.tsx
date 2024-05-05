@@ -22,6 +22,14 @@ const MessageBoxSettings = ({ isNight, settings, setSettings }) => {
         </ShowJoinPartSetting>
         <ShowJoinPartSetting which="part" isNight={isNight} settings={settings} setSettings={setSettings}>
         </ShowJoinPartSetting>
+        <BoolSetting
+          sectionName="Logging"
+          fieldName="enable"
+          isNight={isNight}
+          settings={settings}
+          setSettings={setSettings}>
+          Logs
+        </BoolSetting>
         <div className={SETTINGS_HEADER}>Dim</div>
         <BoolSetting
           sectionName="MessageBox"
