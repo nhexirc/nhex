@@ -2,13 +2,40 @@
 title: User Settings
 description: How to set up user settings
 ---
+Not all available user settings are yet configurable with the user interface. See ["Example Code"](#example-code) below for the complete settings specification.
+
+![nhex settings](../../../assets/nh_settings.png)
+
+### Message Display
+
+* **Show timestamps**: displays a timestamp preceding each message.
+* **Show joins**: show an informational message in the channel each time a user joins.
+* **Show parts**: show an informational message in the channel each time a user parts (or quits).
+* **Dim joins & parts**: dim the join & part information messages.
+* **Font size**: set the font size for messages.
+* **Channel scrollback line limit**: the maximum amount of messages lines - per channel - to keep in memory.
+
+### Network
+
+* **Server**: the server hostname or IP address to connect to. 
+* **Port**: the server's port number to connect to. 
+* **Nickname**: your nickname. 
+* **Channels**: a space-separated list of channels to automatically join after successfully connecting.
+  * If you include a command that will authenticate your user after connecting in `Network.connectCommands` (e.g. `/msg NickServ identify ...`), set `Network.expectLoggedInAfterConnectCommands` to `true` to ensure that these channels are _not_ joined _until_ you have successfully authenticated. On servers that do not apply the user's cloak until after authentication, this will ensure you do not join channels without your cloak.
+    * These settings are not yet available in the UI and must be edited directly in [the file itself](#nhextoml).
+* **Use TLS**: use TLS when connecting; typically, this requires a different port than non-TLS connections.
+
+## Storage
 ### nhex.toml
-Currently, custom user settings are set in a `nhex.toml` file. This file lives in different locations depending on the user's operating system. After making a `nhex.toml` file with your desired user settings, place it in the correct directory. After doing so, start up nhex, and you should see the input fields populated with your settings. If you put in indentify credentials in your settings, verify successful login via server output on the first run.
+
+User settings are saved in a `nhex.toml` file, which is automatically saved whenever you change settings in the UI. This file lives in different locations depending on the user's operating system. If you put identify credentials in your `connectCommands` settings, verify successful login via server output on the first run.
+
 #### File location
 This file lives at `$APPCONFIG/dev.nhex/nhex.toml` where `$APPCONFIG` is defined per platform as:
 - **Windows**: `C:\Users\<username>\AppData\Roaming`
 - **Linux**: `~/.config`
 - **Mac OS**: `/Users/<username>/Library/Application Support`
+
 #### Example Code
 ```toml
 [Network]
@@ -39,4 +66,5 @@ dimJoinsAndParts = false
 showTimestamps = false
 # valid sizes are any of the size modifies (no dash) specified here: https://tailwindcss.com/docs/font-size
 fontSize = "sm"
+scrollbackLimitLines = 10000
 ```

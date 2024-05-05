@@ -5,21 +5,44 @@ description: How to use various IRC commands.
 ## /msg
 ###### Allows you to message another user on an IRC network.
 #### Structure
-`/msg [recepient] [message]`
+`/msg <recepient> <message>`
 #### Example
 /msg AzureDiamond Hello, friend!
+
 ## /join
 ###### Allows you to join another IRC channel.
 #### Structure
-`/join [channel]`
-#### Example
+`/join <channels> `
+#### Discussion
+`channels` may be one or more channels: when multiple are given, they must be separated by spaces.
+#### Examples
 /join #nhex
+
+/join #nhex #nhexdev
+
 ## /nick
 ###### Allows you to change your name on an IRC network.
 #### Structure
-`/nick [nickname]`
+`/nick <nickname>`
 #### Example
 /nick AzureDiamond
+
+## /whois
+###### Allows a user to get basic information of a user on the same irc network.
+#### Structure
+`/whois <user>`
+#### Example
+/whois AzureDiamond
+
+## /quit
+###### Terminates the connection to the IRC server.
+#### Structure
+`/quit [quitMessage]`
+#### Discussion
+`quitMessage` is an optional message: if not provided, a default mentioned `nhex` is used.
+
+## /part
+###### Leaves the channel you are currently viewing.
 ```js
 <Cthon98> hey, if you type in your pw, it will show as stars
 <Cthon98> ********* see!
@@ -39,13 +62,3 @@ description: How to use various IRC commands.
 <Cthon98> er, I just copy pasted YOUR ******'s and it appears to YOU as hunter2 cause its your pw
 <AzureDiamond> oh, ok.
 ```
-## /whois
-###### Allows a user to get basic information of a user on the same irc network.
-#### Structure
-`/whois [user]`
-#### Example
-/whois AzureDiamond
-## /quit
-###### Terminates the connection to the IRC server.
-## /part
-###### Leaves the channel you are currently viewing.
