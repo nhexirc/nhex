@@ -1,5 +1,5 @@
 import UserSettings from '../lib/userSettings';
-import { DAY_STYLE, NIGHT_STYLE, USER_INPUT_CB } from "../style";
+import { DAY_STYLE, NIGHT_STYLE, USER_INPUT_CHECKBOX } from "../style";
 
 export default function({ which, isNight, settings, setSettings }) {
   return (
@@ -8,7 +8,7 @@ export default function({ which, isNight, settings, setSettings }) {
         <td>Show {which}s:</td>
         <td>
           <input
-            className={`${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT_CB}`}
+            className={`${isNight ? NIGHT_STYLE : DAY_STYLE} ${USER_INPUT_CHECKBOX}`}
             type="checkbox"
             checked={settings?.MessageBox?.show.includes(which)}
             onChange={(e) => {
