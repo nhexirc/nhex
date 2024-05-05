@@ -222,32 +222,28 @@ const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
     setIsConnected(true);
     await emit("nhex://servers_and_chans/select", { server, channel: "" });
   }
-
-  if (menuState.settings) {
-    return (<>
-      <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
-      <Settings isNight={isNight}></Settings>
-    </>);
-  }
-
   return (
     <>
       {!isConnected ?
         <>
           <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
-          <Connect
-            nick={nick}
-            setNick={setNick}
-            server={server}
-            setServer={setServer}
-            port={port}
-            setPort={setPort}
-            channels={channels}
-            setChannels={setChannels}
-            handleTLS={() => setTLS(!tls)}
-            tls={tls}
-            connect={handleConnect}
-            isNight={isNight} />
+          {menuState.settings ?
+            <Settings isNight={isNight}></Settings>
+            :
+            <Connect
+              nick={nick}
+              setNick={setNick}
+              server={server}
+              setServer={setServer}
+              port={port}
+              setPort={setPort}
+              channels={channels}
+              setChannels={setChannels}
+              handleTLS={() => setTLS(!tls)}
+              tls={tls}
+              connect={handleConnect}
+              isNight={isNight} />
+          }
           <Footer isNight={isNight} />
         </>
         :

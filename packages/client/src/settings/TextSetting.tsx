@@ -9,7 +9,7 @@ export default function(props: any) {
   return (
     <>
       <input
-        className={`${isNight ? NIGHT_STYLE + SETTINGS_INPUT_NIGHT : DAY_STYLE + SETTINGS_INPUT_DAY} border p-1`}
+        className={`${isNight ? NIGHT_STYLE + SETTINGS_INPUT_NIGHT : DAY_STYLE + SETTINGS_INPUT_DAY} w-full border p-1`}
         type="text"
         defaultValue={displayXform(settings?.[sectionName]?.[fieldName])}
         placeholder={displayName}
