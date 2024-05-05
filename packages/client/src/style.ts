@@ -1,7 +1,7 @@
 //APP
 export const ROOT_STYLE = "mx-auto flex flex-col justify-between h-dvh scrollbar-thumb-zinc-400 scrollbar-track-zinc-700 overflow-hidden"
 export const NIGHT_STYLE = "bg-slate-900 text-stone-300 placeholder-stone-300/70 checked:bg-red-200"
-export const DAY_STYLE = "bg-orange-200 text-black placeholder-black/70 checked:bg-sky-200"
+export const DAY_STYLE = "bg-orange-200 text-black placeholder-black/70 checked:bg-sky-200/60"
 export const UNIFORM_BORDER_STYLE = "border-zinc-500"
 
 //MENU
@@ -13,10 +13,11 @@ export const SETTINGS_STYLE = "align-top mx-auto mt-1 mb-auto w-1/2 overflow-y-a
 export const SETTINGS_HEADER = "text-2xl py-2 font-bold"
 export const SETTINGS_ALIGNMENT = "flex items-center gap-2"
 export const TEXT_OPTIONS = "appearance-none text-xl focus:outline-none p-1"
-export const SETTINGS_INPUT_DAY = "border border-black bg-sky-200/70"
+export const SETTINGS_INPUT_DAY = "border border-black bg-sky-200/50"
 export const SETTINGS_INPUT_NIGHT = "border border-red-200"
 export const SETTINGS_SECTION_DAY = "bg-orange-700/20 border-2 border-black/50"
 export const SETTINGS_SECTION_NIGHT = "bg-slate-800 border-2 border-red-200/70"
+export const USER_INPUT_CHECKBOX = "cursor-pointer appearance-none w-5 h-5 focus:outline-none border border-zinc-800 bg-zinc-500"
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col h-dvh"
 
@@ -51,7 +52,6 @@ export const TOPIC_BAR = "bg-transparent italic h-8 resize-none text-center scro
 
 //USER INPUT
 export const USER_INPUT = "fixed bottom-0 w-full focus:outline-none"
-export const USER_INPUT_CHECKBOX = "cursor-pointer appearance-none w-5 h-5 focus:outline-none border bg-zinc-500"
 
 //SERVER + MESSAGEBOX + NAMES
 export const SERV_MSG_NAMES_PANEL_STYLE = "flex flex-row"
