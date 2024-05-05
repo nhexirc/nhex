@@ -1,6 +1,6 @@
 import UserSettings from '../lib/userSettings';
 import { MessageBoxValidFontSizes } from '../lib/types';
-import { DAY_STYLE, NIGHT_STYLE } from "../style";
+import { DAY_STYLE, NIGHT_STYLE, SETTINGS_HEADER, SETTINGS_INPUT_DAY, SETTINGS_INPUT_NIGHT, TEXT_OPTIONS } from "../style";
 import ShowJoinPartSetting from './ShowJoinPartSetting';
 import BoolSetting from './BoolSetting';
 import TextSetting from './TextSetting';
@@ -8,68 +8,57 @@ import TextSetting from './TextSetting';
 const MessageBoxSettings = ({ isNight, settings, setSettings }) => {
   return (
     <>
-      <div className="text-2xl mb-4">Message Display</div>
+      <div className={SETTINGS_HEADER}>Display</div>
       <div>
-        <table className="w-full">
-          <tbody>
-            <BoolSetting
-              displayName="Show timestamps"
-              sectionName="MessageBox"
-              fieldName="showTimestamps"
-              isNight={isNight}
-              settings={settings}
-              setSettings={setSettings}>
-            </BoolSetting>
-
-            <ShowJoinPartSetting which="join" isNight={isNight} settings={settings} setSettings={setSettings}>
-            </ShowJoinPartSetting>
-
-            <ShowJoinPartSetting which="part" isNight={isNight} settings={settings} setSettings={setSettings}>
-            </ShowJoinPartSetting>
-
-            <BoolSetting
-              displayName="Dim joins &amp; parts"
-              sectionName="MessageBox"
-              fieldName="dimJoinsAndParts"
-              isNight={isNight}
-              settings={settings}
-              setSettings={setSettings}>
-            </BoolSetting>
-
-            <tr>
-              <td>Font size:</td>
-              <td>
-                <select className={`${isNight ? NIGHT_STYLE : DAY_STYLE}`}
-                  onChange={(e) => {
-                    UserSettings.save({
-                      ...settings,
-                      MessageBox: {
-                        ...settings?.MessageBox,
-                        fontSize: e.target.selectedOptions[0].value
-                      }
-                    }).then((newSettings) => setSettings(newSettings));
-                  }}>
-                  {MessageBoxValidFontSizes.map((size) => (<>
-                    <option value={size} selected={size === settings?.MessageBox?.fontSize}>
-                      {size}
-                    </option>
-                  </>))}
-                </select>
-              </td>
-            </tr>
-
-            <TextSetting
-              displayName="Channel scrollback line limit"
-              sectionName="MessageBox"
-              fieldName="scrollbackLimitLines"
-              isNight={isNight}
-              settings={settings}
-              setSettings={setSettings}
-              valueXform={Number}
-            >
-            </TextSetting>
-          </tbody>
-        </table>
+        <BoolSetting
+          sectionName="MessageBox"
+          fieldName="showTimestamps"
+          isNight={isNight}
+          settings={settings}
+          setSettings={setSettings}>
+          Timestamps
+        </BoolSetting>
+        <ShowJoinPartSetting which="join" isNight={isNight} settings={settings} setSettings={setSettings}>
+        </ShowJoinPartSetting>
+        <ShowJoinPartSetting which="part" isNight={isNight} settings={settings} setSettings={setSettings}>
+        </ShowJoinPartSetting>
+        <div className={SETTINGS_HEADER}>Dim</div>
+        <BoolSetting
+          sectionName="MessageBox"
+          fieldName="dimJoinsAndParts"
+          isNight={isNight}
+          settings={settings}
+          setSettings={setSettings}>
+          Joins/Parts
+        </BoolSetting>
+        <p className={SETTINGS_HEADER}>Text Size</p>
+        <select className={`${isNight ? NIGHT_STYLE + SETTINGS_INPUT_NIGHT : DAY_STYLE + SETTINGS_INPUT_DAY} ${TEXT_OPTIONS} border`}
+          onChange={(e) => {
+            UserSettings.save({
+              ...settings,
+              MessageBox: {
+                ...settings?.MessageBox,
+                fontSize: e.target.selectedOptions[0].value
+              }
+            }).then((newSettings) => setSettings(newSettings));
+          }}>
+          {MessageBoxValidFontSizes.map((size) => (<>
+            <option value={size} selected={size === settings?.MessageBox?.fontSize}>
+              {size}
+            </option>
+          </>))}
+        </select>
+        <p className={SETTINGS_HEADER}>Scrollback Line Limit</p>
+        <TextSetting
+          displayName="Scrollback Line Limit"
+          sectionName="MessageBox"
+          fieldName="scrollbackLimitLines"
+          isNight={isNight}
+          settings={settings}
+          setSettings={setSettings}
+          valueXform={Number}
+        >
+        </TextSetting>
       </div>
     </>
   );
