@@ -13,8 +13,10 @@ export const SETTINGS_STYLE = "align-top mx-auto mt-1 mb-auto w-1/2 overflow-y-a
 export const SETTINGS_HEADER = "text-2xl py-2"
 export const SETTINGS_ALIGNMENT = "flex items-center gap-2"
 export const TEXT_OPTIONS = "appearance-none text-xl focus:outline-none p-1"
-export const SETTINGS_INPUT_DAY = "border border-black"
+export const SETTINGS_INPUT_DAY = "border border-black bg-sky-200/70"
 export const SETTINGS_INPUT_NIGHT = "border border-red-200"
+export const SETTINGS_SECTION_DAY = "bg-orange-700/20 border-2 border-black/50"
+export const SETTINGS_SECTION_NIGHT = "bg-slate-800 border-2 border-red-200/70"
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col h-dvh"
 
