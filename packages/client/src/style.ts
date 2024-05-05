@@ -10,7 +10,7 @@ export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap
 
 //SETTINGS
 export const SETTINGS_STYLE = "align-top mx-auto mt-1 mb-auto w-1/2 overflow-y-auto scrollbar-thin"
-export const SETTINGS_HEADER = "text-2xl py-2"
+export const SETTINGS_HEADER = "text-2xl py-2 font-bold"
 export const SETTINGS_ALIGNMENT = "flex items-center gap-2"
 export const TEXT_OPTIONS = "appearance-none text-xl focus:outline-none p-1"
 export const SETTINGS_INPUT_DAY = "border border-black bg-sky-200/70"
