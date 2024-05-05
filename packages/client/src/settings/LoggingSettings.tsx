@@ -1,23 +1,17 @@
+import { SETTINGS_HEADER } from '../style';
 import BoolSetting from './BoolSetting';
 
 const LoginSettings = ({ isNight, settings, setSettings }) => {
   return (
     <>
-      <div className="text-2xl mb-4">Logging</div>
-      <div>
-        <table className="w-full">
-          <tbody>
-            <BoolSetting
-              displayName="Enabled"
-              sectionName="Logging"
-              fieldName="enable"
-              isNight={isNight}
-              settings={settings}
-              setSettings={setSettings}>
-            </BoolSetting>
-          </tbody>
-        </table>
-      </div>
+      <BoolSetting
+        sectionName="Logging"
+        fieldName="enable"
+        isNight={isNight}
+        settings={settings}
+        setSettings={setSettings}>
+        <p className={SETTINGS_HEADER}>Logging</p>
+      </BoolSetting>
     </>
   );
 }
