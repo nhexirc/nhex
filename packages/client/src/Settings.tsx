@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import UserSettings from './lib/userSettings';
 import { UserSettingsIface } from './lib/types';
-import LoggingSettings from './settings/LoggingSettings.tsx';
 import MessageBoxSettings from './settings/MessageBoxSettings.tsx';
 import NetworkSettings from './settings/NetworkSettings.tsx';
 import DNDSettings from './settings/DNDSettings.tsx';
