@@ -24,11 +24,6 @@ const Settings = ({ isNight }) => {
 
   return (
     <div className={SETTINGS_STYLE}>
-
-      <div className={sectionStyle}>
-        <DNDSettings isNight={isNight} settings={settings} setSettings={setSettings}>
-        </DNDSettings>
-      </div>
       <div className={sectionStyle}>
         <MessageBoxSettings isNight={isNight} settings={settings} setSettings={setSettings}>
         </MessageBoxSettings>
@@ -36,6 +31,10 @@ const Settings = ({ isNight }) => {
       <div className={sectionStyle}>
         <NetworkSettings isNight={isNight} settings={settings} setSettings={setSettings}>
         </NetworkSettings>
+      </div>
+      <div className={sectionStyle}>
+        <DNDSettings isNight={isNight} settings={settings} setSettings={setSettings}>
+        </DNDSettings>
       </div>
     </div>
   );
