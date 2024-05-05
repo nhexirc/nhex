@@ -5,7 +5,7 @@ import LoggingSettings from './settings/LoggingSettings.tsx';
 import MessageBoxSettings from './settings/MessageBoxSettings.tsx';
 import NetworkSettings from './settings/NetworkSettings.tsx';
 import DNDSettings from './settings/DNDSettings.tsx';
-import { SETTINGS_STYLE } from "./style";
+import { SETTINGS_SECTION_DAY, SETTINGS_SECTION_NIGHT, SETTINGS_STYLE } from "./style";
 
 const Settings = ({ isNight }) => {
   const [settings, setSettings] = useState<UserSettingsIface>(null);
@@ -20,7 +20,7 @@ const Settings = ({ isNight }) => {
     }
   });
 
-  const sectionStyle = (isNight ? "bg-slate-800" : "bg-orange-800/40") + " p-4 m-4 rounded";
+  const sectionStyle = (isNight ? SETTINGS_SECTION_NIGHT : SETTINGS_SECTION_DAY) + " shadow-xl p-4 m-4 rounded";
 
   return (
     <div className={SETTINGS_STYLE}>
