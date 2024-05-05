@@ -8,7 +8,7 @@ import TextSetting from './TextSetting';
 const MessageBoxSettings = ({ isNight, settings, setSettings }) => {
   return (
     <>
-      <div className={SETTINGS_HEADER}>Display</div>
+      <div className={SETTINGS_HEADER + ' pt-0'}>Display</div>
       <div>
         <BoolSetting
           sectionName="MessageBox"

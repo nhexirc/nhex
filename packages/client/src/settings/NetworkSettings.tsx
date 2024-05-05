@@ -5,7 +5,7 @@ import { SETTINGS_HEADER } from '../style';
 const NetworkSettings = ({ isNight, settings, setSettings }) => {
   return (
     <div className='flex flex-col gap-2'>
-      <div className={SETTINGS_HEADER}>Network</div>
+      <div className={SETTINGS_HEADER + ' pt-0'}>Network</div>
       <TextSetting
         displayName="Server"
         sectionName="Network"
