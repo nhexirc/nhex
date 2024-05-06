@@ -192,7 +192,9 @@ impl UserInput {
                 Command::Send(msg)
             }
             "list" => {
-                let mut msg = ClientMsg::new(vinezombie::names::cmd::LIST);
+                let msg = ClientMsg::new(vinezombie::names::cmd::LIST);
+                /* currently we only support fetching the full list, persisting it to sqlite
+                   and running the user's queries over that DB. TODO: fix!
                 let mut args = msg.args.edit();
                 if let Some(p0) = self.args.pop_front() {
                     args.add_word(check!(p0: Arg));
@@ -200,6 +202,7 @@ impl UserInput {
                 if let Some(p1) = self.args.pop_front() {
                     args.add_word(check!(p1: Arg));
                 }
+                */
                 Command::Send(msg)
             }
             _ => return Err(UserInputError::UnknownCmd { name: self.command }),

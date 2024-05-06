@@ -62,3 +62,26 @@ description: How to use various IRC commands.
 <Cthon98> er, I just copy pasted YOUR ******'s and it appears to YOU as hunter2 cause its your pw
 <AzureDiamond> oh, ok.
 ```
+
+## /list
+###### Search for channels.
+#### Structure
+`/list [-fetch] [-topic] <searchTerm>`
+#### Discussion
+Searches channel names and optionally topics. `searchTerm` may include `*` or `%` as a wildcard character. Only a single-word search term is currently supported.
+##### Options
+* `-fetch` (_**dangerous**_): refreshes the channel database from the server. On some networks, this may cause you to be disconnected for flooding. In any case it should **only be used infrequently** to remain good network citizens.
+* `-topic`: include channel topics in the search.
+#### Examples
+```
+/list #ubuntu%
+```
+```
+/list -topic *programming*
+```
+```
+/list -fetch #nhex
+```
+```
+/list -fetch -topic *linux*
+```
