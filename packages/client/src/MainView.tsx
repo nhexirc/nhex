@@ -114,7 +114,11 @@ const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
     return settings;
   });
 
-  function refreshServersAndChans() {
+  function refreshServersAndChans(setCurrentSelection?: SACSelect) {
+    if (setCurrentSelection) {
+      CUR_SELECTION = setCurrentSelection;
+    }
+    
     setServersAndChans(Object.fromEntries(Object.entries(BUFFERS).map(([server, netBuffs]) => (
       [server, Object.keys(netBuffs.buffers).filter((c) => c !== "")]
     ))));
@@ -182,7 +186,7 @@ const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
     isConnected,
     realSetIsConnected,
     getCurSelection,
-    setCurSelection: (newVal: any) => (CUR_SELECTION = { ...newVal }),
+    setCurSelection: (newVal: SACSelect) => (CUR_SELECTION = { ...newVal }),
     BUFFERS,
     STATE,
     setMessageBoxLines,

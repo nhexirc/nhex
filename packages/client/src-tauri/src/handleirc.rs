@@ -58,19 +58,19 @@ pub fn spawn_task(
                     );
                     channel_list_count = 0;
                 }
-                _ => {
-                    window
-                        .emit(
-                            "nhex://irc_message",
-                            super::IRCMessage {
-                                server: server.as_str(),
-                                message: message.to_string(),
-                                timestamp: now_since_epoch.as_millis(),
-                            },
-                        )
-                        .expect("cannot emit irc_message");
-                }
+                _ => {}
             }
+
+            window
+                .emit(
+                    "nhex://irc_message",
+                    super::IRCMessage {
+                        server: server.as_str(),
+                        message: message.to_string(),
+                        timestamp: now_since_epoch.as_millis(),
+                    },
+                )
+                .expect("cannot emit irc_message");
         }
     });
 }

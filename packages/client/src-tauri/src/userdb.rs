@@ -49,6 +49,14 @@ pub struct IRCMessageParsed {
     highlightedUs: bool,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+#[allow(non_snake_case)]
+pub struct ChannelListEntry {
+    name: String,
+    topic: String,
+    userCount: u32,
+}
+
 // ideally these init_db_* functions should return `conn` which all the other functions will take as a param
 // because re-opening the DB each time is not great. but it works for now...
 pub fn init_logging_db(path: &str) -> Result<()> {
@@ -245,4 +253,58 @@ pub fn add_channel_list_entry(
     )?;
 
     Ok(())
+}
+
+pub fn list_channels_with_pattern(
+    path: &str,
+    network: String,
+    channel_pattern: String,
+    search_topic: bool,
+) -> Result<Vec<ChannelListEntry>> {
+    let conn = Connection::open(path)?;
+    let sql;
+
+    if search_topic {
+        sql = "SELECT name, topic, user_count FROM channel_list_entry WHERE network = ?1 AND (name LIKE ?2 OR topic LIKE ?2)";
+    }
+    else {
+        sql = "SELECT name, topic, user_count FROM channel_list_entry WHERE network = ?1 AND name LIKE ?2";
+    }
+
+    let mut statement = conn.prepare_cached(sql)?;
+    let parsed_rows = statement.query_map((network, channel_pattern), |row| {
+        let name = row.get_unwrap::<usize, String>(0);
+        let topic = row.get_unwrap::<usize, String>(1);
+        let user_count = row.get_unwrap::<usize, u32>(2);
+
+        Ok(ChannelListEntry {
+            name: name,
+            topic: topic,
+            userCount: user_count
+        })
+    })?;
+
+    let mut ret_vec = Vec::new();
+    for parsed in parsed_rows {
+        ret_vec.push(parsed?);
+    }
+
+    Ok(ret_vec)
+}
+
+
+pub fn last_channel_listing_time_for_network(
+    path: &str,
+    network: String,
+) -> u64 {
+    let conn = Connection::open(path).expect("open");
+    match conn.query_row(
+        "SELECT updated_time_unix_ms FROM channel_list_meta WHERE network = ?1",
+        [network],
+        |row| row.get(0)
+    ) {
+        Ok(e) => return e,
+        Err(rusqlite::Error::QueryReturnedNoRows) => return 0,
+        Err(e) => panic!("{}", e)
+    }
 }

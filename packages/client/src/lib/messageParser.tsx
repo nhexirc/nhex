@@ -155,7 +155,7 @@ const MESSAGE_HANDLERS: MessageHandlers = {
     topic: topicHandler,
 };
 
-const NUMERIC_HANDLERS: MessageHandlers = {
+export const NUMERIC_HANDLERS: MessageHandlers = {
     353 /*RPL_NAMREPLY*/: (networkBuffers: Record<string, Buffer>, parsed: IRCMessageParsed) => {
         const chanName = parsed.params[2];
         if (!networkBuffers[chanName]) {
@@ -190,7 +190,7 @@ export default function (
     const parsed: IRCMessageParsed = parse(event.payload.message);
     parsed.timestamp = event.payload.timestamp;
 
-    let currentBuffer: Buffer = networkBuffers[""];
+    let currentBuffer: Buffer;
 
     if (MESSAGE_HANDLERS[parsed.command.toLowerCase()]) {
         currentBuffer = MESSAGE_HANDLERS[parsed.command.toLowerCase()](networkBuffers, parsed, currentNick);
@@ -209,15 +209,6 @@ export default function (
     let ourTLD = ourTLDComps.length > 2 ? ourTLDComps.slice(-2).join(".") : currentServer;
     if (parsed.prefix?.endsWith(ourTLD)) {
         parsed.fromServer = true;
-    }
-
-    if (currentBuffer) {
-        currentBuffer.buffer.push(parsed);
-
-        if (currentBuffer.buffer.length > userSettings?.MessageBox?.scrollbackLimitLines) {
-            const sliceStart = currentBuffer.buffer.length - userSettings?.MessageBox?.scrollbackLimitLines;
-            currentBuffer.buffer = currentBuffer.buffer.slice(sliceStart);
-        }
     }
 
     return { parsed, currentBuffer };

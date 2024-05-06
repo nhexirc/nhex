@@ -90,9 +90,10 @@ async fn connect_impl(
     // Receive events from the frontend and queue commands.
     let (sender, mut cmd_queue) = tokio::sync::mpsc::unbounded_channel::<Command>();
     let ack_handle = app_handle.app_handle();
+    let server_name = server.clone();
     app_handle.listen_global(EVENT_PATH_INPUT, move |event| {
         let cmd = deserde(event);
-        if !cmd.server.is_empty() && cmd.server != server {
+        if !cmd.server.is_empty() && cmd.server != server_name && !cmd.server.starts_with("nhex") {
             return;
         }
         let id = cmd.id;
@@ -187,6 +188,14 @@ async fn user_db_log_message(log: userdb::Logging, app_handle: tauri::AppHandle)
     .expect("add_logging");
 }
 
+fn jsonify_vec<T: serde::Serialize> (vec: Vec<T>) -> Vec<String> {
+    let mut ret_vec: Vec<String> = Vec::new();
+    for line in vec.iter() {
+        ret_vec.push(serde_json::to_string(line).expect("to_string"));
+    }
+    return ret_vec;
+}
+
 #[tauri::command]
 async fn user_db_latest_channel_lines(
     network: String,
@@ -198,15 +207,36 @@ async fn user_db_latest_channel_lines(
         user_db_path(app_handle, "logging").to_str().expect("path"),
         network,
         channel,
-        num_lines,
-    )
-    .expect("get_latest_channel_lines");
+        num_lines
+    ).expect("get_latest_channel_lines");
+    return jsonify_vec(lines);
+}
 
-    let mut ret_vec: Vec<String> = Vec::new();
-    for line in lines.iter() {
-        ret_vec.push(serde_json::to_string(line).expect("to_string"));
-    }
-    return ret_vec;
+#[tauri::command]
+async fn user_db_list_channels_with_pattern(
+    network: String,
+    channel_pattern: String,
+    search_topic: bool,
+    app_handle: tauri::AppHandle,
+) -> Vec<String> {
+    let lines: Vec<userdb::ChannelListEntry> = userdb::list_channels_with_pattern(
+        user_db_path(app_handle, "nhex").to_str().expect("path"),
+        network,
+        channel_pattern,
+        search_topic,
+    ).expect("list_channels_with_pattern");
+    return jsonify_vec(lines);
+}
+
+#[tauri::command]
+async fn user_db_last_channel_listing_time_for_network(
+    network: String,
+    app_handle: tauri::AppHandle,
+) -> u64 {
+    userdb::last_channel_listing_time_for_network(
+        user_db_path(app_handle, "nhex").to_str().expect("path"),
+        network,
+    )
 }
 
 #[tauri::command]
@@ -221,6 +251,8 @@ fn main() {
             user_db_init,
             user_db_log_message,
             user_db_latest_channel_lines,
+            user_db_list_channels_with_pattern,
+            user_db_last_channel_listing_time_for_network,
             dnduploader_termbin,
         ])
         .run(tauri::generate_context!())

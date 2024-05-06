@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from '@tauri-apps/api/event';
 import messageParser from './messageParser';
+import { NUMERIC_HANDLERS } from './messageParser';
 import {
   Buffer,
   IRCMessageEvent,
@@ -11,6 +12,7 @@ import {
 } from './types';
 import { nickFromPrefix } from './common';
 import UserDB from './userDB';
+import { OUR_BUFFER_NAME, initializeUserInputHandlers } from './userInputHandlers';
 
 function messageBoxLinesFromBuffer(buffer: Buffer): MessageBoxLines {
   return buffer.buffer.map((parsed: IRCMessageParsed) => ({ message: parsed }));
@@ -44,6 +46,43 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
 
   console.log('connect...', nick, server, port, channels, isConnected);
   getCurSelection().server = server;
+
+  const addLineToOurBuffer = (lines: string[], retPassthru: any = null) => {
+    const buf = BUFFERS[OUR_BUFFER_NAME].buffers[""];
+    buf.dirty.normal += lines.length;
+    lines.forEach((line) => buf.buffer.push(new IRCMessageParsed(
+      "privmsg",
+      ["", line],
+      "nhex!nhex@nhex",
+      "",
+      false,
+    )));
+    setMessageBoxLines(messageBoxLinesFromBuffer(buf));
+    refreshServersAndChans({ server: OUR_BUFFER_NAME, channel: "" });
+    return retPassthru;
+  };
+
+  const appendToOurLatestLine = (appendStr: string) => {
+    const buf: Buffer = BUFFERS[OUR_BUFFER_NAME].buffers[""];
+    let targetParams: string[] = buf.buffer.slice(-1)?.[0]?.params;
+
+    appendStr += " ";
+    if (!targetParams) {
+      buf.buffer.push(new IRCMessageParsed(
+        "privmsg",
+        ["", appendStr],
+        "nhex!nhex@nhex",
+        "",
+        false,
+      ));
+    }
+    else {
+      targetParams.push(appendStr);
+    }
+
+    setMessageBoxLines(messageBoxLinesFromBuffer(buf));
+    refreshServersAndChans({ server: OUR_BUFFER_NAME, channel: "" });
+  };
 
   const getHistoricalBuffer = async (channel: string) => {
     const settings = getUserSettings();
@@ -81,6 +120,65 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
   }
 
   const networkBuffers = BUFFERS[server].buffers;
+  const channelListState = {
+    count: 0,
+    search: null,
+    searchTopic: false,
+    lastRefreshUnix: -1,
+  };
+
+  const processEndOfChannelListing = async (wasLiveListing: boolean, searchTopic: boolean = false) => {
+    setCurSelection({ server: OUR_BUFFER_NAME, channel: "" });
+
+    if (!channelListState.search) {
+      return addLineToOurBuffer([
+        "No search string was given!",
+        "Help: https://docs.nhexirc.com/guides/commands/#list",
+      ]);
+    }
+
+    if (wasLiveListing) {
+      addLineToOurBuffer([`Fetch finished with ${channelListState.count} channels found.`]);
+    }
+
+    let lines = (await invoke("user_db_list_channels_with_pattern", {
+      network: server,
+      channelPattern: channelListState.search,
+      searchTopic
+    }) as string[])
+      .map((json) => JSON.parse(json))
+      .map(({ name, topic, userCount }) => ({
+        name,
+        topic: topic.replace(/^:/, '').replace(/\r\n$/, ''),
+        userCount
+      }))
+      .map(({ name, topic, userCount }) =>
+        `**${name}** (${userCount} nicks) ${topic.length ? `"${topic}"` : ''}`);
+
+    if (!lines.length) {
+      lines = [`No channel results found for search "\`${channelListState.search}\`"`];
+    }
+    else {
+      lines = [
+        `Search for "**${channelListState.search}**" found ${lines.length} results` +
+        (channelListState.searchTopic ? ' (topic included)' : '') + ":",
+        "",
+        ...lines,
+        "",
+      ];
+    }
+
+    const footer = [
+      "---",
+      '_legend_: **channel name** (number of nicks) "topic (if not empty)"',
+    ];
+
+    if (!wasLiveListing) {
+      footer.push(`_data last refreshed at ${new Date(channelListState.lastRefreshUnix).toLocaleString()}_`);
+    }
+
+    addLineToOurBuffer(lines.concat(footer));
+  };
 
   await listen('nhex://irc_message', async (event: IRCMessageEvent) => {
     if (event.payload.server !== server) {
@@ -101,8 +199,14 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
       db.log_message(server, parsed);
     }
 
-    /* these should _maybe_ all be moved into messageParser() ...?
-       but then messageParser will need a *lot* more context params... */
+    // don't add messages of these types to any buffer, as they're handled elsewhere
+    if (Object.keys(NUMERIC_HANDLERS).map(String).includes(parsed.command)) {
+      return;
+    }
+
+    /* messageParser breaks a string into fields and handles any direct results,
+       whereas the following handle state changes that should be contained here
+       (to keep messageParser's context small) */
     if (parsed.command === "376" /* RPL_ENDOFMOTD */) {
       realSetIsConnected(true);
       console.log(`connected as "${STATE.nick}"!`, server, port, channels, isConnected);
@@ -132,29 +236,56 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
         setNick(realNick);
       }
     }
-
-    if (!currentBuffer) {
-      // messageParser will return null if it didn't add the message to any buffer (e.g. a JOIN that
-      // was handled to adjust channel names list but isn't to be printed in the message box), but we
-      // still want to refresh the user's current message box view
-      currentBuffer = BUFFERS[getCurSelection().server].buffers[getCurSelection().channel];
+    else if (parsed.command === "321") {
+      channelListState.count = 0;
+      return;
+    }
+    else if (parsed.command === "322") {
+      channelListState.count++;
+      if (!(channelListState.count % 100)) {
+        let line = `${channelListState.count}...`;
+        if (channelListState.count === 100) {
+          line = `Count of channels fetched so far: ${line}`;
+        }
+        appendToOurLatestLine(line);
+      }
+      return;
+    }
+    else if (parsed.command === "323") {
+      await processEndOfChannelListing(true, channelListState.searchTopic);
+      return;
     }
 
-    if (currentBuffer) {
-      if (event.payload.server === getCurSelection().server && currentBuffer.name === getCurSelection().channel) {
-        setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer));
-        setChannelNames(currentBuffer.names);
-        setTopic(currentBuffer.topic);
-        emit("nhex://servers_and_chans/selected", getCurSelection());
-      }
-      else {
-        let relevantCmd = (parsed.command === 'quit' ? 'part' : parsed.command).toLowerCase();
-        if (userSettings?.MessageBox?.show?.includes(relevantCmd) ?? true) {
-          currentBuffer.dirty.normal++;
+    if (!currentBuffer) {
+      currentBuffer = BUFFERS[getCurSelection().server].buffers[""];
+    }
 
-          if (parsed.highlightedUs) {
-            currentBuffer.dirty.highlight++;
-          }
+    currentBuffer.buffer.push(parsed);
+
+    // don't trim the server or app buffers
+    if (currentBuffer.name !== "" && !event.payload.server.startsWith("nhex")) {
+      // trim buffers when they exceed the configured scrollbackLimitLines
+      if (currentBuffer.buffer.length > userSettings?.MessageBox?.scrollbackLimitLines) {
+        const sliceStart = currentBuffer.buffer.length - userSettings?.MessageBox?.scrollbackLimitLines;
+        currentBuffer.buffer = currentBuffer.buffer.slice(sliceStart);
+      }
+    }
+
+    // if the message was for the user's current selection, refresh it
+    if (event.payload.server === getCurSelection().server && currentBuffer.name === getCurSelection().channel) {
+      setMessageBoxLines(messageBoxLinesFromBuffer(currentBuffer));
+      setChannelNames(currentBuffer.names);
+      setTopic(currentBuffer.topic);
+      emit("nhex://servers_and_chans/selected", getCurSelection());
+    }
+    // otherwise, update the message-dirty status of the buffer
+    else {
+      let relevantCmd = (parsed.command === 'quit' ? 'part' : parsed.command).toLowerCase();
+      if (userSettings?.MessageBox?.show?.includes(relevantCmd) ?? true) {
+        currentBuffer.dirty.normal++;
+
+        if (parsed.highlightedUs) {
+          currentBuffer.dirty.highlight++;
         }
       }
     }
@@ -172,116 +303,22 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
     emit("nhex://servers_and_chans/selected", getCurSelection());
   });
 
-  const handlers = {
-    privmsg(event: MBUserInputEvent) {
-      BUFFERS[getCurSelection().server].buffers[getCurSelection().channel].buffer.push(new IRCMessageParsed(
-        "PRIVMSG",
-        [getCurSelection().channel, ...event.payload.args],
-        STATE.nick,
-        event.payload.raw,
-        true,
-      ));
-
-      emit("nhex://servers_and_chans/select", getCurSelection());
-      // Use an empty string here, as it will never collide with actual command names.
-      return "";
-    },
-    msg(event: MBUserInputEvent) {
-      const pmPartnerNick = event.payload.args[0];
-      const messageParams = event.payload.args.slice(1);
-
-      let buf = BUFFERS[getCurSelection().server].buffers[pmPartnerNick];
-      if (!buf) {
-        buf = BUFFERS[getCurSelection().server].buffers[pmPartnerNick] = new Buffer(pmPartnerNick);
-      }
-
-      buf.buffer.push(new IRCMessageParsed(
-        "PRIVMSG",
-        [pmPartnerNick, ...messageParams],
-        STATE.nick,
-        messageParams.join(" "),
-      ));
-
-      refreshServersAndChans();
-      return "msg";
-    },
-    // alias to `join`
-    j(event: MBUserInputEvent) {
-      return this.join(event);
-    },
-    join() {
-      return "join";
-    },
-    // alias to `part`
-    p(event: MBUserInputEvent) {
-      return this.part(event);
-    },
-    part(event: MBUserInputEvent) {
-      let channel = getCurSelection().channel;
-      if (event.payload.args.length !== 0) {
-        [channel] = event.payload.args;
-      } else {
-        event.payload.args = [channel];
-      }
-
-      if (channel === "") {
-        // can't PART the server!
-        return null;
-      }
-
-      // should probably add - and wait for - and ACK that we actually PART'ed before this?
-
-      delete BUFFERS[getCurSelection().server].buffers[channel];
-
-      if (channel === getCurSelection().channel) {
-        getCurSelection().channel = "";
-        setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[getCurSelection().server].buffers[""]));
-      }
-
-      refreshServersAndChans();
-
-      // force override of getCurSelection().channel in the resulting event
-      event.payload["channel"] = channel;
-      return "part";
-    },
-    whois(event: MBUserInputEvent) {
-      return "whois";
-    },
-    quit() {
-      if (!STATE.connected) {
-        return null;
-      }
-
-      realSetIsConnected(false);
-      return "quit";
-    },
-    nick(event: MBUserInputEvent) {
-      if (event.payload.args.length > 1) {
-        console.warn(`Too many args (${event.payload.args.length}) for /nick!`, event.payload.args);
-      }
-      // do NOT call setNick() here! that will happen by virtue of the NICK message handling path
-      return "nick";
-    },
-    stats() {
-      return "stats";
-    },
-    /* DO NOT uncomment this to expose it to users until /list is rate-limited per the comment below!!
-    list() {
-      // TODO: only allow refresh every so often! (based on updated_time_unix_ms)
-      return "list";
-    },
-    /**/
-  };
-  const implementedHandlers = Object.keys(handlers);
   let id = 1; // Start at 1 because the Rust side assumes 0 means "unset".
+  const { handlers, implementedHandlers } = initializeUserInputHandlers({
+    ...context,
+    messageBoxLinesFromBuffer,
+    addLinesToSelectedBuffer: addLineToOurBuffer,
+    channelListState,
+    processEndOfChannelListing,
+  });
 
-  listen("nhex://user_input/raw", (event: MBUserInputEvent) => {
+  listen("nhex://user_input/raw", async (event: MBUserInputEvent) => {
     const command = event.payload.command.toLowerCase();
     const nrmCommand = command === "" ? "privmsg" : command;
     if (implementedHandlers.includes(nrmCommand)) {
       // this handles any special logic, could be a noop, and returns the name
       // of the rust event to be called
-      const eventName = handlers[nrmCommand](event);
+      const eventName = await handlers[nrmCommand](event);
       if (eventName !== null) {
         // Hand off to the Rust side.
         // See `UserInput::run` for where this dispatches to if all goes well.
