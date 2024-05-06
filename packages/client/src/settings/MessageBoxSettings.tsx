@@ -8,7 +8,7 @@ import TextSetting from './TextSetting';
 const MessageBoxSettings = ({ isNight, settings, setSettings }) => {
   return (
     <>
-      <div className={SETTINGS_HEADER + ' pt-0'}>Display</div>
+      <div className={SETTINGS_HEADER + ' pt-0'}>Enable</div>
       <div>
         <BoolSetting
           sectionName="MessageBox"
@@ -18,18 +18,19 @@ const MessageBoxSettings = ({ isNight, settings, setSettings }) => {
           setSettings={setSettings}>
           Timestamps
         </BoolSetting>
-        <ShowJoinPartSetting which="join" isNight={isNight} settings={settings} setSettings={setSettings}>
-        </ShowJoinPartSetting>
-        <ShowJoinPartSetting which="part" isNight={isNight} settings={settings} setSettings={setSettings}>
-        </ShowJoinPartSetting>
         <BoolSetting
           sectionName="Logging"
           fieldName="enable"
           isNight={isNight}
           settings={settings}
           setSettings={setSettings}>
-          Logs
+          Logging
         </BoolSetting>
+        <div className={SETTINGS_HEADER}>Display</div>
+        <ShowJoinPartSetting which="join" isNight={isNight} settings={settings} setSettings={setSettings}>
+        </ShowJoinPartSetting>
+        <ShowJoinPartSetting which="part" isNight={isNight} settings={settings} setSettings={setSettings}>
+        </ShowJoinPartSetting>
         <div className={SETTINGS_HEADER}>Dim</div>
         <BoolSetting
           sectionName="MessageBox"
