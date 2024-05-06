@@ -228,7 +228,7 @@ const MainView = ({ dayNightToggle, isNight, menuTriggers, menuState, db }) => {
         <>
           <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
           {menuState.settings ?
-            <Settings isNight={isNight}></Settings>
+            <Settings isNight={isNight} />
             :
             <Connect
               nick={nick}

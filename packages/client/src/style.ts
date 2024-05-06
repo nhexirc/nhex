@@ -9,15 +9,15 @@ export const MENU_STYLE = "flex sm:flex-row flex-col justify-center sm:gap-6 py-
 export const ROW_STYLE = "flex flex-row items-center justify-center sm:gap-6 gap-2"
 
 //SETTINGS
-export const SETTINGS_STYLE = "align-top mx-auto  mb-auto bg-zinc-500/20 w-full overflow-y-auto scrollbar-thin shadow-[0_0_20px_rgba(0,0,0,0.30)]"
+export const SETTINGS_STYLE = "mx-auto w-full overflow-y-auto scrollbar-thin px-4"
 export const SETTINGS_HEADER = "text-2xl py-2 font-bold"
 export const SETTINGS_ALIGNMENT = "flex items-center gap-2"
 export const TEXT_OPTIONS = "appearance-none text-lg focus:outline-none py-1 bg-zinc-600/20 px-2"
-export const SETTINGS_INPUT_DAY = "border border-black bg-sky-200/60"
-export const SETTINGS_INPUT_NIGHT = "border border-red-200 bg-slate-700/50"
-export const SETTINGS_SECTION_DAY = "bg-orange-100/70 border-2 border-black/50"
-export const SETTINGS_SECTION_NIGHT = "bg-slate-900 border-2 border-red-200/70"
-export const SETTINGS_SECTIONS_STATIC_STYLE = " flex flex-col mx-auto w-1/2 shadow-xl p-4 m-4 rounded"
+export const SETTINGS_INPUT_DAY = "border border-black bg-sky-200/60 max-w-96"
+export const SETTINGS_INPUT_NIGHT = "border border-red-200 bg-slate-700/50 max-w-96"
+export const SETTINGS_SECTION_DAY = "bg-orange-100/70"
+export const SETTINGS_SECTION_NIGHT = "bg-slate-500/40"
+export const SETTINGS_SECTIONS_STATIC_STYLE = " flex flex-col mx-auto max-w-5xl shadow-xl p-4 my-4 rounded"
 export const USER_INPUT_CHECKBOX = "cursor-pointer appearance-none w-5 h-5 focus:outline-none border border-zinc-800 bg-zinc-500"
 //IRC COMPONENT
 export const IRC_STYLE = "flex flex-col h-dvh"

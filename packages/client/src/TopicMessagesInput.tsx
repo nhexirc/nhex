@@ -12,6 +12,7 @@ import Menu from "./Menu";
 import MenuTriggers from './menu/triggers';
 import UserSettings from './lib/userSettings';
 import IRCChat from "./IRCChat";
+import Settings from "./Settings";
 
 const TopicMessagesInput = ({ lines, STATE, nick, isNight, dayNightToggle, topic, menuTriggers, menuState }: {
   lines: MessageBoxLines,
@@ -54,11 +55,17 @@ const TopicMessagesInput = ({ lines, STATE, nick, isNight, dayNightToggle, topic
           <Menu dayNightToggle={dayNightToggle} isNight={isNight} menuTriggers={menuTriggers} state={menuState} />
           <Topic topic={topic} />
         </div>
-        <div ref={mbRef} className={MESSAGES_WINDOW}>
-          <IRCChat lines={lines} STATE={STATE} settings={settings} messageContainerStyle={messageContainerStyle} />
-        </div>
+        {menuState.settings ?
+          <Settings isNight={isNight} />
+          :
+          <>
+            <div ref={mbRef} className={MESSAGES_WINDOW}>
+              <IRCChat lines={lines} STATE={STATE} settings={settings} messageContainerStyle={messageContainerStyle} />
+            </div>
+            <UserInput nick={nick} isNight={isNight} />
+          </>
+        }
       </div>
-      <UserInput nick={nick} isNight={isNight} />
     </div >
   );
 }
