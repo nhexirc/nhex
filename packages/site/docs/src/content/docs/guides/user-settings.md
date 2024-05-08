@@ -67,7 +67,8 @@ This file lives at `$APPCONFIG/dev.nhex/nhex.toml` where `$APPCONFIG` is defined
 
 An up-to-date version of this file, including additional commentary, is always available [here](https://github.com/nhexirc/nhex/blob/main/packages/client/example.nhex.toml).
 
-```toml[DragAndDrop]
+```toml
+[DragAndDrop]
 enable = true
 textFileExtensions = [ "txt", "md", "js", "ts", "tsx", "c", "cpp", "py", "rs", "pl" ]
 textUploadHost = "termbin.com"
