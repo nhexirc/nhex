@@ -72,11 +72,19 @@ async fn connect_impl(
     let (_, stream) = client.add((), vzc::handlers::YieldAll).unwrap();
     handleirc::spawn_task(app_handle.app_handle(), server.clone(), stream, window);
     // Connection registation.
-    let (_id, reg_result) = client
+    let mut reg_result = client
         .add(&vzc::register::register_as_client(), &options)
-        .unwrap();
-    client.run_tokio().await?;
-    reg_result.await.unwrap()?;
+        .unwrap()
+        .1;
+    loop {
+        use tokio::sync::oneshot::error::TryRecvError;
+        client.run_tokio().await?;
+        match reg_result.try_recv() {
+            Ok(v) => break v?,
+            Err(TryRecvError::Empty) => (),
+            Err(TryRecvError::Closed) => unreachable!("registration handler should always yield")
+        }
+    }
     // TODO: Update on vinezombie 0.3.2.
     let _ = client.add((), vzc::handlers::AutoPong);
     // Receive events from the frontend and queue commands.
