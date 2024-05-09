@@ -82,7 +82,7 @@ async fn connect_impl(
         match reg_result.try_recv() {
             Ok(v) => break v?,
             Err(TryRecvError::Empty) => (),
-            Err(TryRecvError::Closed) => unreachable!("registration handler should always yield")
+            Err(TryRecvError::Closed) => unreachable!("registration handler should always yield"),
         }
     }
     // TODO: Update on vinezombie 0.3.2.

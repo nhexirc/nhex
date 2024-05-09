@@ -30,7 +30,7 @@ pub enum UserInputError {
 
 #[inline]
 pub fn make_line(value: String) -> Line<'static> {
-    Line::from_bytes(value).unwrap()
+    Line::from_bytes(value).expect("frontend allowed Line-invalid chars into command")
 }
 /// Unwraps an optional value into a variable `name`, or returns an error.
 macro_rules! let_some {
@@ -114,9 +114,11 @@ impl UserInput {
     /// containing `'\r'`, `'\n'`, or `'\0'`, and will panic otherwise.
     pub fn send_to(mut self, sender: &UnboundedSender<Command>) -> Result<bool, UserInputError> {
         // TODO: Limits, throughout. Message length, target limits.
-        let channel = Arg::from_bytes(self.channel).expect("frontend requested invalid channel");
         let to_send = match self.command.as_str() {
-            "" => Command::Msg(channel, make_line(self.argsStr)),
+            "" => {
+                let channel = self.channel;
+                Command::Msg(check!(channel: Arg), make_line(self.argsStr))
+            }
             "join" => {
                 // Quietly discard invalid channel names for now.
                 // Going loud is also an option.
