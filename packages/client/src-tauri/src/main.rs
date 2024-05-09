@@ -68,22 +68,23 @@ async fn connect_impl(
         .connect_tokio(|| vzc::tls::TlsConfigOptions::default().build())
         .await?;
     let mut client = vzc::Client::new(sock, vzc::channel::TokioChannels);
-    // TOOD: Can nhex actually tolerate the caps r_a_c requests by default?
+    // Spawn the task to send messages back to the frontend now because the frontend wants it.
+    let (_, stream) = client.add((), vzc::handlers::YieldAll).unwrap();
+    handleirc::spawn_task(app_handle.app_handle(), server.clone(), stream, window);
+    // Connection registation.
     let (_id, reg_result) = client
         .add(&vzc::register::register_as_client(), &options)
         .unwrap();
     client.run_tokio().await?;
-    // Shouldn't panic because the handler will always emit the error in failure.
     reg_result.await.unwrap()?;
+    // TODO: Update on vinezombie 0.3.2.
     let _ = client.add((), vzc::handlers::AutoPong);
-    // Application logic past this point.
+    // Receive events from the frontend and queue commands.
     let (sender, mut cmd_queue) = tokio::sync::mpsc::unbounded_channel::<Command>();
     let ack_handle = app_handle.app_handle();
-    let server_name = server.clone();
-    // Receive events from the frontend and queue commands.
     app_handle.listen_global(EVENT_PATH_INPUT, move |event| {
         let cmd = deserde(event);
-        if !cmd.server.is_empty() && cmd.server != server_name {
+        if !cmd.server.is_empty() && cmd.server != server {
             return;
         }
         let id = cmd.id;
@@ -91,7 +92,7 @@ async fn connect_impl(
         // TODO: send_to might return `Ok(false)` if the connection shut down.
         let result = UserInputResult {
             id,
-            server: &server_name,
+            server: &server,
             error: cmd.send_to(&sender).err(),
         };
         if result.error.is_some() {
@@ -108,10 +109,7 @@ async fn connect_impl(
         .expect("cannot emit ack");
     });
 
-    // TODO: Emit on success here.
-
-    let (_, stream) = client.add((), vzc::handlers::YieldAll).unwrap();
-    handleirc::spawn_task(app_handle, server, stream, window);
+    // TODO: Emit on success here. Also update on vinezombie 0.3.2.
     while !cmd_queue.is_closed() || client.needs_run() {
         tokio::select! {
             biased;
