@@ -27,9 +27,18 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
     processEndOfChannelListing,
   } = context;
 
+  /* Get or Create if Not Exists the given channel/pm buffer */
+  const gcneChannel = (bufferName: string): Buffer => {
+    let buf = BUFFERS[server].buffers[bufferName];
+    if (!buf) {
+      buf = BUFFERS[server].buffers[bufferName] = new Buffer(bufferName);
+    }
+    return buf;
+  };
+
   const handlers = {
     privmsg(event: MBUserInputEvent) {
-      BUFFERS[getCurSelection().server].buffers[getCurSelection().channel].buffer.push(new IRCMessageParsed(
+      BUFFERS[server].buffers[getCurSelection().channel].buffer.push(new IRCMessageParsed(
         "PRIVMSG",
         [getCurSelection().channel, ...event.payload.args],
         STATE.nick,
@@ -37,7 +46,7 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
         true,
       ));
 
-      emit("nhex://servers_and_chans/select", getCurSelection());
+      emit("nhex://servers_and_chans/select", { ...getCurSelection(), server });
       // Use an empty string here, as it will never collide with actual command names.
       return "";
     },
@@ -46,27 +55,24 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
       const pmPartnerNick = event.payload.args[0];
       const messageParams = event.payload.args.slice(1);
 
-      let buf = BUFFERS[getCurSelection().server].buffers[pmPartnerNick];
-      if (!buf) {
-        buf = BUFFERS[getCurSelection().server].buffers[pmPartnerNick] = new Buffer(pmPartnerNick);
-      }
-
-      buf.buffer.push(new IRCMessageParsed(
+      gcneChannel(pmPartnerNick).buffer.push(new IRCMessageParsed(
         "PRIVMSG",
         [pmPartnerNick, ...messageParams],
         STATE.nick,
         messageParams.join(" "),
       ));
 
-      await emit("nhex://servers_and_chans/select", { ...getCurSelection(), channel: pmPartnerNick });
+      await emit("nhex://servers_and_chans/select", { server, channel: pmPartnerNick });
       refreshServersAndChans();
       return "msg";
     },
 
     async join(event: MBUserInputEvent) {
       if (event.payload.args.length === 1) {
-        //await emit("nhex://servers_and_chans/select", { ...getCurSelection(), channel: pmPartnerNick });
-        //refreshServersAndChans();
+        const [channel] = event.payload.args;
+        gcneChannel(channel);
+        await emit("nhex://servers_and_chans/select", { server, channel });
+        refreshServersAndChans();
       }
 
       return "join";
@@ -87,11 +93,11 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
 
       // should probably add - and wait for - and ACK that we actually PART'ed before this?
 
-      delete BUFFERS[getCurSelection().server].buffers[channel];
+      delete BUFFERS[server].buffers[channel];
 
       if (channel === getCurSelection().channel) {
         getCurSelection().channel = "";
-        setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[getCurSelection().server].buffers[""]));
+        setMessageBoxLines(messageBoxLinesFromBuffer(BUFFERS[server].buffers[""]));
       }
 
       refreshServersAndChans();
@@ -198,7 +204,7 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
     p: "part",
     q: "quit",
     w: "whois",
-  }
+  };
 
   Object.entries(aliases).forEach(([alias, funcName]) => {
     handlers[alias] = handlers[funcName].bind(handlers);
@@ -206,6 +212,6 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
 
   return {
     handlers,
-    implementedHandlers: Object.keys(handlers)
+    implementedHandlers: Object.keys(handlers),
   };
 }
