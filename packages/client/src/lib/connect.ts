@@ -257,7 +257,7 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
     }
 
     if (!currentBuffer) {
-      currentBuffer = BUFFERS[getCurSelection().server].buffers[""];
+      currentBuffer = BUFFERS[server].buffers[""];
     }
 
     currentBuffer.buffer.push(parsed);
