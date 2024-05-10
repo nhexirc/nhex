@@ -2,19 +2,17 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod dnduploaders;
+mod handleirc;
 mod userdb;
 mod userinput;
 
-use std::path::PathBuf;
-use std::time::{SystemTime, UNIX_EPOCH};
-
 use userinput::*;
 
-use chrono::prelude::*;
-use futures::prelude::*;
-use irc::client::prelude::*;
 use serde::Serialize;
+use std::path::PathBuf;
 use tauri::{async_runtime, Manager, Window};
+
+use vinezombie::{client as vzc, string::*};
 
 // Structs that will be serialized back to the TS side.
 // As we only need to serialize them, we borrow where it makes sense.
@@ -51,41 +49,59 @@ async fn connect_impl(
     tls: bool,
     window: Window,
     app_handle: tauri::AppHandle,
-) -> Result<(), irc::error::Error> {
-    let alt_nicks = vec![
-        format!("{}_", nick),
-        format!("{}__", nick),
-        format!("{}___", nick),
-    ];
-    let config = Config {
-        nickname: Some(nick),
-        alt_nicks,
-        server: Some(server.clone()),
-        port: Some(port),
-        use_tls: Some(tls),
-        version: Some(VERSION_STRING.to_owned()),
-        ..Config::default()
+) -> Result<(), std::io::Error> {
+    let mut address = vzc::conn::ServerAddr::from_host(server.clone())?;
+    let options = vzc::register::Options::<()> {
+        pass: None,
+        nicks: vec![Nick::from_bytes(nick)?],
+        // When nhex works out how to do passwords, uncomment this:
+        /*
+        sasl: vec![vzc::auth::AnySasl::Password(vzc::auth::sasl::Password::new(
+            username.try_into()?, Secret::new(password.try_into()?)
+        ))],
+        */
+        ..Default::default()
     };
-
-    let mut client = Client::from_config(config).await?;
-    client.identify()?;
-
-    let mut stream = client.stream()?;
-
-    let sender = client.sender();
+    address.port = Some(port);
+    address.tls = tls;
+    let sock = address
+        .connect_tokio(|| vzc::tls::TlsConfigOptions::default().build())
+        .await?;
+    let mut client = vzc::Client::new(sock, vzc::channel::TokioChannels);
+    // Spawn the task to send messages back to the frontend now because the frontend wants it.
+    let (_, stream) = client.add((), vzc::handlers::YieldAll).unwrap();
+    handleirc::spawn_task(app_handle.app_handle(), server.clone(), stream, window);
+    // Connection registation.
+    let mut reg_result = client
+        .add(&vzc::register::register_as_client(), &options)
+        .unwrap()
+        .1;
+    loop {
+        use tokio::sync::oneshot::error::TryRecvError;
+        client.run_tokio().await?;
+        match reg_result.try_recv() {
+            Ok(v) => break v?,
+            Err(TryRecvError::Empty) => (),
+            Err(TryRecvError::Closed) => unreachable!("registration handler should always yield"),
+        }
+    }
+    // TODO: Update on vinezombie 0.3.2.
+    let _ = client.add((), vzc::handlers::AutoPong);
+    // Receive events from the frontend and queue commands.
+    let (sender, mut cmd_queue) = tokio::sync::mpsc::unbounded_channel::<Command>();
     let ack_handle = app_handle.app_handle();
-    let server_name = server.clone();
     app_handle.listen_global(EVENT_PATH_INPUT, move |event| {
         let cmd = deserde(event);
-        if !cmd.server.is_empty() && cmd.server != server_name {
+        if !cmd.server.is_empty() && cmd.server != server {
             return;
         }
         let id = cmd.id;
         let command = cmd.command.clone();
+        // TODO: send_to might return `Ok(false)` if the connection shut down.
         let result = UserInputResult {
             id,
-            server: server_name.as_str(),
-            error: cmd.run(&sender).err(),
+            server: &server,
+            error: cmd.send_to(&sender).err(),
         };
         if result.error.is_some() {
             ack_handle
@@ -101,77 +117,27 @@ async fn connect_impl(
         .expect("cannot emit ack");
     });
 
-    // TODO: Emit on success here.
-
-    let mut channel_list_count: i128 = -1;
-    let user_path_bind = user_db_path(app_handle, "nhex");
-    let user_db_path = user_path_bind.to_str().expect("path");
-    while let Some(message) = stream.next().await {
-        let message = message?;
-        let now = SystemTime::now();
-        let now_since_epoch = now.duration_since(UNIX_EPOCH).expect("time before 1970");
-        let now_dt: DateTime<Local> = now.into();
-
-        print!(
-            "[{}] <{}> {}",
-            // TODO: Let this be configurable! Otherwise, use yyyy-mm-dd!
-            now_dt.format("%d/%m/%Y %T%.3f"),
-            server,
-            message
-        );
-
-        // do a very quick "parse", just enough to find the command ID, in order to determine
-        // if these are LIST related commands (321-323) which are not to be emitted to the frontend at all.
-        // XXX: should we just do the full message parse here instead of in the frontend?
-        let mclone = message.clone().to_string();
-        let parts = mclone.split(" ");
-        let parts_vec: Vec<&str> = parts.collect::<Vec<&str>>();
-        assert!(parts_vec.len() > 1);
-
-        match parts_vec[1] {
-            "321" => {
-                assert!(channel_list_count == -1);
-                channel_list_count = 0;
-                continue;
+    // TODO: Emit on success here. Also update on vinezombie 0.3.2.
+    while !cmd_queue.is_closed() || client.needs_run() {
+        tokio::select! {
+            biased;
+            Some(cmd) = cmd_queue.recv() => {
+                cmd.run(&mut client);
+                // Since we're here, fully drain the queue.
+                while let Ok(cmd) = cmd_queue.try_recv() {
+                    cmd.run(&mut client);
+                }
             }
-            "322" => {
-                assert!(channel_list_count > -1);
-                assert!(parts_vec.len() > 5);
-                channel_list_count += 1;
-                userdb::add_channel_list_entry(
-                    user_db_path,
-                    server.as_str(),
-                    parts_vec[3],
-                    parts_vec[4].parse::<u64>().expect("parse"),
-                    parts_vec[5..].join(" ").as_str(),
-                )
-                .expect("add_channel_list_entry");
-                continue;
+            result = client.run_tokio(), if client.needs_run() => {
+                if result?.is_none() {
+                    // TODO: Read timeout.
+                    // Store the channel from the previous ping handler.
+                    // If it doesn't exist or succeeded, add a ping handler.
+                    // If it failed, flee.
+                    // Probably won't have to do this in a future breaking version of vinezombie.
+                }
             }
-            "323" => {
-                assert!(channel_list_count > -1);
-                userdb::update_channel_list_meta(
-                    user_db_path,
-                    server.as_str(),
-                    channel_list_count as u64,
-                )
-                .expect("update_channel_list_meta");
-                channel_list_count = -1;
-                continue;
-            }
-            _ => {}
         }
-
-        window
-            .emit(
-                "nhex://irc_message",
-                IRCMessage {
-                    server: server.as_str(),
-                    message: message.to_string(),
-                    timestamp: now_since_epoch.as_millis(),
-                },
-            )
-            .expect("cannot emit irc_message");
     }
     Ok(())
 }
@@ -232,8 +198,9 @@ async fn user_db_latest_channel_lines(
         user_db_path(app_handle, "logging").to_str().expect("path"),
         network,
         channel,
-        num_lines
-    ).expect("get_latest_channel_lines");
+        num_lines,
+    )
+    .expect("get_latest_channel_lines");
 
     let mut ret_vec: Vec<String> = Vec::new();
     for line in lines.iter() {
