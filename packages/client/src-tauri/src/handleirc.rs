@@ -17,10 +17,9 @@ pub fn spawn_task(
             let now_since_epoch = now.duration_since(UNIX_EPOCH).expect("time before 1970");
             let now_dt: DateTime<Local> = now.into();
 
-            print!(
+            println!(
                 "[{}] <{}> {}",
-                // TODO: Let this be configurable! Otherwise, use yyyy-mm-dd!
-                now_dt.format("%d/%m/%Y %T%.3f"),
+                now_dt.format("%F %T%.3f"),
                 server,
                 message
             );
