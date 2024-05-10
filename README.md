@@ -1,9 +1,9 @@
 # nhex
-A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/).
+A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/). Powered by [vinezombie](https://crates.io/crates/vinezombie) & [React](https://react.dev/), built with [Tauri](https://tauri.app/).
+
 - client [![Build Check](https://github.com/nhexirc/nhex/actions/workflows/build_check.yml/badge.svg)](https://github.com/nhexirc/nhex/actions/workflows/build_check.yml)
-- nhexirc.com [![Netlify Status](https://api.netlify.com/api/v1/badges/aca73784-8f91-4be8-8bf0-391e0c93b13d/deploy-status)](https://app.netlify.com/sites/nhex/deploys)
-- docs.nhexirc.com
-[![Netlify Status](https://api.netlify.com/api/v1/badges/3e9e90bf-f768-45da-8668-4f67b6f3830e/deploy-status)](https://app.netlify.com/sites/nhex-docs/deploys)
+- [nhexirc.com](https://nhexirc.com) [![Netlify Status](https://api.netlify.com/api/v1/badges/aca73784-8f91-4be8-8bf0-391e0c93b13d/deploy-status)](https://app.netlify.com/sites/nhex/deploys)
+- [docs.nhexirc.com](https://docs.nhexirc.com) [![Netlify Status](https://api.netlify.com/api/v1/badges/3e9e90bf-f768-45da-8668-4f67b6f3830e/deploy-status)](https://app.netlify.com/sites/nhex-docs/deploys)
 
 
 ![](./packages/client/public/screenshots/nh_conn.png)
