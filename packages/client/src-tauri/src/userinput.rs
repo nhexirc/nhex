@@ -183,7 +183,7 @@ impl UserInput {
                     (Some(nick), _) => (None, check!(nick: Nick)),
                     _ => return Err(UserInputError::MissingArg { name: "nick" }),
                 };
-                let mut msg = ClientMsg::new(vinezombie::names::cmd::STATS);
+                let mut msg = ClientMsg::new(vinezombie::names::cmd::WHOIS);
                 let mut args = msg.args.edit();
                 if let Some(server) = server {
                     args.add_word(server);
