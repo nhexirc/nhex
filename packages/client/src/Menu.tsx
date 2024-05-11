@@ -14,7 +14,7 @@ const Menu = ({ dayNightToggle, isNight, menuTriggers, state }) => {
       </div>
       <div className={ROW_STYLE}>
         {row2.map((item, i) => <MenuItem triggerFunc={menuTriggers.trigger.bind(menuTriggers, item)} key={i} state={state}>{item}</MenuItem>)}
-        <a href="https://docs.nhexirc.com" target="_blank">help</a>
+        <a href="https://nhexirc.com/docs" target="_blank">help</a>
         <button onClick={dayNightToggle}>
           <img className="min-w-5 max-w-5" src={isNight ? sun : moon} alt="day/night toggle" />
         </button>

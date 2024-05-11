@@ -133,7 +133,7 @@ export default async function (context: Record<any, any>, db: UserDB, options?: 
     if (!channelListState.search) {
       return addLineToOurBuffer([
         "No search string was given!",
-        "Help: https://docs.nhexirc.com/guides/commands/#list",
+        "Help: https://nhexirc.com/docs/guides/commands/#list",
       ]);
     }
 

@@ -159,7 +159,7 @@ export function initializeUserInputHandlers(context: Record<any, any>): {
       if (!searchStrCheck || searchStrCheck === "-fetch") {
         return addLinesToSelectedBuffer([
           "No search string was given!",
-          "Help: https://docs.nhexirc.com/guides/commands/#list",
+          "Help: https://nhexirc.com/docs/guides/commands/#list",
         ]);
       }
 
