@@ -4,7 +4,7 @@ description: How to set up user settings
 ---
 Not all available user settings are yet configurable with the user interface. See ["Example Code"](#example-code) below for the complete settings specification.
 
-![nhex settings](../../../assets/nh_settings.png)
+![nhex settings](../../../../assets/nh_settings.png)
 
 --- 
 

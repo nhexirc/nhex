@@ -3,7 +3,7 @@ title: nhex documentation
 description: nhex documentation for all your needs.
 template: doc
 ---
-![nhex logo](../../assets/nh_irc.png)
+![nhex logo](../../../assets/nh_irc.png)
 ### Usage
 Please refer to the sidebar for topics and solutions.
 ### Contribute
