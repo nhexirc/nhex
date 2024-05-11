@@ -5,7 +5,7 @@ A next-generation IRC client inspired by [HexChat](https://hexchat.github.io/). 
 
 ![](./packages/client/public/screenshots/nh_conn.png)
 
-_Jump right to [the downloads](https://github.com/nhexirc/nhex/releases/latest) or [the documentation](https://docs.nhexirc.com)._
+_Jump right to [the downloads](https://github.com/nhexirc/nhex/releases/latest) or [the documentation](https://nhexirc.com/docs)._
 
 Pronounced "_nex_" (the "_h_" is silent).
 
@@ -29,7 +29,7 @@ See the [latest release](https://github.com/nhexirc/nhex/releases/latest) to dow
 
 # Using
 
-See [the documentation](https:///docs.nhexirc.com) for full usage details.
+See [the documentation](https:///nhexirc.com/docs) for full usage details.
 
 # Developing
 
