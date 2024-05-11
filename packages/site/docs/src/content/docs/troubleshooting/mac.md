@@ -8,8 +8,8 @@ description: MacOS troubleshooting for nhex.
 Downloading the binary from github `nhex_x.x.x_aarch64.dmg` may result in an error defining the binary as being damaged. 
 #### Fixes
 
-:::tip
-You will need to replace the x's with the appropriate version number for **solution 1**!
+:::caution
+Replace the placeholders `x.x.x` in the command with version numbers for **solution 1**!
 :::
 
 :::note[Solution 1]
