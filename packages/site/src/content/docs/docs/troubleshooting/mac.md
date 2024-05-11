@@ -9,7 +9,7 @@ Downloading the binary from github `nhex_x.x.x_aarch64.dmg` may result in an err
 #### Fixes
 
 :::caution
-Replace the placeholders `x.x.x` in the command with version numbers for **solution 1**!
+ For **solution 1**, use version numbers in lieu of placeholders `x.x.x` in the command!
 :::
 
 :::note[Solution 1]
